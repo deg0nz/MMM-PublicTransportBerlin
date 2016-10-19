@@ -1,0 +1,28 @@
+{
+  "name": "MMM-PublicTransportBerlin",
+  "version": "0.1.0",
+  "description": "VBB-Hafas driven public transport module for MagicMirror 2.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deg0nz/MMM-PublicTransportBerlin"
+  },
+  "keywords": [
+    "magic mirror",
+    "magic mirror 2",
+    "smart mirror",
+    "public transport",
+    "public transport berlin",
+    "public transport brandenburg",
+    "module"
+  ],
+  "author": "deg0nz",
+  "contributors": "https://github.com/deg0nz/MMM-PublicTransportBerlin/graphs/contributors",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/deg0nz/MMM-PublicTransportBerlin/issues"
+  },
+  "homepage": "https://github.com/deg0nz/MMM-PublicTransportBerlin#readme",
+  "dependencies": {
+    "vbb-client": "latest"
+  }
+}

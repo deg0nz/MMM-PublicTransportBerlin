@@ -1,0 +1,90 @@
+.ptbWrapper {
+	width: 370px;
+	height: 300px;
+	position: relative;
+}
+
+.ptbTable {
+	display: table;
+    border: medium;
+    border-collapse: separate;
+    border-spacing: 1px;
+}
+
+.ruleCell {
+    line-height: 0px;
+    border-spacing: 10px;
+    border-bottom: 1px solid #666;
+}
+
+hr {
+    height: 0px;
+    width: 100%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-left: auto;
+    margin-right: auto;
+    border-bottom: 1px solid #666;
+}
+
+.delayTime {
+    font-size: 16px;
+    padding-left: 0px;
+    padding-right: 10px;
+}
+
+.ellipsis {
+	position: absolute;
+	background-color: #F414A0;
+	width: 300px;
+	height: 100px;
+	border: 2px;
+	border-radius: 150px;
+}
+
+.sbahnsign {
+   color: #FFFFFF;
+   text-align: center;
+   width: 2.5em;
+   height: 1.25em;
+   position: relative;
+   -moz-border-radius:    1.25em;
+   -webkit-border-radius: 1.25em;
+   border-radius:         1.25em;
+}
+
+.ubahnsign {
+   color: #FFFFFF;
+   text-align: center;
+   width: 2.5em;
+   height: 1.25em;
+   position: relative;
+}
+
+.tramsign {
+   color: #FFFFFF;
+   text-align: center;
+   width: 2.5em;
+   height: 1.25em;
+   background: #BE1414;
+   position: relative;
+}
+
+.bussign {
+    color: #FFFFFF;
+    text-align: center;
+    width: 2.5em;
+    height: 1.25em;
+    position: relative;
+}
+
+.dbsign {
+    color: #FFFFFF;
+    text-align: center;
+    width: 2.5em;
+    height: 1.25em;
+    background: #BE1414;
+    position: relative;
+}
+
+
