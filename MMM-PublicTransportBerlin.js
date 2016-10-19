@@ -6,17 +6,18 @@ Module.register("MMM-PublicTransportBerlin", {
     defaults: {
         name: "MMM-PublicTransportBerlin",
         hidden: false,
+        stationId: 9160003,
         delay: 10,                      // How long do you need to walk to the next Station?
         interval: 120000,               // How often should the table be updated in ms?
         departureMinutes: 30,           // For how many minutes should departures be shown?
         showColoredLineSymbols: true,   // Want colored line symbols?
         useColorForRealtimeInfo: true,  // Want colored real time information (delay, early)?
+        showTableHeadersAsSymbols: true,// Table Headers as symbols or written?
         maxUnreachableDepartures: 3,    // How many unreachable departures should be shown?
         maxReachableDepartures: 7,      // How many reachable departures should be shown?
         fadeUnreachableDepartures: true,
         fadeReachableDepartures: true,
-        fadePointForReachableDepartures: 0.5,
-        stationId: 9160003
+        fadePointForReachableDepartures: 0.5
     },
 
     start: function () {
@@ -33,7 +34,7 @@ Module.register("MMM-PublicTransportBerlin", {
             this.sendSocketNotification('GET_DEPARTURES', this.config.stationId);
         }, 1000);
 
-        if(this.config.interval < 30000){
+        if (this.config.interval < 30000) {
             this.config.interval = 30000;
         }
         setInterval(() => {
@@ -59,7 +60,7 @@ Module.register("MMM-PublicTransportBerlin", {
         wrapper.appendChild(heading);
 
 
-        // table header
+        // Table header
         var table = document.createElement("table");
         table.className = "ptbTable small light";
 
@@ -67,39 +68,66 @@ Module.register("MMM-PublicTransportBerlin", {
 
         var headerRow = document.createElement("tr");
 
+        // Cell for departure time
         var headerTime = document.createElement("td");
-        headerTime.innerHTML = "Abfahrt";
+
+        if (this.config.showTableHeadersAsSymbols) {
+            headerTime.className = "centeredTd";
+            var timeIcon = document.createElement("span");
+            timeIcon.className = "fa fa-clock-o centered";
+            headerTime.appendChild(timeIcon);
+        } else {
+            headerTime.innerHTML = "Abfahrt";
+        }
+
         headerRow.appendChild(headerTime);
 
+        // Cell for delay time
         var delayTime = document.createElement("td");
         delayTime.innerHTML = "&nbsp;";
         headerRow.appendChild(delayTime);
 
+        // Cell for line symbol
         var headerLine = document.createElement("td");
-        headerLine.innerHTML = "Linie";
+
+        if (this.config.showTableHeadersAsSymbols) {
+            headerLine.className = "centeredTd";
+            var lineIcon = document.createElement("span");
+            lineIcon.className = "fa fa-tag";
+            headerLine.appendChild(lineIcon);
+        } else {
+            headerLine.innerHTML = "&nbsp";
+        }
+
         headerRow.appendChild(headerLine);
 
+        // Cell for direction
         var headerDirection = document.createElement("td");
-        headerDirection.innerHTML = "Nach";
+        if (this.config.showTableHeadersAsSymbols) {
+            headerDirection.className = "centeredTd";
+            var directionIcon = document.createElement("span");
+            directionIcon.className = "fa fa-exchange";
+            headerDirection.appendChild(directionIcon);
+        } else {
+            headerDirection.innerHTML = "Nach";
+        }
+
         headerRow.appendChild(headerDirection);
 
         headerRow.className = "bold dimmed";
-
         tHead.appendChild(headerRow);
 
         table.appendChild(tHead);
 
-        // create table body from data
+        // Create table body from data
         var tBody = document.createElement("tbody");
 
         this.getFirstReachableDeparturePositionInArray().then((reachableDeparturePos) => {
 
-            Log.log("getFirstReachableDeparturePositionInArray: " + reachableDeparturePos);
-
             this.departuresArray.forEach((current, i) => {
 
                 if (i >= reachableDeparturePos - this.config.maxUnreachableDepartures
-                    && i < reachableDeparturePos + this.config.maxReachableDepartures ) {
+                    && i < reachableDeparturePos + this.config.maxReachableDepartures) {
 
                     var currentWhen = moment(new Date(current.when));
 
