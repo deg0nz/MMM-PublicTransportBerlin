@@ -129,9 +129,7 @@ Module.register("MMM-PublicTransportBerlin", {
                 if (i >= reachableDeparturePos - this.config.maxUnreachableDepartures
                     && i < reachableDeparturePos + this.config.maxReachableDepartures) {
 
-                    var currentWhen = moment(new Date(current.when));
-
-                    if (i === reachableDeparturePos) {
+                    if (i === reachableDeparturePos && this.config.delay > 0 && reachableDeparturePos != 0) {
 
                         var ruleRow = document.createElement("tr");
 
@@ -146,45 +144,7 @@ Module.register("MMM-PublicTransportBerlin", {
                         tBody.appendChild(ruleRow);
                     }
 
-                    var row = document.createElement("tr");
-
-                    var timeCell = document.createElement("td");
-
-                    timeCell.innerHTML = currentWhen.format("HH:mm");
-                    row.appendChild(timeCell);
-
-                    var delayCell = document.createElement("td");
-                    delayCell.className = "delayTime";
-
-                    var delay = Math.floor((((current.delay % 31536000) % 86400) % 3600) / 60);
-
-                    if (delay > 0) {
-                        delayCell.innerHTML = "+" + delay + " ";
-                        if (this.config.useColorForRealtimeInfo)
-                        {
-                            delayCell.style.color = "red";
-                        }
-                    } else if (delay < 0) {
-                        delayCell.innerHTML = delay + " ";
-                        if (this.config.useColorForRealtimeInfo)
-                        {
-                            delayCell.style.color = "green";
-                        }
-                    } else if (delay === 0) {
-                        delayCell.innerHTML = "";
-                    }
-
-                    row.appendChild(delayCell);
-
-                    var lineCell = document.createElement("td");
-                    var lineSymbol = this.getLineSymbol(current);
-
-                    lineCell.appendChild(lineSymbol);
-                    row.appendChild(lineCell);
-
-                    var directionCell = document.createElement("td");
-                    directionCell.innerHTML = current.direction;
-                    row.appendChild(directionCell);
+                    var row = this.getRow(current);
 
                     // fading for entries before "delay rule"
                     if (this.config.fadeUnreachableDepartures && this.config.delay > 0) {
@@ -213,8 +173,15 @@ Module.register("MMM-PublicTransportBerlin", {
 
                     tBody.appendChild(row);
                 }
-
             });
+        }, () => {
+
+            Log.log("promise rejected..")
+            this.departuresArray.forEach((current) => {
+                var row = this.getRow(current);
+
+                tBody.appendChild(row);
+            })
         });
 
         table.appendChild(tBody);
@@ -224,19 +191,68 @@ Module.register("MMM-PublicTransportBerlin", {
         return wrapper;
     },
 
+    getRow: function (current) {
+
+        var currentWhen = moment(new Date(current.when));
+
+        var row = document.createElement("tr");
+
+        var timeCell = document.createElement("td");
+        timeCell.className = "centeredTd";
+        timeCell.innerHTML = currentWhen.format("HH:mm");
+        row.appendChild(timeCell);
+
+        var delayCell = document.createElement("td");
+        delayCell.className = "delayTime";
+
+        var delay = Math.floor((((current.delay % 31536000) % 86400) % 3600) / 60);
+
+        if (delay > 0) {
+            delayCell.innerHTML = "+" + delay + " ";
+            if (this.config.useColorForRealtimeInfo) {
+                delayCell.style.color = "red";
+            }
+        } else if (delay < 0) {
+            delayCell.innerHTML = delay + " ";
+            if (this.config.useColorForRealtimeInfo) {
+                delayCell.style.color = "green";
+            }
+        } else if (delay === 0) {
+            delayCell.innerHTML = "";
+        }
+
+        row.appendChild(delayCell);
+
+        var lineCell = document.createElement("td");
+        var lineSymbol = this.getLineSymbol(current);
+
+        lineCell.appendChild(lineSymbol);
+        row.appendChild(lineCell);
+
+        var directionCell = document.createElement("td");
+        directionCell.innerHTML = current.direction;
+        row.appendChild(directionCell);
+
+        return row;
+    },
+
     getFirstReachableDeparturePositionInArray: function () {
         let now = moment();
         let nowWithDelay = now.add(this.config.delay, 'minutes');
 
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             this.departuresArray.forEach((current, i, depArray) => {
-                if (i < depArray.length - 1) {
+                if (i < depArray.length - 1 && this.config.delay != 0) {
                     var currentWhen = moment(new Date(current.when));
                     var nextWhen = moment(new Date(depArray[i + 1].when));
 
                     if (!this.firstReachableDepartureFound && currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay)) {
+
+                        console.log("--> Reachable departure for " + this.stationName + ": " + i);
                         resolve(i);
                     }
+                } else if (i === depArray.length - 1) {
+                    reject();
                 }
             })
         });

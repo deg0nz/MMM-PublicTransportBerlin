@@ -1,7 +1,7 @@
 "use strict";
 const vbbClient = require('vbb-client');
 
-var VbbFetcher = function (config){
+var VbbFetcher = function (config) {
 
     this.config = config;
 
@@ -10,31 +10,36 @@ var VbbFetcher = function (config){
     })
 }
 
-VbbFetcher.prototype.getStationId = function() {
+VbbFetcher.prototype.getStationId = function () {
     return this.config.stationId;
 }
 
-VbbFetcher.prototype.getStationName = function() {
-    return vbbClient.station(this.config.stationId).then( (response) => {
+VbbFetcher.prototype.getStationName = function () {
+    return vbbClient.station(this.config.stationId).then((response) => {
         return response.name;
     })
 }
 
 
-VbbFetcher.prototype.fetchDepartures = function() {
+VbbFetcher.prototype.fetchDepartures = function () {
     var now = new Date();
+    var when = now.setMinutes(now.getMinutes() + (this.config.delay - 10));
+
     var opt = {
-        when: now.setMinutes(now.getMinutes()),
+        when: now,
         duration: this.config.departureMinutes,
-       // identifier: "Testing - MagicMirror module MMM-PublicTransportBerlin"    // send testing identifier
+        // identifier: "Testing - MagicMirror module MMM-PublicTransportBerlin"    // send testing identifier
     }
 
-    return vbbClient.departures(this.config.stationId, opt).then( (response) => {
+    var foo = when.toString();
+    console.log("When fetch deps: " + foo);
+
+    return vbbClient.departures(this.config.stationId, opt).then((response) => {
         return this.processData(response)
     });
 }
 
-VbbFetcher.prototype.processData = function(data) {
+VbbFetcher.prototype.processData = function (data) {
 
     var departuresData = {
         stationId: this.config.stationId,
@@ -42,12 +47,25 @@ VbbFetcher.prototype.processData = function(data) {
         departuresArray: []
     }
 
-    data.forEach( (row) => {
+    console.log("------------------------------")
+    console.log("Data for " + data[0].station.name + ". Length of array: " + data.length);
+
+    data.forEach((row, i) => {
 
         let delay = row.delay;
 
-        if (!delay){
+        if (!delay) {
             row.delay = 0
+        }
+
+        // leave this here for debugging reasons (for now)...
+
+        var delayMinutes = Math.floor((((delay % 31536000) % 86400) % 3600) / 60);
+
+        var time = row.when.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+
+        if (i <= 20) {
+            console.log(time + " " + delayMinutes + " " + row.product.type.unicode + " " + row.direction);
         }
 
         var dateObject = new Date(row.when);
@@ -60,29 +78,29 @@ VbbFetcher.prototype.processData = function(data) {
             type: row.product.type.type,
             color: row.product.type.color,
             direction: row.direction
-        }
+        };
 
         departuresData.departuresArray.push(current);
-    })
+    });
 
     departuresData.departuresArray.sort(compare);
 
-    return this.getStationName(this.config.stationId).then( (name) => {
+    return this.getStationName(this.config.stationId).then((name) => {
         departuresData.stationName = name;
         return departuresData;
     });
 }
 
-function compare(a,b) {
+function compare(a, b) {
 
     // delay must be converted to milliseconds
     var timeA = a.when.getTime() + a.delay * 1000;
     var timeB = b.when.getTime() + b.delay * 1000;
 
-    if(timeA < timeB) {
+    if (timeA < timeB) {
         return -1;
     }
-    if(timeA > timeB){
+    if (timeA > timeB) {
         return 1
     }
     return 0
