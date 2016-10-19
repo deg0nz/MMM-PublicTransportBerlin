@@ -56,6 +56,7 @@ The module quite configurable. These are the possible options:
 |`delay`|How long does it take you to get from the mirror to the station? The value is given in minutes.<br><br>**Type:** `integer`<br>**Default vaule:** `10 // 10 minutes`|
 |`departureMinutes`|For how many minutes in the future should departures be fetched? If `delay` is set > 0, then this time will be added to `now() + delay`. (This could be obsolete in future versions but is needed for now.)<br><br>**Type:** `integer`<br>**Default vaule:** `10`|
 |`showColoredLineSymbols`|If you want the line coloured and shaped or text only.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
+|`useColorForRealtimeInfo`|Set colors for realtime information<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
 |`showTableHeadersAsSymbols`|Show the table headers as text or symbols.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
 |`maxUnreachableDepartures`|How many unreachable departures should be shown. Only necessary, of you set `delay` > 0<br><br>**Type:** `integer`<br>**Default vaule:** `3`|
 |`maxReachableDepartures`|How many unreachable departures should be shown.<br><br>**Type:** `integer`<br>**Default vaule:** `7`|
@@ -75,6 +76,7 @@ Here is an example of an entry in `config.js`:
     departureMinutes: 10,          
     maxDepartures: 15,              
     showColoredLineSymbols: true,  
+    useColorForRealtimeInfo: true,
     showTableHeadersAsSymbols: true,
     maxUnreachableDepartures: 3,    
     maxReachableDepartures: 7,
