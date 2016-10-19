@@ -84,7 +84,7 @@ Here is an example of an entry in `config.js`:
 
 ## Multiple Modules
 
-Creation of multiple instances of this module are possible. Just add another entry of the MMM-PublicTransportBerlin module to the `config.js` of your mirror.
+Multiple instances of this module are possible. Just add another entry of the MMM-PublicTransportBerlin module to the `config.js` of your mirror.
 
 ## Special Thanks
 
