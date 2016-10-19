@@ -14,10 +14,9 @@ Module.register("MMM-PublicTransportBerlin", {
         showColoredLineSymbols: true,   // Want colored line symbols?
         maxUnreachableDepartures: 3,    // How many unreachable departures should be shown?
         maxReachableDepartures: 7,      // How many reachable departures should be shown?
-        fade: true,
         fadeUnreachableDepartures: true,
         fadeReachableDepartures: true,
-        fadePointForReachableDepartures: 0.25,
+        fadePointForReachableDepartures: 0.5,
         stationId: 9160003
     },
 
@@ -168,7 +167,7 @@ Module.register("MMM-PublicTransportBerlin", {
                     row.appendChild(directionCell);
 
                     // fading for entries before "delay rule"
-                    if (this.config.fade && this.config.fadeUnreachableDepartures && this.config.delay > 0) {
+                    if (this.config.fadeUnreachableDepartures && this.config.delay > 0) {
 
                         var steps = this.config.maxUnreachableDepartures;
 
@@ -180,7 +179,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
                     // fading for entries after "delay rule"
 
-                    if (this.config.fade && this.config.fadeReachableDepartures && this.config.fadePointForReachableDepartures < 1) {
+                    if (this.config.fadeReachableDepartures && this.config.fadePointForReachableDepartures < 1) {
                         if (this.config.fadePointForReachableDepartures < 0) {
                             this.config.fadePointForReachableDepartures = 0;
                         }
