@@ -91,16 +91,10 @@ Module.register("MMM-PublicTransportBerlin", {
 
         table.appendChild(tHead);
 
-
         // create table body from data
         var tBody = document.createElement("tbody");
 
-        var now = moment();
-
-        // Das nach first rechable pos!!
-        var nowWithDelay = now.add(this.config.delay, 'minutes');
-
-        this.getFirstReachableDeparturePositionInArray(now, nowWithDelay).then((reachableDeparturePos) => {
+        this.getFirstReachableDeparturePositionInArray().then((reachableDeparturePos) => {
 
             Log.log("getFirstReachableDeparturePositionInArray: " + reachableDeparturePos);
 
@@ -114,18 +108,13 @@ Module.register("MMM-PublicTransportBerlin", {
                     if (i === reachableDeparturePos) {
 
                         var ruleRow = document.createElement("tr");
+
                         var ruleTimeCell = document.createElement("td");
+                        ruleRow.appendChild(ruleTimeCell);
 
                         var ruleCell = document.createElement("td");
-
-                      //  var rule = document.createElement("hr");
-
-                      //  ruleCell.appendChild(rule);
                         ruleCell.colSpan = 3;
                         ruleCell.className = "ruleCell";
-
-
-                        ruleRow.appendChild(ruleTimeCell);
                         ruleRow.appendChild(ruleCell);
 
                         tBody.appendChild(ruleRow);
@@ -177,8 +166,8 @@ Module.register("MMM-PublicTransportBerlin", {
                         }
                     }
 
+                    // TODO: Look into that again! Not working properly...
                     // fading for entries after "delay rule"
-
                     if (this.config.fadeReachableDepartures && this.config.fadePointForReachableDepartures < 1) {
                         if (this.config.fadePointForReachableDepartures < 0) {
                             this.config.fadePointForReachableDepartures = 0;
@@ -202,19 +191,19 @@ Module.register("MMM-PublicTransportBerlin", {
         wrapper.appendChild(table);
 
         return wrapper;
-
     },
 
-    // noch mal überprüfen!!
-    getFirstReachableDeparturePositionInArray: function (now, nowWithDelay) {
-        return new Promise((resolve, reject) => {
+    getFirstReachableDeparturePositionInArray: function () {
+        let now = moment();
+        let nowWithDelay = now.add(this.config.delay, 'minutes');
+
+        return new Promise((resolve) => {
             this.departuresArray.forEach((current, i, depArray) => {
                 if (i < depArray.length - 1) {
                     var currentWhen = moment(new Date(current.when));
                     var nextWhen = moment(new Date(depArray[i + 1].when));
 
-                    if (!this.firstReachableDepartureFound && currentWhen.isSameOrBefore(nowWithDelay) && nextWhen.isAfter(nowWithDelay)) {
-                        //Log.log("getFirstReachableDeparturePositionInArray: " + i);
+                    if (!this.firstReachableDepartureFound && currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay)) {
                         resolve(i);
                     }
                 }
@@ -235,12 +224,10 @@ Module.register("MMM-PublicTransportBerlin", {
         return symbol;
     },
 
-    // Define required styles.
     getStyles: function () {
         return ['style.css'];
     },
 
-    // Define required scripts.
     getScripts: function () {
         return [
             "moment.js",
