@@ -15,8 +15,8 @@ module.exports = NodeHelper.create({
 
     getStationName: function(stationId) {
         this.getFetcherIndex(stationId).then( (index) => {
-            console.log("index from getStationName: " + index);
             this.departuresFetchers[index].getStationName().then( (response) => {
+
                 this.sendSocketNotification('STATION_NAME', response)
             })
         })
@@ -25,12 +25,9 @@ module.exports = NodeHelper.create({
     getDepartures: function(stationId){
 
         this.getFetcherIndex(stationId).then( (index) => {
-            console.log("index from getDepartures: " + index);
-
             this.departuresFetchers[index].fetchDepartures().then( (departuresData) => {
 
                 this.pimpDeparturesArray(departuresData.departuresArray);
-
                 this.sendSocketNotification('DEPARTURES', departuresData)
             })
         });
@@ -54,7 +51,6 @@ module.exports = NodeHelper.create({
        return new Promise( (resolve,reject) => {
            this.departuresFetchers.findIndex( (element, index) => {
                if (element.getStationId() === stationId) {
-                   console.log("index from getFetcherIndex: " + index);
                    resolve(index);
                }
            })

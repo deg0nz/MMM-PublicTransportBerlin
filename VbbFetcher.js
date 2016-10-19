@@ -26,11 +26,10 @@ VbbFetcher.prototype.fetchDepartures = function() {
     var opt = {
         when: now.setMinutes(now.getMinutes()),
         duration: this.config.departureMinutes,
-        identifier: "Testing - MagicMirror module MMM-PublicTransportBerlin"    // send testing identifier
+       // identifier: "Testing - MagicMirror module MMM-PublicTransportBerlin"    // send testing identifier
     }
 
     return vbbClient.departures(this.config.stationId, opt).then( (response) => {
-        console.log("Response array length: " + response.length);
         return this.processData(response)
     });
 }
@@ -43,24 +42,15 @@ VbbFetcher.prototype.processData = function(data) {
         departuresArray: []
     }
 
-    data.forEach( (row, i) => {
+    data.forEach( (row) => {
 
         let delay = row.delay;
-        var delayMinutes = " ";
 
-        if (delay){
-            delayMinutes = Math.floor((((delay % 31536000) % 86400) % 3600) / 60);
-        } else {
+        if (!delay){
             row.delay = 0
         }
 
-        var time = row.when.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-
         var dateObject = new Date(row.when);
-
-        if (i <= 15) {
-            console.log(time + " " + delayMinutes + " " + row.product.type.unicode + " " + row.direction);
-        }
 
         var current = {
             when: dateObject,
