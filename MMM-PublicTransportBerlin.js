@@ -1,16 +1,14 @@
 "use strict";
 
 Module.register("MMM-PublicTransportBerlin", {
+
     // default values
-    // Nöldi: 9160003
-    // Alex: 9100003
     defaults: {
         name: "MMM-PublicTransportBerlin",
         hidden: false,
         delay: 10,                      // How long do you need to walk to the next Station?
         interval: 120000,               // How often should the table be updated in ms?
         departureMinutes: 30,           // For how many minutes should departures be shown?
-        maxDepartures: 15,              // how many departures should be shown in the widget?
         showColoredLineSymbols: true,   // Want colored line symbols?
         maxUnreachableDepartures: 3,    // How many unreachable departures should be shown?
         maxReachableDepartures: 7,      // How many reachable departures should be shown?
@@ -42,7 +40,6 @@ Module.register("MMM-PublicTransportBerlin", {
         }, this.config.interval)
     },
 
-    // for updating the DOM
     getDom: function () {
 
         this.firstReachableDepartureFound = false;
@@ -119,7 +116,6 @@ Module.register("MMM-PublicTransportBerlin", {
 
                         tBody.appendChild(ruleRow);
                     }
-
 
                     var row = document.createElement("tr");
 
