@@ -7,9 +7,11 @@ It shows live public transport information for Berlin and Brandenburg based on [
 Since it uses VBB data, the whole transport network is covered. So public transport in Brandenburg will work as well. 
 MMM-PublicTransportBerlin uses the [vbb-hafas](https://github.com/derhuerst/vbb-hafas) REST API by [derhuerst](https://github.com/derhuerst).
 
-*Note: Currently, only departures of a station with all kinds of transportation (bus, tram, ferry, suburban, subway). 
-I will add a filter function in the near future.*   
-*Also, the fading for the reachable departures is not yet working properly.*
+*Notes:*
+* *Currently, only departures of a station with all kinds of transportation (bus, tram, ferry, suburban, subway) are possible. 
+I will add a filter function to choose between transportation kinds in the near future.*   
+* *There hasn't been tests with all possible values yet. Some value combinations could lead to strange behaviour.*
+* *Also, the fading for the reachable departures is not yet working properly.*
 
 You can enter a delay time for "How long does it take to get to my station?". 
 Then the module calculates the next reachable departures and draws a line between reachable and unreachable departures.
@@ -47,18 +49,18 @@ The module quite configurable. These are the possible options:
 
 |Option|Description|
 |---|---|
-|`name`|**Optional** The name of the module instance (if you want multiple modules).<br><br>**Type:** `string`<br>|
-|`stationId`|**Required** The ID of the station. How to get the ID for your station is described below.<br><br>**Type:** `integer`|
-|`interval`|How often the module is updated. The value is given in seconds.<br><br>**Type:** `integer`<br>**Default value:** `120000 // 2 minutes`|
-|`hidden`|**Optional** Visibility of the module.<br><br>**Type:** `boolean`<br>**Default vaule:** `false`|
-|`delay`|**Required** How long does it take you to get from the mirror to the station? The value is given in minutes.<br><br>**Type:** `integer`<br>**Default vaule:** `10 // 10 minutes`|
-|`departureMinutes`|**Required** For how many minutes in the future should departures be fetched? If `delay` is set > 0, then this time will be added to `now() + delay`. (This could be obsolete in future versions but is needed for now.)<br><br>**Type:** `integer`<br>**Default vaule:** `10`|
-|`showColoredLineSymbols`|**Optional** If you want the line coloured and shaped or text only.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
-|`maxUnreachableDepartures`|**Required** How many unreachable departures should be shown. Only necessary, of you set `delay` > 0<br><br>**Type:** `integer`<br>**Default vaule:** `3`|
-|`maxReachableDepartures`|**Required** How many unreachable departures should be shown.<br><br>**Type:** `integer`<br>**Default vaule:** `7`|
-|`fadeUnreachableDepartures`|**Optional** Activates/deactivates fading for unreachable departures.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
-|`fadeReachableDepartures`|**Optional** Activates/deactivates fading for reachable departures.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
-|`fadePointForReachableDepartures`|**Optional** Fading point for<br><br>**Type:** `float`<br>**Default vaule:** `0.5` <br>**Possible values:** `0.0 - 1.0`|
+|`name`|The name of the module instance (if you want multiple modules).<br><br>**Type:** `string`<br>|
+|`stationId`|The ID of the station. How to get the ID for your station is described below.<br><br>**Type:** `integer`|
+|`interval`|How often the module is updated. The value is given in seconds.<br><br>**Type:** `integer`<br>**Default value:** `120000 // 2 minutes`<br> This value is **Required** |
+|`hidden`|Visibility of the module.<br><br>**Type:** `boolean`<br>**Default vaule:** `false`|
+|`delay`|How long does it take you to get from the mirror to the station? The value is given in minutes.<br><br>**Type:** `integer`<br>**Default vaule:** `10 // 10 minutes`|
+|`departureMinutes`|For how many minutes in the future should departures be fetched? If `delay` is set > 0, then this time will be added to `now() + delay`. (This could be obsolete in future versions but is needed for now.)<br><br>**Type:** `integer`<br>**Default vaule:** `10`|
+|`showColoredLineSymbols`|If you want the line coloured and shaped or text only.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
+|`maxUnreachableDepartures`|How many unreachable departures should be shown. Only necessary, of you set `delay` > 0<br><br>**Type:** `integer`<br>**Default vaule:** `3`|
+|`maxReachableDepartures`|How many unreachable departures should be shown.<br><br>**Type:** `integer`<br>**Default vaule:** `7`|
+|`fadeUnreachableDepartures`|Activates/deactivates fading for unreachable departures.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
+|`fadeReachableDepartures`|Activates/deactivates fading for reachable departures.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
+|`fadePointForReachableDepartures`|Fading point for<br><br>**Type:** `float`<br>**Default vaule:** `0.5` <br>**Possible values:** `0.0 - 1.0`|
 
 Here is an example of an entry in `config.js`:
 
