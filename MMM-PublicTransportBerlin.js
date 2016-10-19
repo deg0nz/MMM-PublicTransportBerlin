@@ -10,6 +10,7 @@ Module.register("MMM-PublicTransportBerlin", {
         interval: 120000,               // How often should the table be updated in ms?
         departureMinutes: 30,           // For how many minutes should departures be shown?
         showColoredLineSymbols: true,   // Want colored line symbols?
+        useColorForRealtimeInfo: true,  // Want colored real time information (delay, early)?
         maxUnreachableDepartures: 3,    // How many unreachable departures should be shown?
         maxReachableDepartures: 7,      // How many reachable departures should be shown?
         fadeUnreachableDepartures: true,
@@ -131,10 +132,16 @@ Module.register("MMM-PublicTransportBerlin", {
 
                     if (delay > 0) {
                         delayCell.innerHTML = "+" + delay + " ";
-                        delayCell.style.color = "red";
+                        if (this.config.useColorForRealtimeInfo)
+                        {
+                            delayCell.style.color = "red";
+                        }
                     } else if (delay < 0) {
                         delayCell.innerHTML = delay + " ";
-                        delayCell.style.color = "green";
+                        if (this.config.useColorForRealtimeInfo)
+                        {
+                            delayCell.style.color = "green";
+                        }
                     } else if (delay === 0) {
                         delayCell.innerHTML = "";
                     }
@@ -208,14 +215,16 @@ Module.register("MMM-PublicTransportBerlin", {
     },
 
     getLineSymbol: function (product) {
-        if (this.config.showColoredLineSymbols) {
-
-        }
         var symbol = document.createElement('div');
 
         symbol.innerHTML = product.line;
         symbol.className = product.cssClass + " xsmall";
-        symbol.style.backgroundColor = product.color;
+
+        if (this.config.showColoredLineSymbols) {
+            symbol.style.backgroundColor = product.color;
+        } else {
+            symbol.style.backgroundColor = "#333333";
+        }
 
         return symbol;
     },
