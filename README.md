@@ -7,9 +7,7 @@ It shows live public transport information for Berlin and Brandenburg based on [
 Since it uses VBB data, the whole transport network is covered. So public transport in Brandenburg will work as well. 
 MMM-PublicTransportBerlin uses the [vbb-hafas](https://github.com/derhuerst/vbb-hafas) REST API by [derhuerst](https://github.com/derhuerst).
 
-*Notes:*
-* *Currently, only departures of a station with all kinds of transportation (bus, tram, ferry, suburban, subway) are possible. 
-I will add a filter function to choose between transportation kinds in the near future.*   
+*Notes:* 
 * *There hasn't been tests with all possible values yet. Some value combinations could lead to strange behaviour.*
 * *Also, the fading for the reachable departures is not yet working properly.*
 
@@ -41,7 +39,9 @@ This is a cURL example for getting all possible stations with the keyword "alexa
 curl 'https://transport.rest/stations?query=alexanderplatz'
 ```
 
-The answer should contain one or more possible stations with valid station IDs.
+The answer should contain one or more possible stations with valid station IDs. More queries are possible, 
+like searching via coordinates or autocompletion of stations. Please check the [vbb-rest API documentation](https://github.com/derhuerst/vbb-rest/blob/21930eb2442ecdc8888e70d024391be29264f33f/docs/index.md)
+for more options.
 
 ## Configuration
 
@@ -51,8 +51,9 @@ The module quite configurable. These are the possible options:
 |---|---|
 |`name`|The name of the module instance (if you want multiple modules).<br><br>**Type:** `string`<br>|
 |`stationId`|The ID of the station. How to get the ID for your station is described below.<br><br>**Type:** `integer` This value is **Required**.|
-|`ignoredStations`|To allow appearance of multiple transportation methods, `vbb-hafas` returns departures of multiple stations in the area of the main station(including bus and tram stations for example). You can exclude those stations by adding them to this array. Usually, this can be empty.<br><br>**Type:** `integer array` (comma separated `integers` in the array).<br>**Default value:** `empty`|
-|`interval`|How often the module is updated. The value is given in seconds.<br><br>**Type:** `integer`<br>**Default value:** `120000 // 2 minutes`|
+|`ignoredStations`|To allow appearance of multiple transportation methods, `vbb-hafas` returns departures of multiple stations in the area of the main station (including bus and tram stations for example). You can exclude those stations by adding them to this array. Usually, this can be empty.<br><br>**Type:** `integer array` (comma separated `integers` in the array).<br>**Default value:** `<empty>`|
+|`excludedTransportationTypes`|Transportation types to be excluded from appearing on a module instance can be listed here.<br><br>**Type:** `string`, comma-separated list<br>**Default vaule:** `<empty>` <br>**Possible values:** `bus`, `tram`, `suburban`, `subway`, `regional`, `ferry`|
+|`interval`|How often the module is updated. The value is given in milliseconds.<br><br>**Type:** `integer`<br>**Default value:** `120000 // 2 minutes`|
 |`hidden`|Visibility of the module.<br><br>**Type:** `boolean`<br>**Default vaule:** `false`|
 |`delay`|How long does it take you to get from the mirror to the station? The value is given in minutes.<br><br>**Type:** `integer`<br>**Default vaule:** `10 // 10 minutes`|
 |`departureMinutes`|For how many minutes in the future should departures be fetched? If `delay` is set > 0, then this time will be added to `now() + delay`. (This could be obsolete in future versions but is needed for now.)<br><br>**Type:** `integer`<br>**Default vaule:** `10`|
@@ -72,6 +73,8 @@ Here is an example of an entry in `config.js`:
     name: "Alexanderplatz",
     stationId: 9160003,
     hidden: false,
+    ignoredStations: [9100003,2342,1337], 
+    excludedTransportationTypes: 'bus,suburban,subway',   
     delay: 10,
     interval: 120000,
     departureMinutes: 10,          
