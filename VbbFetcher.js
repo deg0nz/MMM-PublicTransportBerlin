@@ -46,37 +46,37 @@ VbbFetcher.prototype.processData = function (data) {
     //console.log("Data for " + data[0].station.name + ". Length of array: " + data.length);
 
     data.forEach((row, i) => {
+        if (this.config.ignoredStations.length === 0 || !isStationIgnored(row.station.id, this.config.ignoredStations)) {
 
+            let delay = row.delay;
 
-        let delay = row.delay;
+            if (!delay) {
+                row.delay = 0
+            }
 
-        if (!delay) {
-            row.delay = 0
+            // leave this here for debugging reasons (for now)...
+
+            var delayMinutes = Math.floor((((delay % 31536000) % 86400) % 3600) / 60);
+
+            var time = row.when.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+
+            if (i <= 20) {
+                console.log(time + " " + delayMinutes + " " + row.product.type.unicode + " " + row.direction + " | stationId: " + row.station.id);
+            }
+
+            var dateObject = new Date(row.when);
+
+            var current = {
+                when: dateObject,
+                delay: row.delay,
+                line: row.product.line,
+                nr: row.product.nr,
+                type: row.product.type.type,
+                color: row.product.type.color,
+                direction: row.direction
+            };
+            departuresData.departuresArray.push(current);
         }
-
-        // leave this here for debugging reasons (for now)...
-
-        var delayMinutes = Math.floor((((delay % 31536000) % 86400) % 3600) / 60);
-
-        var time = row.when.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
-
-        if (i <= 20) {
-            console.log(time + " " + delayMinutes + " " + row.product.type.unicode + " " + row.direction + " | stationId: " + row.station.id);
-        }
-
-        var dateObject = new Date(row.when);
-
-        var current = {
-            when: dateObject,
-            delay: row.delay,
-            line: row.product.line,
-            nr: row.product.nr,
-            type: row.product.type.type,
-            color: row.product.type.color,
-            direction: row.direction
-        };
-        departuresData.departuresArray.push(current);
-
     });
 
     departuresData.departuresArray.sort(compare);
@@ -85,6 +85,13 @@ VbbFetcher.prototype.processData = function (data) {
         departuresData.stationName = name;
         return departuresData;
     });
+}
+
+function isStationIgnored(stationId, ignoredStations) {
+    var stationIndexInArray = ignoredStations.findIndex((currentId) => {
+        return currentId === stationId;
+    });
+    return stationIndexInArray != -1;
 }
 
 function compare(a, b) {

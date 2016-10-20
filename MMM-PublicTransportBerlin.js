@@ -7,6 +7,7 @@ Module.register("MMM-PublicTransportBerlin", {
         name: "MMM-PublicTransportBerlin",
         hidden: false,
         stationId: 9160003,
+        ignoredStations: [],             // Which stations should be ignored? (comma-separated list of station IDs)
         delay: 10,                      // How long do you need to walk to the next Station?
         interval: 120000,               // How often should the table be updated in ms?
         departureMinutes: 30,           // For how many minutes should departures be shown?
