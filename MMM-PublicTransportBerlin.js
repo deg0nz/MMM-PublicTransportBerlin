@@ -50,7 +50,7 @@ Module.register("MMM-PublicTransportBerlin", {
         var wrapper = document.createElement("div");
         wrapper.className = "ptbWrapper";
 
-        if (this.departuresArray.length === 0) {
+        if (this.departuresArray.length === 0 && !this.config.loaded) {
             wrapper.innerHTML = (this.loaded) ? this.translate("EMPTY") : this.translate("LOADING");
             wrapper.className = "small light dimmed";
             return wrapper;
@@ -177,8 +177,6 @@ Module.register("MMM-PublicTransportBerlin", {
             });
         }, // Handle table for delay === 0 here
             () => {
-
-            Log.log("promise rejected..")
             this.departuresArray.forEach((current, i) => {
                 if (i < this.config.maxReachableDepartures) {
                     var row = this.getRow(current);
@@ -290,8 +288,8 @@ Module.register("MMM-PublicTransportBerlin", {
     },
 
     socketNotificationReceived: function (notification, payload) {
-
         if (notification === 'DEPARTURES') {
+            this.config.loaded = true;
             if (payload.stationId === this.config.stationId) {
                 this.stationName = payload.stationName;
                 this.departuresArray = payload.departuresArray;

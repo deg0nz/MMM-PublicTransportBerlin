@@ -46,7 +46,8 @@ VbbFetcher.prototype.processData = function (data) {
     //console.log("Data for " + data[0].station.name + ". Length of array: " + data.length);
 
     data.forEach((row, i) => {
-        if (this.config.ignoredStations.length === 0 || !isStationIgnored(row.station.id, this.config.ignoredStations)) {
+        if (!this.config.ignoredStations.includes(row.station.id)
+            && !this.config.excludedTransportationTypes.includes(row.product.type.type)) {
 
             let delay = row.delay;
 
@@ -85,13 +86,6 @@ VbbFetcher.prototype.processData = function (data) {
         departuresData.stationName = name;
         return departuresData;
     });
-}
-
-function isStationIgnored(stationId, ignoredStations) {
-    var stationIndexInArray = ignoredStations.findIndex((currentId) => {
-        return currentId === stationId;
-    });
-    return stationIndexInArray != -1;
 }
 
 function compare(a, b) {
