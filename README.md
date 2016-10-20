@@ -51,7 +51,8 @@ The module quite configurable. These are the possible options:
 |---|---|
 |`name`|The name of the module instance (if you want multiple modules).<br><br>**Type:** `string`<br>|
 |`stationId`|The ID of the station. How to get the ID for your station is described below.<br><br>**Type:** `integer` This value is **Required**.|
-|`interval`|How often the module is updated. The value is given in seconds.<br><br>**Type:** `integer`<br>**Default value:** `120000 // 2 minutes`<br>|
+|`ignoredStations`|To allow appearance of multiple transportation methods, `vbb-hafas` returns departures of multiple stations in the area of the main station(including bus and tram stations for example). You can exclude those stations by adding them to this array. Usually, this can be empty.<br><br>**Type:** `integer array` (comma separated `integers` in the array).<br>**Default value:** `empty`|
+|`interval`|How often the module is updated. The value is given in seconds.<br><br>**Type:** `integer`<br>**Default value:** `120000 // 2 minutes`|
 |`hidden`|Visibility of the module.<br><br>**Type:** `boolean`<br>**Default vaule:** `false`|
 |`delay`|How long does it take you to get from the mirror to the station? The value is given in minutes.<br><br>**Type:** `integer`<br>**Default vaule:** `10 // 10 minutes`|
 |`departureMinutes`|For how many minutes in the future should departures be fetched? If `delay` is set > 0, then this time will be added to `now() + delay`. (This could be obsolete in future versions but is needed for now.)<br><br>**Type:** `integer`<br>**Default vaule:** `10`|
