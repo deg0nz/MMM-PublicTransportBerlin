@@ -22,17 +22,12 @@ VbbFetcher.prototype.getStationName = function () {
 
 
 VbbFetcher.prototype.fetchDepartures = function () {
-    var now = new Date();
-    var when = now.setMinutes(now.getMinutes() + (this.config.delay - 10));
 
     var opt = {
-        when: now,
+        when: "now",
         duration: this.config.departureMinutes,
         // identifier: "Testing - MagicMirror module MMM-PublicTransportBerlin"    // send testing identifier
-    }
-
-    var foo = when.toString();
-    console.log("When fetch deps: " + foo);
+    };
 
     return vbbClient.departures(this.config.stationId, opt).then((response) => {
         return this.processData(response)
@@ -47,10 +42,11 @@ VbbFetcher.prototype.processData = function (data) {
         departuresArray: []
     }
 
-    console.log("------------------------------")
-    console.log("Data for " + data[0].station.name + ". Length of array: " + data.length);
+    //console.log("------------------------------");
+    //console.log("Data for " + data[0].station.name + ". Length of array: " + data.length);
 
     data.forEach((row, i) => {
+
 
         let delay = row.delay;
 
@@ -65,7 +61,7 @@ VbbFetcher.prototype.processData = function (data) {
         var time = row.when.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
 
         if (i <= 20) {
-            console.log(time + " " + delayMinutes + " " + row.product.type.unicode + " " + row.direction);
+            console.log(time + " " + delayMinutes + " " + row.product.type.unicode + " " + row.direction + " | stationId: " + row.station.id);
         }
 
         var dateObject = new Date(row.when);
@@ -79,8 +75,8 @@ VbbFetcher.prototype.processData = function (data) {
             color: row.product.type.color,
             direction: row.direction
         };
-
         departuresData.departuresArray.push(current);
+
     });
 
     departuresData.departuresArray.sort(compare);
