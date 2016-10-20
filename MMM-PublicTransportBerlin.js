@@ -178,9 +178,13 @@ Module.register("MMM-PublicTransportBerlin", {
 
             Log.log("promise rejected..")
             this.departuresArray.forEach((current) => {
-                var row = this.getRow(current);
 
-                tBody.appendChild(row);
+                if (i < this.config.maxReachableDepartures) {
+                    var row = this.getRow(current);
+
+                    tBody.appendChild(row);
+                }
+
             })
         });
 
