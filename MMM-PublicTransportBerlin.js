@@ -74,7 +74,7 @@ Module.register("MMM-PublicTransportBerlin", {
         if (this.config.showTableHeadersAsSymbols) {
             headerTime.className = "centeredTd";
             var timeIcon = document.createElement("span");
-            timeIcon.className = "fa fa-clock-o centered";
+            timeIcon.className = "fa fa-clock-o";
             headerTime.appendChild(timeIcon);
         } else {
             headerTime.innerHTML = "Abfahrt";
@@ -96,7 +96,7 @@ Module.register("MMM-PublicTransportBerlin", {
             lineIcon.className = "fa fa-tag";
             headerLine.appendChild(lineIcon);
         } else {
-            headerLine.innerHTML = "&nbsp";
+            headerLine.innerHTML = "Linie";
         }
 
         headerRow.appendChild(headerLine);
@@ -174,7 +174,8 @@ Module.register("MMM-PublicTransportBerlin", {
                     tBody.appendChild(row);
                 }
             });
-        }, () => {
+        }, // Handle table for delay === 0 here
+            () => {
 
             Log.log("promise rejected..")
             this.departuresArray.forEach((current, i) => {
@@ -227,6 +228,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
         var lineCell = document.createElement("td");
         var lineSymbol = this.getLineSymbol(current);
+        lineCell.className = "centeredTd noPadding";
 
         lineCell.appendChild(lineSymbol);
         row.appendChild(lineCell);

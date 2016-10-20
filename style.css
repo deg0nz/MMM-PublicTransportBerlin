@@ -1,13 +1,12 @@
 .ptbWrapper {
-	width: 370px;
-	height: 300px;
-	position: relative;
+    width: 370px;
+    height: 300px;
+    position: relative;
 }
 
 .ptbTable {
-	display: table;
-    border: medium;
-    border-collapse: separate;
+    display: table;
+    border-collapse: collapse;
     border-spacing: 1px;
 }
 
@@ -23,47 +22,52 @@
     vertical-align: middle;
 }
 
+.noPadding {
+    padding: 0px;
+}
+
 .delayTime {
     font-size: 16px;
-    padding-left: 0px;
-    padding-right: 10px;
+    padding-left: 2px;
+    padding-right: 0px;
+    text-align: left;
 }
 
 .ellipsis {
-	position: absolute;
-	background-color: #F414A0;
-	width: 300px;
-	height: 100px;
-	border: 2px;
-	border-radius: 150px;
+    position: absolute;
+    background-color: #F414A0;
+    width: 300px;
+    height: 100px;
+    border: 2px;
+    border-radius: 150px;
 }
 
 .sbahnsign {
-   color: #FFFFFF;
-   text-align: center;
-   width: 2.5em;
-   height: 1.25em;
-   position: relative;
-   -moz-border-radius:    1.25em;
-   -webkit-border-radius: 1.25em;
-   border-radius:         1.25em;
+    color: #FFFFFF;
+    text-align: center;
+    width: 2.5em;
+    height: 1.25em;
+    position: relative;
+    -moz-border-radius: 1.25em;
+    -webkit-border-radius: 1.25em;
+    border-radius: 1.25em;
 }
 
 .ubahnsign {
-   color: #FFFFFF;
-   text-align: center;
-   width: 2.5em;
-   height: 1.25em;
-   position: relative;
+    color: #FFFFFF;
+    text-align: center;
+    width: 2.5em;
+    height: 1.25em;
+    position: relative;
 }
 
 .tramsign {
-   color: #FFFFFF;
-   text-align: center;
-   width: 2.5em;
-   height: 1.25em;
-   background: #BE1414;
-   position: relative;
+    color: #FFFFFF;
+    text-align: center;
+    width: 2.5em;
+    height: 1.25em;
+    background: #BE1414;
+    position: relative;
 }
 
 .bussign {
