@@ -39,9 +39,9 @@ module.exports = NodeHelper.create({
         departuresArray.forEach( (current) => {
             currentProperties = this.getLineProperties(current);
 
-            if (!this.config.marqueeLongDirections) {
-                current.direction = this.trimDirectionString(current.direction);
-            }
+            //if (!this.config.marqueeLongDirections) {
+            //    current.direction = this.trimDirectionString(current.direction);
+            //}
             current.color = currentProperties.color;
             current.cssClass = currentProperties.cssClass;
         })
@@ -57,22 +57,6 @@ module.exports = NodeHelper.create({
                }
            })
        });
-    },
-
-    trimDirectionString: function (string) {
-
-        var dirString = string;
-
-        if(dirString.indexOf(',') > -1){
-            dirString = dirString.split(',')[0]
-        }
-
-        var viaIndex = dirString.search(/( via )/g);
-        if(viaIndex > -1){
-            dirString = dirString.split(/( via )/g)[0]
-        }
-
-        return dirString
     },
 
     getLineProperties: function(product) {

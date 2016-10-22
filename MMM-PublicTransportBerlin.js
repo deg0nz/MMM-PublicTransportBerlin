@@ -237,14 +237,13 @@ Module.register("MMM-PublicTransportBerlin", {
         var directionCell = document.createElement("td");
         directionCell.className = "directionCell";
 
-        Log.log("direction length: " + current.direction.length + " string: " + current.direction);
-        if (current.direction.length >= 26 && this.config.marqueeLongDirections) {
+        if (this.config.marqueeLongDirections && current.direction.length >= 26) {
             directionCell.className = "directionCell marquee";
             var directionSpan = document.createElement("span");
             directionSpan.innerHTML = current.direction;
             directionCell.appendChild(directionSpan);
         } else {
-            directionCell.innerHTML = current.direction;
+            directionCell.innerHTML = this.trimDirectionString(current.direction);
         }
 
         row.appendChild(directionCell);
@@ -272,6 +271,22 @@ Module.register("MMM-PublicTransportBerlin", {
                 }
             })
         });
+    },
+
+    trimDirectionString: function (string) {
+
+        var dirString = string;
+
+        if(dirString.indexOf(',') > -1){
+            dirString = dirString.split(',')[0]
+        }
+
+        var viaIndex = dirString.search(/( via )/g);
+        if(viaIndex > -1){
+            dirString = dirString.split(/( via )/g)[0]
+        }
+
+        return dirString
     },
 
     getLineSymbol: function (product) {
