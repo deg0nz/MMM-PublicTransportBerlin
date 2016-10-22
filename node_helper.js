@@ -39,7 +39,9 @@ module.exports = NodeHelper.create({
         departuresArray.forEach( (current) => {
             currentProperties = this.getLineProperties(current);
 
-            current.direction = this.trimDirectionString(current.direction);
+            if (!this.config.marqueeLongDirections) {
+                current.direction = this.trimDirectionString(current.direction);
+            }
             current.color = currentProperties.color;
             current.cssClass = currentProperties.cssClass;
         })

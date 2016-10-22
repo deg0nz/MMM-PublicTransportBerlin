@@ -9,6 +9,7 @@ Module.register("MMM-PublicTransportBerlin", {
         stationId: 9160003,
         ignoredStations: [],                // Which stations should be ignored? (comma-separated list of station IDs)
         excludedTransportationTypes: '',    // Which transportation types should not be shown on the mirror? (comma-separated list of types) possible values: bus,tram,suburban,subway,ferry
+        marqueeLongDirections: true,
         delay: 10,                          // How long do you need to walk to the next Station?
         interval: 120000,                   // How often should the table be updated in ms?
         departureMinutes: 30,               // For how many minutes should departures be shown?
@@ -126,66 +127,66 @@ Module.register("MMM-PublicTransportBerlin", {
 
         this.getFirstReachableDeparturePositionInArray().then((reachableDeparturePos) => {
 
-            this.departuresArray.forEach((current, i) => {
+                this.departuresArray.forEach((current, i) => {
 
-                if (i >= reachableDeparturePos - this.config.maxUnreachableDepartures
-                    && i < reachableDeparturePos + this.config.maxReachableDepartures) {
+                    if (i >= reachableDeparturePos - this.config.maxUnreachableDepartures
+                        && i < reachableDeparturePos + this.config.maxReachableDepartures) {
 
-                    if (i === reachableDeparturePos && this.config.delay > 0 && reachableDeparturePos != 0) {
+                        if (i === reachableDeparturePos && this.config.delay > 0 && reachableDeparturePos != 0) {
 
-                        var ruleRow = document.createElement("tr");
+                            var ruleRow = document.createElement("tr");
 
-                        var ruleTimeCell = document.createElement("td");
-                        ruleRow.appendChild(ruleTimeCell);
+                            var ruleTimeCell = document.createElement("td");
+                            ruleRow.appendChild(ruleTimeCell);
 
-                        var ruleCell = document.createElement("td");
-                        ruleCell.colSpan = 3;
-                        ruleCell.className = "ruleCell";
-                        ruleRow.appendChild(ruleCell);
+                            var ruleCell = document.createElement("td");
+                            ruleCell.colSpan = 3;
+                            ruleCell.className = "ruleCell";
+                            ruleRow.appendChild(ruleCell);
 
-                        tBody.appendChild(ruleRow);
-                    }
-
-                    var row = this.getRow(current);
-
-                    // fading for entries before "delay rule"
-                    if (this.config.fadeUnreachableDepartures && this.config.delay > 0) {
-
-                        var steps = this.config.maxUnreachableDepartures;
-
-                        if (i >= reachableDeparturePos - steps && i < reachableDeparturePos) {
-                            var currentStep = reachableDeparturePos - i;
-                            row.style.opacity = 1 - ((1 / steps * currentStep) - 0.2);
+                            tBody.appendChild(ruleRow);
                         }
-                    }
 
-                    // TODO: Look into that again! Not working properly...
-                    // fading for entries after "delay rule"
-                    if (this.config.fadeReachableDepartures && this.config.fadePointForReachableDepartures < 1) {
-                        if (this.config.fadePointForReachableDepartures < 0) {
-                            this.config.fadePointForReachableDepartures = 0;
-                        }
-                        var startingPoint = this.config.maxReachableDepartures * this.config.fadePointForReachableDepartures;
-                        var steps = (reachableDeparturePos + this.config.maxReachableDepartures) - startingPoint;
-                        if (i >= reachableDeparturePos + startingPoint) {
-                            var currentStep = (i - reachableDeparturePos) - startingPoint;
-                            row.style.opacity = 1 - (1 / steps * currentStep);
-                        }
-                    }
+                        var row = this.getRow(current);
 
-                    tBody.appendChild(row);
-                }
-            });
-        }, // Handle table for delay === 0 here
+                        // fading for entries before "delay rule"
+                        if (this.config.fadeUnreachableDepartures && this.config.delay > 0) {
+
+                            var steps = this.config.maxUnreachableDepartures;
+
+                            if (i >= reachableDeparturePos - steps && i < reachableDeparturePos) {
+                                var currentStep = reachableDeparturePos - i;
+                                row.style.opacity = 1 - ((1 / steps * currentStep) - 0.2);
+                            }
+                        }
+
+                        // TODO: Look into that again! Not working properly...
+                        // fading for entries after "delay rule"
+                        if (this.config.fadeReachableDepartures && this.config.fadePointForReachableDepartures < 1) {
+                            if (this.config.fadePointForReachableDepartures < 0) {
+                                this.config.fadePointForReachableDepartures = 0;
+                            }
+                            var startingPoint = this.config.maxReachableDepartures * this.config.fadePointForReachableDepartures;
+                            var steps = (reachableDeparturePos + this.config.maxReachableDepartures) - startingPoint;
+                            if (i >= reachableDeparturePos + startingPoint) {
+                                var currentStep = (i - reachableDeparturePos) - startingPoint;
+                                row.style.opacity = 1 - (1 / steps * currentStep);
+                            }
+                        }
+
+                        tBody.appendChild(row);
+                    }
+                });
+            }, // Handle table for delay === 0 here
             () => {
-            this.departuresArray.forEach((current, i) => {
-                if (i < this.config.maxReachableDepartures) {
-                    var row = this.getRow(current);
+                this.departuresArray.forEach((current, i) => {
+                    if (i < this.config.maxReachableDepartures) {
+                        var row = this.getRow(current);
 
-                    tBody.appendChild(row);
-                }
-            })
-        });
+                        tBody.appendChild(row);
+                    }
+                })
+            });
 
         table.appendChild(tBody);
 
@@ -201,12 +202,12 @@ Module.register("MMM-PublicTransportBerlin", {
         var row = document.createElement("tr");
 
         var timeCell = document.createElement("td");
-        timeCell.className = "centeredTd";
+        timeCell.className = "centeredTd timeCell";
         timeCell.innerHTML = currentWhen.format("HH:mm");
         row.appendChild(timeCell);
 
         var delayCell = document.createElement("td");
-        delayCell.className = "delayTime";
+        delayCell.className = "delayTimeCell";
 
         var delay = Math.floor((((current.delay % 31536000) % 86400) % 3600) / 60);
 
@@ -228,13 +229,24 @@ Module.register("MMM-PublicTransportBerlin", {
 
         var lineCell = document.createElement("td");
         var lineSymbol = this.getLineSymbol(current);
-        lineCell.className = "centeredTd noPadding";
+        lineCell.className = "centeredTd noPadding lineCell";
 
         lineCell.appendChild(lineSymbol);
         row.appendChild(lineCell);
 
         var directionCell = document.createElement("td");
-        directionCell.innerHTML = current.direction;
+        directionCell.className = "directionCell";
+
+        Log.log("direction length: " + current.direction.length + " string: " + current.direction);
+        if (current.direction.length >= 26 && this.config.marqueeLongDirections) {
+            directionCell.className = "directionCell marquee";
+            var directionSpan = document.createElement("span");
+            directionSpan.innerHTML = current.direction;
+            directionCell.appendChild(directionSpan);
+        } else {
+            directionCell.innerHTML = current.direction;
+        }
+
         row.appendChild(directionCell);
 
         return row;
