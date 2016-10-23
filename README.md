@@ -71,24 +71,28 @@ Here is an example of an entry in `config.js`:
 
 ``` JavaScript
 {
-    name: "Alexanderplatz",
-    stationId: 9160003,
-    hidden: false,
-    ignoredStations: [9100003,2342,1337], 
-    excludedTransportationTypes: 'bus,suburban,subway',   
-    delay: 10,
-    interval: 120000,
-    departureMinutes: 10,          
-    maxDepartures: 15,              
-    showColoredLineSymbols: true,  
-    useColorForRealtimeInfo: true,
-    showTableHeadersAsSymbols: true,
-    maxUnreachableDepartures: 3,    
-    maxReachableDepartures: 7,
-    fadeUnreachableDepartures: true,
-    fadeReachableDepartures: true,
-    fadePointForReachableDepartures: 0.25
-}
+    module: 'MMM-PublicTransportBerlin',
+    position: 'top_right',
+    config: {
+        name: "Alexanderplatz",
+        stationId: 9160003,
+        hidden: false,
+        ignoredStations: [9100003,2342,1337], 
+        excludedTransportationTypes: 'bus,suburban,subway',   
+        delay: 10,
+        interval: 120000,
+        departureMinutes: 10,          
+        maxDepartures: 15,              
+        showColoredLineSymbols: true,  
+        useColorForRealtimeInfo: true,
+        showTableHeadersAsSymbols: true,
+        maxUnreachableDepartures: 3,    
+        maxReachableDepartures: 7,
+        fadeUnreachableDepartures: true,
+        fadeReachableDepartures: true,
+        fadePointForReachableDepartures: 0.25
+    }
+},
 ```
 
 ## Multiple Modules
