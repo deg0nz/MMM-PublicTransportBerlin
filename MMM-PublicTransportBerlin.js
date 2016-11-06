@@ -20,7 +20,7 @@ Module.register("MMM-PublicTransportBerlin", {
         maxReachableDepartures: 7,          // How many reachable departures should be shown?
         fadeUnreachableDepartures: true,
         fadeReachableDepartures: true,
-        fadePointForReachableDepartures: 0.5
+        fadePointForReachableDepartures: 0.25
     },
 
     start: function () {
@@ -167,7 +167,7 @@ Module.register("MMM-PublicTransportBerlin", {
                                 this.config.fadePointForReachableDepartures = 0;
                             }
                             var startingPoint = this.config.maxReachableDepartures * this.config.fadePointForReachableDepartures;
-                            var steps = (reachableDeparturePos + this.config.maxReachableDepartures) - startingPoint;
+                            var steps = this.config.maxReachableDepartures - startingPoint;
                             if (i >= reachableDeparturePos + startingPoint) {
                                 var currentStep = (i - reachableDeparturePos) - startingPoint;
                                 row.style.opacity = 1 - (1 / steps * currentStep);
@@ -275,7 +275,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
     trimDirectionString: function (string) {
 
-        var dirString = string;
+        let dirString = string;
 
         if(dirString.indexOf(',') > -1){
             dirString = dirString.split(',')[0]
