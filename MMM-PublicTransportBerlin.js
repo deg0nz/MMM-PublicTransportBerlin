@@ -29,7 +29,6 @@ Module.register("MMM-PublicTransportBerlin", {
         this.departuresArray = [];
         this.stationName = "";
         this.loaded = false;
-        this.firstReachableDepartureFound = false;
 
         this.sendSocketNotification('CREATE_FETCHER', this.config);
 
@@ -46,8 +45,6 @@ Module.register("MMM-PublicTransportBerlin", {
     },
 
     getDom: function () {
-
-        this.firstReachableDepartureFound = false;
 
         var wrapper = document.createElement("div");
         wrapper.className = "ptbWrapper";
@@ -147,7 +144,7 @@ Module.register("MMM-PublicTransportBerlin", {
                             tBody.appendChild(ruleRow);
                         }
 
-                        var row = this.getRow(current);
+                        let row = this.getRow(current);
 
                         // fading for entries before "delay rule"
                         if (this.config.fadeUnreachableDepartures && this.config.delay > 0) {
@@ -177,15 +174,16 @@ Module.register("MMM-PublicTransportBerlin", {
                         tBody.appendChild(row);
                     }
                 });
-            }, // Handle table for delay === 0 here
+            }, // Handle no reachable departures found
             () => {
-                this.departuresArray.forEach((current, i) => {
-                    if (i < this.config.maxReachableDepartures) {
-                        var row = this.getRow(current);
+                let row = document.createElement("tr");
+                let cell = document.createElement("td");
+                cell.colSpan = 4;
 
-                        tBody.appendChild(row);
-                    }
-                })
+                cell.innerHTML = "No reachable departures found.";
+
+                row.appendChild(cell);
+                tBody.appendChild(row);
             });
 
         table.appendChild(tBody);
@@ -257,17 +255,20 @@ Module.register("MMM-PublicTransportBerlin", {
 
         return new Promise((resolve, reject) => {
             this.departuresArray.forEach((current, i, depArray) => {
-                if (i < depArray.length - 1 && this.config.delay != 0) {
+                if (i <= depArray.length - 1 && this.config.delay != 0) {
                     var currentWhen = moment(new Date(current.when));
                     var nextWhen = moment(new Date(depArray[i + 1].when));
 
-                    if (!this.firstReachableDepartureFound && currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay)) {
+                    if ((currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay))
+                        || (i === 0 && nextWhen.isSameOrAfter(nowWithDelay))) {
 
-                        console.log("--> Reachable departure for " + this.stationName + ": " + i);
+                        //console.log("--> Reachable departure for " + this.stationName + ": " + i);
                         resolve(i);
+                    } else if (i === depArray.length - 1 && currentWhen.isBefore(nowWithDelay)) {
+                        reject();
                     }
-                } else if (i === depArray.length - 1) {
-                    reject();
+                } else if (this.config.delay === 0) {
+                    resolve(0);
                 }
             })
         });
@@ -277,12 +278,12 @@ Module.register("MMM-PublicTransportBerlin", {
 
         let dirString = string;
 
-        if(dirString.indexOf(',') > -1){
+        if (dirString.indexOf(',') > -1) {
             dirString = dirString.split(',')[0]
         }
 
         var viaIndex = dirString.search(/( via )/g);
-        if(viaIndex > -1){
+        if (viaIndex > -1) {
             dirString = dirString.split(/( via )/g)[0]
         }
 
