@@ -1,5 +1,5 @@
 "use strict";
-var NodeHelper = require('node_helper');
+const NodeHelper = require('node_helper');
 const VbbFetcher = require('./VbbFetcher');
 const Promise = require('./vendor/bluebird-3.4.5.min');
 
@@ -34,7 +34,7 @@ module.exports = NodeHelper.create({
     },
 
     pimpDeparturesArray: function (departuresArray) {
-        var currentProperties = {};
+        let currentProperties = {};
 
         departuresArray.forEach( (current) => {
             currentProperties = this.getLineProperties(current);
@@ -44,7 +44,7 @@ module.exports = NodeHelper.create({
             //}
             current.color = currentProperties.color;
             current.cssClass = currentProperties.cssClass;
-        })
+        });
 
         return departuresArray;
     },
@@ -61,13 +61,13 @@ module.exports = NodeHelper.create({
 
     getLineProperties: function(product) {
 
-        var out = {
+        let out = {
             color: "#000000",
             cssClass: ""
         }
 
-        var type = product.type;
-        var line = product.nr;
+        let type = product.type;
+        let line = product.nr;
 
         switch (type) {
             case "suburban":
@@ -96,7 +96,7 @@ module.exports = NodeHelper.create({
     },
 
     getSuburbanLineColor: function(lineNumber) {
-        var color;
+        let color;
 
         switch (lineNumber) {
 
@@ -147,7 +147,7 @@ module.exports = NodeHelper.create({
     },
 
     getSubwayLineColor: function (lineNumber) {
-        var color;
+        let color;
 
         switch (lineNumber) {
             case 1:

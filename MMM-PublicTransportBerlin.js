@@ -46,7 +46,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
     getDom: function () {
 
-        var wrapper = document.createElement("div");
+        let wrapper = document.createElement("div");
         wrapper.className = "ptbWrapper";
 
         if (this.departuresArray.length === 0 && !this.config.loaded) {
@@ -55,21 +55,21 @@ Module.register("MMM-PublicTransportBerlin", {
             return wrapper;
         }
 
-        var heading = document.createElement("header");
+        let heading = document.createElement("header");
         heading.innerHTML = this.stationName;
         wrapper.appendChild(heading);
 
 
         // Table header
-        var table = document.createElement("table");
+        let table = document.createElement("table");
         table.className = "ptbTable small light";
 
-        var tHead = document.createElement("thead");
+        let tHead = document.createElement("thead");
 
-        var headerRow = document.createElement("tr");
+        let headerRow = document.createElement("tr");
 
         // Cell for departure time
-        var headerTime = document.createElement("td");
+        let headerTime = document.createElement("td");
 
         if (this.config.showTableHeadersAsSymbols) {
             headerTime.className = "centeredTd";
@@ -83,12 +83,12 @@ Module.register("MMM-PublicTransportBerlin", {
         headerRow.appendChild(headerTime);
 
         // Cell for delay time
-        var delayTime = document.createElement("td");
+        let delayTime = document.createElement("td");
         delayTime.innerHTML = "&nbsp;";
         headerRow.appendChild(delayTime);
 
         // Cell for line symbol
-        var headerLine = document.createElement("td");
+        let headerLine = document.createElement("td");
 
         if (this.config.showTableHeadersAsSymbols) {
             headerLine.className = "centeredTd";
@@ -102,7 +102,7 @@ Module.register("MMM-PublicTransportBerlin", {
         headerRow.appendChild(headerLine);
 
         // Cell for direction
-        var headerDirection = document.createElement("td");
+        let headerDirection = document.createElement("td");
         if (this.config.showTableHeadersAsSymbols) {
             headerDirection.className = "centeredTd";
             var directionIcon = document.createElement("span");
@@ -120,59 +120,58 @@ Module.register("MMM-PublicTransportBerlin", {
         table.appendChild(tHead);
 
         // Create table body from data
-        var tBody = document.createElement("tbody");
+        let tBody = document.createElement("tbody");
 
         this.getFirstReachableDeparturePositionInArray().then((reachableDeparturePos) => {
 
-                this.departuresArray.forEach((current, i) => {
+            this.departuresArray.forEach((current, i) => {
 
-                    if (i >= reachableDeparturePos - this.config.maxUnreachableDepartures
-                        && i < reachableDeparturePos + this.config.maxReachableDepartures) {
+                if (i >= reachableDeparturePos - this.config.maxUnreachableDepartures
+                    && i < reachableDeparturePos + this.config.maxReachableDepartures) {
 
-                        if (i === reachableDeparturePos && this.config.delay > 0 && reachableDeparturePos != 0) {
+                    if (i === reachableDeparturePos && this.config.delay > 0 && reachableDeparturePos != 0) {
 
-                            var ruleRow = document.createElement("tr");
+                        let ruleRow = document.createElement("tr");
 
-                            var ruleTimeCell = document.createElement("td");
-                            ruleRow.appendChild(ruleTimeCell);
+                        let ruleTimeCell = document.createElement("td");
+                        ruleRow.appendChild(ruleTimeCell);
 
-                            var ruleCell = document.createElement("td");
-                            ruleCell.colSpan = 3;
-                            ruleCell.className = "ruleCell";
-                            ruleRow.appendChild(ruleCell);
+                        let ruleCell = document.createElement("td");
+                        ruleCell.colSpan = 3;
+                        ruleCell.className = "ruleCell";
+                        ruleRow.appendChild(ruleCell);
 
-                            tBody.appendChild(ruleRow);
-                        }
-
-                        let row = this.getRow(current);
-
-                        // fading for entries before "delay rule"
-                        if (this.config.fadeUnreachableDepartures && this.config.delay > 0) {
-
-                            var steps = this.config.maxUnreachableDepartures;
-
-                            if (i >= reachableDeparturePos - steps && i < reachableDeparturePos) {
-                                var currentStep = reachableDeparturePos - i;
-                                row.style.opacity = 1 - ((1 / steps * currentStep) - 0.2);
-                            }
-                        }
-
-                        // TODO: Look into that again! Not working properly...
-                        // fading for entries after "delay rule"
-                        if (this.config.fadeReachableDepartures && this.config.fadePointForReachableDepartures < 1) {
-                            if (this.config.fadePointForReachableDepartures < 0) {
-                                this.config.fadePointForReachableDepartures = 0;
-                            }
-                            var startingPoint = this.config.maxReachableDepartures * this.config.fadePointForReachableDepartures;
-                            var steps = this.config.maxReachableDepartures - startingPoint;
-                            if (i >= reachableDeparturePos + startingPoint) {
-                                var currentStep = (i - reachableDeparturePos) - startingPoint;
-                                row.style.opacity = 1 - (1 / steps * currentStep);
-                            }
-                        }
-
-                        tBody.appendChild(row);
+                        tBody.appendChild(ruleRow);
                     }
+
+                    let row = this.getRow(current);
+
+                    // fading for entries before "delay rule"
+                    if (this.config.fadeUnreachableDepartures && this.config.delay > 0) {
+
+                        let steps = this.config.maxUnreachableDepartures;
+
+                        if (i >= reachableDeparturePos - steps && i < reachableDeparturePos) {
+                            var currentStep = reachableDeparturePos - i;
+                            row.style.opacity = 1 - ((1 / steps * currentStep) - 0.2);
+                        }
+                    }
+
+                    // fading for entries after "delay rule"
+                    if (this.config.fadeReachableDepartures && this.config.fadePointForReachableDepartures < 1) {
+                        if (this.config.fadePointForReachableDepartures < 0) {
+                            this.config.fadePointForReachableDepartures = 0;
+                        }
+                        let startingPoint = this.config.maxReachableDepartures * this.config.fadePointForReachableDepartures;
+                        let steps = this.config.maxReachableDepartures - startingPoint;
+                        if (i >= reachableDeparturePos + startingPoint) {
+                            var currentStep = (i - reachableDeparturePos) - startingPoint;
+                            row.style.opacity = 1 - (1 / steps * currentStep);
+                        }
+                    }
+
+                    tBody.appendChild(row);
+                }
                 });
             }, // Handle no reachable departures found
             () => {
@@ -195,19 +194,19 @@ Module.register("MMM-PublicTransportBerlin", {
 
     getRow: function (current) {
 
-        var currentWhen = moment(new Date(current.when));
+        let currentWhen = moment(new Date(current.when));
 
-        var row = document.createElement("tr");
+        let row = document.createElement("tr");
 
-        var timeCell = document.createElement("td");
+        let timeCell = document.createElement("td");
         timeCell.className = "centeredTd timeCell";
         timeCell.innerHTML = currentWhen.format("HH:mm");
         row.appendChild(timeCell);
 
-        var delayCell = document.createElement("td");
+        let delayCell = document.createElement("td");
         delayCell.className = "delayTimeCell";
 
-        var delay = Math.floor((((current.delay % 31536000) % 86400) % 3600) / 60);
+        let delay = Math.floor((((current.delay % 31536000) % 86400) % 3600) / 60);
 
         if (delay > 0) {
             delayCell.innerHTML = "+" + delay + " ";
@@ -225,14 +224,14 @@ Module.register("MMM-PublicTransportBerlin", {
 
         row.appendChild(delayCell);
 
-        var lineCell = document.createElement("td");
-        var lineSymbol = this.getLineSymbol(current);
+        let lineCell = document.createElement("td");
+        let lineSymbol = this.getLineSymbol(current);
         lineCell.className = "centeredTd noPadding lineCell";
 
         lineCell.appendChild(lineSymbol);
         row.appendChild(lineCell);
 
-        var directionCell = document.createElement("td");
+        let directionCell = document.createElement("td");
         directionCell.className = "directionCell";
 
         if (this.config.marqueeLongDirections && current.direction.length >= 26) {
@@ -256,14 +255,15 @@ Module.register("MMM-PublicTransportBerlin", {
         return new Promise((resolve, reject) => {
             this.departuresArray.forEach((current, i, depArray) => {
                 if (i <= depArray.length - 1 && this.config.delay != 0) {
-                    var currentWhen = moment(new Date(current.when));
-                    var nextWhen = moment(new Date(depArray[i + 1].when));
+                    let currentWhen = moment(new Date(current.when));
+                    let nextWhen = moment(new Date(depArray[i + 1].when));
 
                     if ((currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay))
                         || (i === 0 && nextWhen.isSameOrAfter(nowWithDelay))) {
 
-                        //console.log("--> Reachable departure for " + this.stationName + ": " + i);
+                        console.log("--> Reachable departure for " + this.stationName + ": " + i);
                         resolve(i);
+                        
                     } else if (i === depArray.length - 1 && currentWhen.isBefore(nowWithDelay)) {
                         reject();
                     }
@@ -282,7 +282,7 @@ Module.register("MMM-PublicTransportBerlin", {
             dirString = dirString.split(',')[0]
         }
 
-        var viaIndex = dirString.search(/( via )/g);
+        let viaIndex = dirString.search(/( via )/g);
         if (viaIndex > -1) {
             dirString = dirString.split(/( via )/g)[0]
         }
@@ -291,7 +291,7 @@ Module.register("MMM-PublicTransportBerlin", {
     },
 
     getLineSymbol: function (product) {
-        var symbol = document.createElement('div');
+        let symbol = document.createElement('div');
 
         symbol.innerHTML = product.line;
         symbol.className = product.cssClass + " xsmall";
