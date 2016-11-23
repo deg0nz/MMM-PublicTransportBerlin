@@ -271,7 +271,7 @@ Module.register("MMM-PublicTransportBerlin", {
                         console.log("--> Reachable departure for " + this.stationName + ": " + i);
                         resolve(i);
                     }
-                } else if (currentWhen.isBefore(nowWithDelay)) {
+                } else if (i === depArray.length - 1 && currentWhen.isBefore(nowWithDelay)) {
                     console.log("--> No reachable departure for " + this.stationName + " found.");
                     reject();
                 }
