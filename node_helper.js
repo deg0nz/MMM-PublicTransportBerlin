@@ -5,38 +5,49 @@ const Promise = require('./vendor/bluebird-3.4.5.min');
 
 module.exports = NodeHelper.create({
 
-    start: function(){
+    start: function () {
         this.departuresFetchers = []
     },
 
-    createFetcher: function(config) {
-        this.departuresFetchers.push(new VbbFetcher(config));
+    createFetcher: function (config) {
+        let fetcher;
+
+        if (typeof this.departuresFetchers[config.stationId] === "undefined") {
+
+            fetcher = new VbbFetcher(config);
+            this.departuresFetchers[config.stationId] = fetcher;
+
+            fetcher.getStationName().then((res) => {
+                console.log("Transportation fetcher for station " + res + " created. (Station ID: " + fetcher.getStationId() + ")");
+            })
+        } else {
+            fetcher = this.departuresFetchers[config.stationId];
+
+            fetcher.getStationName().then((res) => {
+                console.log("Using existing transportation fetcher for station " + res + " (Station ID: " + fetcher.getStationId() + ")");
+            });
+        }
+
+        this.getDepartures(fetcher.getStationId());
     },
 
-    getStationName: function(stationId) {
-        this.getFetcherIndex(stationId).then( (index) => {
-            this.departuresFetchers[index].getStationName().then( (response) => {
-
-                this.sendSocketNotification('STATION_NAME', response)
-            })
-        })
+    getStationName: function (stationId) {
+        this.departuresFetchers[stationId].getStationName().then((response) => {
+            this.sendSocketNotification('STATION_NAME', response)
+        });
     },
 
-    getDepartures: function(stationId){
-
-        this.getFetcherIndex(stationId).then( (index) => {
-            this.departuresFetchers[index].fetchDepartures().then( (departuresData) => {
-
-                this.pimpDeparturesArray(departuresData.departuresArray);
-                this.sendSocketNotification('DEPARTURES', departuresData)
-            })
+    getDepartures: function (stationId) {
+        this.departuresFetchers[stationId].fetchDepartures().then((departuresData) => {
+            this.pimpDeparturesArray(departuresData.departuresArray);
+            this.sendSocketNotification('DEPARTURES', departuresData)
         });
     },
 
     pimpDeparturesArray: function (departuresArray) {
         let currentProperties = {};
 
-        departuresArray.forEach( (current) => {
+        departuresArray.forEach((current) => {
             currentProperties = this.getLineProperties(current);
 
             //if (!this.config.marqueeLongDirections) {
@@ -49,22 +60,12 @@ module.exports = NodeHelper.create({
         return departuresArray;
     },
 
-    getFetcherIndex: function (stationId) {
-       return new Promise( (resolve,reject) => {
-           this.departuresFetchers.findIndex( (element, index) => {
-               if (element.getStationId() === stationId) {
-                   resolve(index);
-               }
-           })
-       });
-    },
-
-    getLineProperties: function(product) {
+    getLineProperties: function (product) {
 
         let out = {
             color: "#000000",
             cssClass: ""
-        }
+        };
 
         let type = product.type;
         let line = product.nr;
@@ -95,7 +96,7 @@ module.exports = NodeHelper.create({
         return out;
     },
 
-    getSuburbanLineColor: function(lineNumber) {
+    getSuburbanLineColor: function (lineNumber) {
         let color;
 
         switch (lineNumber) {
@@ -184,7 +185,7 @@ module.exports = NodeHelper.create({
         return color;
     },
 
-    socketNotificationReceived: function(notification, payload) {
+    socketNotificationReceived: function (notification, payload) {
 
         if (notification === 'GET_DEPARTURES') {
 

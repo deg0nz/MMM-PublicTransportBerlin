@@ -4,10 +4,6 @@ const vbbClient = require('vbb-client');
 let VbbFetcher = function (config) {
 
     this.config = config;
-
-    this.getStationName().then((res) => {
-        console.log("Fetcher for station " + res + " created. (Station ID: " + this.config.stationId + ")")
-    })
 };
 
 VbbFetcher.prototype.getStationId = function () {
@@ -23,10 +19,20 @@ VbbFetcher.prototype.getStationName = function () {
 
 VbbFetcher.prototype.fetchDepartures = function () {
 
+    // when value for a request is calculated to be 5 minutes before delay time
+    let when;
+
+    if (this.config.delay > 0) {
+        when = new Date();
+        when.setTime((Date.now() + this.config.delay * 60000) - (5 * 60000));
+    } else {
+        when = Date.now();
+    }
+
     let opt = {
-        when: "now",
+        when: when,
         duration: this.config.departureMinutes,
-        //identifier: "Testing - MagicMirror module MMM-PublicTransportBerlin"    // send testing identifier
+        identifier: "Testing - MagicMirror module MMM-PublicTransportBerlin"    // send testing identifier
     };
 
     return vbbClient.departures(this.config.stationId, opt).then((response) => {
@@ -42,10 +48,7 @@ VbbFetcher.prototype.processData = function (data) {
         departuresArray: []
     };
 
-    //console.log("------------------------------");
-    //console.log("Data for " + data[0].station.name + ". Length of array: " + data.length);
-
-    data.forEach((row, i) => {
+    data.forEach((row) => {
         if (!this.config.ignoredStations.includes(row.station.id)
             && !this.config.excludedTransportationTypes.includes(row.product.type.type)) {
 
@@ -55,21 +58,8 @@ VbbFetcher.prototype.processData = function (data) {
                 row.delay = 0
             }
 
-            // leave this here for debugging reasons (for now)...
-/*
-            var delayMinutes = Math.floor((((delay % 31536000) % 86400) % 3600) / 60);
-
-            var time = row.when.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
-
-            if (i <= 20) {
-                console.log(time + " " + delayMinutes + " " + row.product.type.unicode + " " + row.direction + " | stationId: " + row.station.id);
-            }
-*/
-
-            let dateObject = new Date(row.when);
-
             let current = {
-                when: dateObject,
+                when: row.when,
                 delay: row.delay,
                 line: row.product.line,
                 nr: row.product.nr,
@@ -77,6 +67,7 @@ VbbFetcher.prototype.processData = function (data) {
                 color: row.product.type.color,
                 direction: row.direction
             };
+
             departuresData.departuresArray.push(current);
         }
     });
@@ -102,6 +93,16 @@ function compare(a, b) {
         return 1
     }
     return 0
+}
+
+// helper function to print departure for debugging
+function printDeparture(row) {
+
+    let delayMinutes = Math.floor((((delay % 31536000) % 86400) % 3600) / 60);
+
+    let time = row.when.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+
+    console.log(time + " " + delayMinutes + " " + row.product.type.unicode + " " + row.direction + " | stationId: " + row.station.id);
 }
 
 module.exports = VbbFetcher;
