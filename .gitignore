@@ -90,3 +90,5 @@ jspm_packages
 *.xml
 
 *.iml
+
+FetcherTest.js

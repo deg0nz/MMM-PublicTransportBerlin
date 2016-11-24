@@ -181,12 +181,12 @@ Module.register("MMM-PublicTransportBerlin", {
                         }
                     });
                 }, // Handle no reachable departures found
-                () => {
+                (message) => {
                     let row = document.createElement("tr");
                     let cell = document.createElement("td");
                     cell.colSpan = 4;
 
-                    cell.innerHTML = "No reachable departures found.";
+                    cell.innerHTML = message;
 
                     row.appendChild(cell);
                     tBody.appendChild(row);
@@ -261,6 +261,13 @@ Module.register("MMM-PublicTransportBerlin", {
         let nowWithDelay = now.add(this.config.delay, 'minutes');
 
         return new Promise((resolve, reject) => {
+
+            if(this.departuresArray.length === 0){
+                Log.log("--> No reachable departure for " + this.stationName + " found.");
+
+                reject("No reachable departures found.");
+            }
+
             this.departuresArray.forEach((current, i, depArray) => {
                 let currentWhen = moment(current.when);
                 if (i < depArray.length) {
@@ -268,12 +275,14 @@ Module.register("MMM-PublicTransportBerlin", {
                     if ((currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay))
                         || (i === 0 && nextWhen.isSameOrAfter(nowWithDelay))) {
 
-                        console.log("--> Reachable departure for " + this.stationName + ": " + i);
+                        Log.log("--> Reachable departure for " + this.stationName + ": " + i);
+
                         resolve(i);
                     }
                 } else if (i === depArray.length - 1 && currentWhen.isBefore(nowWithDelay)) {
-                    console.log("--> No reachable departure for " + this.stationName + " found.");
-                    reject();
+                    Log.log("--> No reachable departure for " + this.stationName + " found.");
+
+                    reject("No reachable departures found.");
                 }
             });
         });
