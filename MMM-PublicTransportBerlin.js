@@ -46,7 +46,7 @@ Module.register("MMM-PublicTransportBerlin", {
         let wrapper = document.createElement("div");
         wrapper.className = "ptbWrapper";
 
-        if (this.departuresArray.length === 0 && !this.config.loaded) {
+        if (this.departuresArray.length === 0 && !this.loaded) {
             wrapper.innerHTML = (this.loaded) ? this.translate("EMPTY") : this.translate("LOADING");
             wrapper.className = "small light dimmed";
             return wrapper;
@@ -331,13 +331,20 @@ Module.register("MMM-PublicTransportBerlin", {
     },
 
     socketNotificationReceived: function (notification, payload) {
+        if(notification === 'FETCHER_INIT') {
+            if (payload.stationId === this.config.stationId) {
+                this.stationName = payload.stationName;
+                this.loaded = true;
+            }
+        }
+
         if (notification === 'DEPARTURES') {
             this.config.loaded = true;
             if (payload.stationId === this.config.stationId) {
-                this.stationName = payload.stationName;
                 this.departuresArray = payload.departuresArray;
                 this.updateDom(3000);
             }
         }
+
     }
 });

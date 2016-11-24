@@ -2,7 +2,6 @@
 const vbbClient = require('vbb-client');
 
 let VbbFetcher = function (config) {
-
     this.config = config;
 };
 
@@ -13,9 +12,8 @@ VbbFetcher.prototype.getStationId = function () {
 VbbFetcher.prototype.getStationName = function () {
     return vbbClient.station(this.config.stationId).then((response) => {
         return response.name;
-    })
+    });
 };
-
 
 VbbFetcher.prototype.fetchDepartures = function () {
 
@@ -44,7 +42,6 @@ VbbFetcher.prototype.processData = function (data) {
 
     let departuresData = {
         stationId: this.config.stationId,
-        stationName: "",
         departuresArray: []
     };
 
@@ -73,11 +70,7 @@ VbbFetcher.prototype.processData = function (data) {
     });
 
     departuresData.departuresArray.sort(compare);
-
-    return this.getStationName(this.config.stationId).then((name) => {
-        departuresData.stationName = name;
-        return departuresData;
-    });
+    return departuresData;
 };
 
 function compare(a, b) {

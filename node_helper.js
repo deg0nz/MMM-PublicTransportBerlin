@@ -16,31 +16,35 @@ module.exports = NodeHelper.create({
 
             fetcher = new VbbFetcher(config);
             this.departuresFetchers[config.stationId] = fetcher;
+            this.sendInit(fetcher);
 
             fetcher.getStationName().then((res) => {
                 console.log("Transportation fetcher for station " + res + " created. (Station ID: " + fetcher.getStationId() + ")");
             })
         } else {
             fetcher = this.departuresFetchers[config.stationId];
+            this.sendInit(fetcher);
 
             fetcher.getStationName().then((res) => {
                 console.log("Using existing transportation fetcher for station " + res + " (Station ID: " + fetcher.getStationId() + ")");
             });
         }
-
         this.getDepartures(fetcher.getStationId());
     },
 
-    getStationName: function (stationId) {
-        this.departuresFetchers[stationId].getStationName().then((response) => {
-            this.sendSocketNotification('STATION_NAME', response)
+    sendInit: function(fetcher){
+        fetcher.getStationName().then((name) => {
+            this.sendSocketNotification('FETCHER_INIT', {
+                stationId: fetcher.getStationId(),
+                stationName: name
+            });
         });
     },
 
     getDepartures: function (stationId) {
         this.departuresFetchers[stationId].fetchDepartures().then((departuresData) => {
             this.pimpDeparturesArray(departuresData.departuresArray);
-            this.sendSocketNotification('DEPARTURES', departuresData)
+            this.sendSocketNotification('DEPARTURES', departuresData);
         });
     },
 
