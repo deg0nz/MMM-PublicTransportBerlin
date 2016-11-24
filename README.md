@@ -8,8 +8,8 @@ Since it uses VBB data, the whole transport network is covered. So public transp
 MMM-PublicTransportBerlin uses the [vbb-hafas](https://github.com/derhuerst/vbb-hafas) REST API by [derhuerst](https://github.com/derhuerst).
 
 *Notes:* 
-* *There hasn't been tests with all possible values yet. Some value combinations could lead to strange behaviour.*
-* *Also, the fading for the reachable departures is not yet working properly.*
+* *The module is working fine. But I think some value combinations could still lead to strange behaviour. I'd appreciate any error report.*
+* *Fading for departures with delay = 0 is not yet implemented*
 
 You can enter a delay time for "How long does it take to get to my station?". 
 Then the module calculates the next reachable departures and draws a line between reachable and unreachable departures.
@@ -53,16 +53,16 @@ The module quite configurable. These are the possible options:
 |`stationId`|The ID of the station. How to get the ID for your station is described below.<br><br>**Type:** `integer` This value is **Required**.|
 |`ignoredStations`|To allow appearance of multiple transportation methods, `vbb-hafas` returns departures of multiple stations in the area of the main station (including bus and tram stations for example). You can exclude those stations by adding them to this array. Usually, this can be empty.<br><br>**Type:** `integer array` (comma separated `integers` in the array).<br>**Default value:** `<empty>`|
 |`excludedTransportationTypes`|Transportation types to be excluded from appearing on a module instance can be listed here.<br><br>**Type:** `string`, comma-separated list<br>**Default vaule:** `<empty>` <br>**Possible values:** `bus`, `tram`, `suburban`, `subway`, `regional`, `ferry`|
-|`marqueeLongDirections`|Makes a 'ticker' text out of all direction descriptions with more than 25 characters. If this value is false, the descriptions are trimmed the station names. You can see a video of it [here](https://ds.kayuk.de/kAfzU/) (rendered by a regular computer).<br><br> *Note: The rendering on the mirror is not perfect, but it is OK in my opinion. If the movement is not fluent enough for you, you should turn it off.*<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
+|`marqueeLongDirections`|Makes a marquee/ticker text out of all direction descriptions with more than 25 characters. If this value is false, the descriptions are trimmed to the station names. You can see a video of it [here](https://ds.kayuk.de/kAfzU/) (rendered by a regular computer).<br><br> *Note: The rendering on the mirror is not perfect, but it is OK in my opinion. If the movement is not fluent enough for you, you should turn it off.*<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
 |`interval`|How often the module should be updated. The value is given in milliseconds.<br><br>**Type:** `integer`<br>**Default value:** `120000 // 2 minutes`|
 |`hidden`|Visibility of the module.<br><br>**Type:** `boolean`<br>**Default vaule:** `false`|
 |`delay`|How long does it take you to get from the mirror to the station? The value is given in minutes.<br><br>**Type:** `integer`<br>**Default vaule:** `10 // 10 minutes`|
 |`departureMinutes`|For how many minutes in the future should departures be fetched? If `delay` is set > 0, then this time will be added to `now() + delay`. (This could be obsolete in future versions but is needed for now.)<br><br>**Type:** `integer`<br>**Default vaule:** `10`|
-|`showColoredLineSymbols`|If you want the line coloured and shaped or text only.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
+|`showColoredLineSymbols`|If you want the line colored and shaped or text only.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
 |`useColorForRealtimeInfo`|Set colors for realtime information<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
 |`showTableHeadersAsSymbols`|Show the table headers as text or symbols.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
 |`maxUnreachableDepartures`|How many unreachable departures should be shown. Only necessary, of you set `delay` > 0<br><br>**Type:** `integer`<br>**Default vaule:** `3`|
-|`maxReachableDepartures`|How many unreachable departures should be shown.<br><br>**Type:** `integer`<br>**Default vaule:** `7`|
+|`maxReachableDepartures`|How many reachable departures should be shown. If your `delay = 0`, this is the value for the number of departures you want to see.<br><br>**Type:** `integer`<br>**Default vaule:** `7`|
 |`fadeUnreachableDepartures`|Activates/deactivates fading for unreachable departures.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
 |`fadeReachableDepartures`|Activates/deactivates fading for reachable departures.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
 |`fadePointForReachableDepartures`|Fading point for reachable departures.<br><br>**Type:** `float`<br>**Default vaule:** `0.5` <br>**Possible values:** `0.0 - 1.0`|
@@ -82,7 +82,8 @@ Here is an example of an entry in `config.js`:
         delay: 10,
         interval: 120000,
         departureMinutes: 10,          
-        maxDepartures: 15,              
+        maxDepartures: 15,
+        marqueeLongDirections: true,
         showColoredLineSymbols: true,  
         useColorForRealtimeInfo: true,
         showTableHeadersAsSymbols: true,
