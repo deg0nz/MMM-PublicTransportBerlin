@@ -32,6 +32,10 @@ Module.register("MMM-PublicTransportBerlin", {
 
         this.sendSocketNotification('CREATE_FETCHER', this.config);
 
+        if(this.config.delay < 0) {
+            this.config.delay = 0;
+        }
+
         if (this.config.interval < 30000) {
             this.config.interval = 30000;
         }
@@ -119,6 +123,20 @@ Module.register("MMM-PublicTransportBerlin", {
         // Create table body from data
         let tBody = document.createElement("tbody");
 
+        // Handle empty departures array
+        if (this.departuresArray.length === 0) {
+            let row = this.getNoDeparturesRow("There are currently no departures.");
+
+            tBody.appendChild(row);
+
+            table.appendChild(tBody);
+
+            wrapper.appendChild(table);
+
+            return wrapper;
+        }
+
+        // handle delay === 0
         if (this.config.delay === 0) {
             this.departuresArray.forEach((current, i) => {
                 if (i < this.config.maxReachableDepartures) {
@@ -128,69 +146,61 @@ Module.register("MMM-PublicTransportBerlin", {
             });
         } else {
             this.getFirstReachableDeparturePositionInArray().then((reachableDeparturePos) => {
-                    this.departuresArray.forEach((current, i) => {
+                this.departuresArray.forEach((current, i) => {
 
-                        if (i >= reachableDeparturePos - this.config.maxUnreachableDepartures
-                            && i < reachableDeparturePos + this.config.maxReachableDepartures) {
+                    if (i >= reachableDeparturePos - this.config.maxUnreachableDepartures
+                        && i < reachableDeparturePos + this.config.maxReachableDepartures) {
 
-                            // insert rule to separate reachable departures
-                            if (i === reachableDeparturePos
-                                && this.config.delay > 0
-                                && reachableDeparturePos !== 0
-                                && this.config.maxUnreachableDepartures !== 0) {
+                        // insert rule to separate reachable departures
+                        if (i === reachableDeparturePos
+                            && reachableDeparturePos !== 0
+                            && this.config.maxUnreachableDepartures !== 0) {
 
-                                let ruleRow = document.createElement("tr");
+                            let ruleRow = document.createElement("tr");
 
-                                let ruleTimeCell = document.createElement("td");
-                                ruleRow.appendChild(ruleTimeCell);
+                            let ruleTimeCell = document.createElement("td");
+                            ruleRow.appendChild(ruleTimeCell);
 
-                                let ruleCell = document.createElement("td");
-                                ruleCell.colSpan = 3;
-                                ruleCell.className = "ruleCell";
-                                ruleRow.appendChild(ruleCell);
+                            let ruleCell = document.createElement("td");
+                            ruleCell.colSpan = 3;
+                            ruleCell.className = "ruleCell";
+                            ruleRow.appendChild(ruleCell);
 
-                                tBody.appendChild(ruleRow);
-                            }
-
-                            // create standard row
-                            let row = this.getRow(current);
-
-                            // fading for entries before "delay rule"
-                            if (this.config.fadeUnreachableDepartures && this.config.delay > 0) {
-                                let steps = this.config.maxUnreachableDepartures;
-                                if (i >= reachableDeparturePos - steps && i < reachableDeparturePos) {
-                                    let currentStep = reachableDeparturePos - i;
-                                    row.style.opacity = 1 - ((1 / steps * currentStep) - 0.2);
-                                }
-                            }
-
-                            // fading for entries after "delay rule"
-                            if (this.config.fadeReachableDepartures && this.config.fadePointForReachableDepartures < 1) {
-                                if (this.config.fadePointForReachableDepartures < 0) {
-                                    this.config.fadePointForReachableDepartures = 0;
-                                }
-                                let startingPoint = this.config.maxReachableDepartures * this.config.fadePointForReachableDepartures;
-                                let steps = this.config.maxReachableDepartures - startingPoint;
-                                if (i >= reachableDeparturePos + startingPoint) {
-                                    let currentStep = (i - reachableDeparturePos) - startingPoint;
-                                    row.style.opacity = 1 - (1 / steps * currentStep);
-                                }
-                            }
-
-                            tBody.appendChild(row);
+                            tBody.appendChild(ruleRow);
                         }
-                    });
-                }, // Handle no reachable departures found
-                (message) => {
-                    let row = document.createElement("tr");
-                    let cell = document.createElement("td");
-                    cell.colSpan = 4;
 
-                    cell.innerHTML = message;
+                        // create standard row
+                        let row = this.getRow(current);
 
-                    row.appendChild(cell);
-                    tBody.appendChild(row);
+                        // fading for entries before "delay rule"
+                        if (this.config.fadeUnreachableDepartures && this.config.delay > 0) {
+                            let steps = this.config.maxUnreachableDepartures;
+                            if (i >= reachableDeparturePos - steps && i < reachableDeparturePos) {
+                                let currentStep = reachableDeparturePos - i;
+                                row.style.opacity = 1 - ((1 / steps * currentStep) - 0.2);
+                            }
+                        }
+
+                        // fading for entries after "delay rule"
+                        if (this.config.fadeReachableDepartures && this.config.fadePointForReachableDepartures < 1) {
+                            if (this.config.fadePointForReachableDepartures < 0) {
+                                this.config.fadePointForReachableDepartures = 0;
+                            }
+                            let startingPoint = this.config.maxReachableDepartures * this.config.fadePointForReachableDepartures;
+                            let steps = this.config.maxReachableDepartures - startingPoint;
+                            if (i >= reachableDeparturePos + startingPoint) {
+                                let currentStep = (i - reachableDeparturePos) - startingPoint;
+                                row.style.opacity = 1 - (1 / steps * currentStep);
+                            }
+                        }
+
+                        tBody.appendChild(row);
+                    }
                 });
+            }, (message) => {
+                let row = this.getNoDeparturesRow(message);
+                tBody.appendChild(row);
+            });
         }
 
         table.appendChild(tBody);
@@ -198,6 +208,18 @@ Module.register("MMM-PublicTransportBerlin", {
         wrapper.appendChild(table);
 
         return wrapper;
+    },
+
+    getNoDeparturesRow: function (message) {
+        let row = document.createElement("tr");
+        let cell = document.createElement("td");
+        cell.colSpan = 4;
+
+        cell.innerHTML = message;
+
+        row.appendChild(cell);
+
+        return row;
     },
 
     getRow: function (current) {
@@ -261,13 +283,6 @@ Module.register("MMM-PublicTransportBerlin", {
         let nowWithDelay = now.add(this.config.delay, 'minutes');
 
         return new Promise((resolve, reject) => {
-
-            if(this.departuresArray.length === 0){
-                Log.log("--> No reachable departure for " + this.stationName + " found.");
-
-                reject("No reachable departures found.");
-            }
-
             this.departuresArray.forEach((current, i, depArray) => {
                 let currentWhen = moment(current.when);
                 if (i < depArray.length) {
@@ -331,7 +346,7 @@ Module.register("MMM-PublicTransportBerlin", {
     },
 
     socketNotificationReceived: function (notification, payload) {
-        if(notification === 'FETCHER_INIT') {
+        if (notification === 'FETCHER_INIT') {
             if (payload.stationId === this.config.stationId) {
                 this.stationName = payload.stationName;
                 this.loaded = true;
