@@ -1,21 +1,33 @@
 "use strict";
 const vbbClient = require('vbb-client');
+const dbClient = require('db-hafas');
 
-let VbbFetcher = function (config) {
+let DbFetcher = function (config) {
     this.config = config;
 };
 
-VbbFetcher.prototype.getStationId = function () {
+let typeData = {
+    'U': {
+        type: 'subway',
+        color: '#0067AD'
+    },
+    'Bus': {
+        type: 'bus',
+        color: '#a5037b'
+    }
+}
+
+DbFetcher.prototype.getStationId = function () {
     return this.config.stationId;
 };
 
-VbbFetcher.prototype.getStationName = function () {
-    return vbbClient.station(this.config.stationId).then((response) => {
-        return response.name;
+DbFetcher.prototype.getStationName = function () {
+    return dbClient.locations(this.config.name).then((response) => {
+        return response ? response[0].name : '';
     });
 };
 
-VbbFetcher.prototype.fetchDepartures = function () {
+DbFetcher.prototype.fetchDepartures = function () {
 
     // when value for a request is calculated to be 5 minutes before delay time
     let when;
@@ -27,43 +39,58 @@ VbbFetcher.prototype.fetchDepartures = function () {
         when = Date.now();
     }
 
+    let direction = null;
+    if (this.config.direction) {
+        direction = this.config.direction;
+    }
+
     let opt = {
         when: when,
         duration: this.config.departureMinutes,
-        // identifier: "Testing - MagicMirror module MMM-PublicTransportBerlin"    // send testing identifier
+        direction: direction
     };
 
-    return vbbClient.departures(this.config.stationId, opt).then((response) => {
+    return dbClient.departures(this.config.stationId, opt).then((response) => {
         return this.processData(response)
     });
 };
 
-VbbFetcher.prototype.processData = function (data) {
+DbFetcher.prototype.processData = function (data) {
 
     let departuresData = {
         stationId: this.config.stationId,
         departuresArray: []
     };
 
+    //console.log(data);
+
     data.forEach((row) => {
-        if (!this.config.ignoredStations.includes(row.station.id)
-            && !this.config.excludedTransportationTypes.includes(row.product.type.type)) {
+        if (!this.config.ignoredStations.includes(row.station.id)) {
+
+            //console.log('------------------------------------------------------------------------------');
+            //console.log('Parsing: ' + row.product.name + ' nach ' + row.direction + ' um ' + row.when);
 
             let delay = row.delay;
-
             if (!delay) {
                 row.delay = 0
+            }
+
+            let productType = row.product.type;
+            if (!productType) {
+                productType = typeData[row.product.productName];
             }
 
             let current = {
                 when: row.when,
                 delay: row.delay,
-                line: row.product.line,
+                line: row.product.name,
                 nr: row.product.nr,
-                type: row.product.type.type,
-                color: row.product.type.color,
+                type: productType.type,
+                color: productType.color,
                 direction: row.direction
             };
+
+            //console.log(current);
 
             departuresData.departuresArray.push(current);
         }
@@ -98,4 +125,4 @@ function printDeparture(row) {
     console.log(time + " " + delayMinutes + " " + row.product.type.unicode + " " + row.direction + " | stationId: " + row.station.id);
 }
 
-module.exports = VbbFetcher;
+module.exports = DbFetcher;

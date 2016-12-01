@@ -1,20 +1,22 @@
 "use strict";
 
-Module.register("MMM-PublicTransportBerlin", {
+Module.register("MMM-PublicTransportDB", {
 
     // default values
     defaults: {
-        name: "MMM-PublicTransportBerlin",
+        name: "MMM-PublicTransportDB",
         hidden: false,
         stationId: 9160003,
         ignoredStations: [],                // Which stations should be ignored? (comma-separated list of station IDs)
         excludedTransportationTypes: '',    // Which transportation types should not be shown on the mirror? (comma-separated list of types) possible values: bus,tram,suburban,subway,ferry
+        direction: null,                    // Which direction should be displayed? (destination station ID)
         marqueeLongDirections: true,
         delay: 10,                          // How long do you need to walk to the next Station?
         interval: 120000,                   // How often should the table be updated in ms?
-        departureMinutes: 30,               // For how many minutes should departures be shown?
+        departureMinutes: 10,               // For how many minutes should departures be shown?
         showColoredLineSymbols: true,       // Want colored line symbols?
         useColorForRealtimeInfo: true,      // Want colored real time information (delay, early)?
+        showTableHeaders: true,
         showTableHeadersAsSymbols: true,    // Table Headers as symbols or written?
         maxUnreachableDepartures: 3,        // How many unreachable departures should be shown?
         maxReachableDepartures: 7,          // How many reachable departures should be shown?
@@ -57,7 +59,7 @@ Module.register("MMM-PublicTransportBerlin", {
         }
 
         let heading = document.createElement("header");
-        heading.innerHTML = this.stationName;
+        heading.innerHTML = this.config.name;
         wrapper.appendChild(heading);
 
 
@@ -65,60 +67,62 @@ Module.register("MMM-PublicTransportBerlin", {
         let table = document.createElement("table");
         table.className = "ptbTable small light";
 
-        let tHead = document.createElement("thead");
+        if (this.config.showTableHeaders) {
+            let tHead = document.createElement("thead");
 
-        let headerRow = document.createElement("tr");
+            let headerRow = document.createElement("tr");
 
-        // Cell for departure time
-        let headerTime = document.createElement("td");
+            // Cell for departure time
+            let headerTime = document.createElement("td");
 
-        if (this.config.showTableHeadersAsSymbols) {
-            headerTime.className = "centeredTd";
-            let timeIcon = document.createElement("span");
-            timeIcon.className = "fa fa-clock-o";
-            headerTime.appendChild(timeIcon);
-        } else {
-            headerTime.innerHTML = "Abfahrt";
+            if (this.config.showTableHeadersAsSymbols) {
+                headerTime.className = "centeredTd";
+                let timeIcon = document.createElement("span");
+                timeIcon.className = "fa fa-clock-o";
+                headerTime.appendChild(timeIcon);
+            } else {
+                headerTime.innerHTML = "Abfahrt";
+            }
+
+            headerRow.appendChild(headerTime);
+
+            // Cell for delay time
+            let delayTime = document.createElement("td");
+            delayTime.innerHTML = "&nbsp;";
+            headerRow.appendChild(delayTime);
+
+            // Cell for line symbol
+            let headerLine = document.createElement("td");
+
+            if (this.config.showTableHeadersAsSymbols) {
+                headerLine.className = "centeredTd";
+                let lineIcon = document.createElement("span");
+                lineIcon.className = "fa fa-tag";
+                headerLine.appendChild(lineIcon);
+            } else {
+                headerLine.innerHTML = "Linie";
+            }
+
+            headerRow.appendChild(headerLine);
+
+            // Cell for direction
+            let headerDirection = document.createElement("td");
+            if (this.config.showTableHeadersAsSymbols) {
+                headerDirection.className = "centeredTd";
+                let directionIcon = document.createElement("span");
+                directionIcon.className = "fa fa-exchange";
+                headerDirection.appendChild(directionIcon);
+            } else {
+                headerDirection.innerHTML = "Nach";
+            }
+
+            headerRow.appendChild(headerDirection);
+
+            headerRow.className = "bold dimmed";
+            tHead.appendChild(headerRow);
+
+            table.appendChild(tHead);
         }
-
-        headerRow.appendChild(headerTime);
-
-        // Cell for delay time
-        let delayTime = document.createElement("td");
-        delayTime.innerHTML = "&nbsp;";
-        headerRow.appendChild(delayTime);
-
-        // Cell for line symbol
-        let headerLine = document.createElement("td");
-
-        if (this.config.showTableHeadersAsSymbols) {
-            headerLine.className = "centeredTd";
-            let lineIcon = document.createElement("span");
-            lineIcon.className = "fa fa-tag";
-            headerLine.appendChild(lineIcon);
-        } else {
-            headerLine.innerHTML = "Linie";
-        }
-
-        headerRow.appendChild(headerLine);
-
-        // Cell for direction
-        let headerDirection = document.createElement("td");
-        if (this.config.showTableHeadersAsSymbols) {
-            headerDirection.className = "centeredTd";
-            let directionIcon = document.createElement("span");
-            directionIcon.className = "fa fa-exchange";
-            headerDirection.appendChild(directionIcon);
-        } else {
-            headerDirection.innerHTML = "Nach";
-        }
-
-        headerRow.appendChild(headerDirection);
-
-        headerRow.className = "bold dimmed";
-        tHead.appendChild(headerRow);
-
-        table.appendChild(tHead);
 
         // Create table body from data
         let tBody = document.createElement("tbody");
@@ -283,20 +287,16 @@ Module.register("MMM-PublicTransportBerlin", {
         let nowWithDelay = now.add(this.config.delay, 'minutes');
 
         return new Promise((resolve, reject) => {
+            Log.log("------------------------------------------------------");
             this.departuresArray.forEach((current, i, depArray) => {
                 let currentWhen = moment(current.when);
-                if (i < depArray.length) {
-                    let nextWhen = moment(depArray[i + 1].when);
-                    if ((currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay))
-                        || (i === 0 && nextWhen.isSameOrAfter(nowWithDelay))) {
-
-                        Log.log("--> Reachable departure for " + this.stationName + ": " + i);
-
+                if (i <= depArray.length) {
+                    if (currentWhen.isSameOrAfter(nowWithDelay)) {
+                        Log.log("--> Reachable departure for " + this.stationId + ": " + i);
                         resolve(i);
                     }
-                } else if (i === depArray.length - 1 && currentWhen.isBefore(nowWithDelay)) {
-                    Log.log("--> No reachable departure for " + this.stationName + " found.");
-
+                } else if (i === depArray.length && currentWhen.isBefore(nowWithDelay)) {
+                    Log.log("--> No reachable departure for " + this.stationId + " found.");
                     reject("No reachable departures found.");
                 }
             });

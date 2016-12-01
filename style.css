@@ -15,7 +15,7 @@
 }
 
 .lineCell {
-    width: 2.5em;
+    width: 3em;
     height: 1.25em;
     padding-left: 0px;
     padding-right: 0px;
@@ -37,7 +37,7 @@
 }
 
 .directionCell {
-    max-width: 22ch;
+    max-width: 32ch;
 }
 
 .marquee {
@@ -100,6 +100,9 @@
     width: 2.5em;
     height: 1.25em;
     position: relative;
+    -moz-border-radius: 1.25em;
+    -webkit-border-radius: 1.25em;
+    border-radius: 1.25em;
 }
 
 .tramsign {
@@ -114,7 +117,7 @@
 .bussign {
     color: #FFFFFF;
     text-align: center;
-    width: 2.5em;
+    width: 3.5em;
     height: 1.25em;
     position: relative;
 }
