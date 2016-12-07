@@ -233,7 +233,7 @@ Module.register("MMM-PublicTransportDB", {
         let row = document.createElement("tr");
 
         let timeCell = document.createElement("td");
-        timeCell.className = "centeredTd timeCell";
+        timeCell.className = "centeredTd timeCell bright";
         timeCell.innerHTML = currentWhen.format("HH:mm");
         row.appendChild(timeCell);
 
@@ -266,7 +266,7 @@ Module.register("MMM-PublicTransportDB", {
         row.appendChild(lineCell);
 
         let directionCell = document.createElement("td");
-        directionCell.className = "directionCell";
+        directionCell.className = "directionCell bright";
 
         if (this.config.marqueeLongDirections && current.direction.length >= 26) {
             directionCell.className = "directionCell marquee";
