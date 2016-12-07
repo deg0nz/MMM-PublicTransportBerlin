@@ -1,5 +1,4 @@
 "use strict";
-const vbbClient = require('vbb-client');
 const dbClient = require('db-hafas');
 
 let DbFetcher = function (config) {

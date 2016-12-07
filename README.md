@@ -1,11 +1,11 @@
-# MMM-PublicTransportBerlin
+# MMM-PublicTransportDB
 
-MMM-PublicTransportBerlin is a module for the [MagicMirror](https://github.com/MichMich/MagicMirror) project by 
+MMM-PublicTransportDB is a module for the [MagicMirror](https://github.com/MichMich/MagicMirror) project by 
 [Michael Teeuw](https://github.com/MichMich).
 
-It shows live public transport information for Berlin and Brandenburg based on [VBB-Hafas](http://www.hafas.de/company/referenzen/vbb) data.
-Since it uses VBB data, the whole transport network is covered. So public transport in Brandenburg will work as well. 
-MMM-PublicTransportBerlin uses the [vbb-hafas](https://github.com/derhuerst/vbb-hafas) REST API by [derhuerst](https://github.com/derhuerst).
+It shows live public transport information for Germany based on [DB-Hafas](http://www.hafas.de/company/referenzen/db) data.
+MMM-PublicTransportDB uses the [db-hafas](https://github.com/derhuerst/db-hafas) library by [derhuerst](https://github.com/derhuerst). It primarily displays data from the *Deutsche Bahn*, but also includes local networks that integrate their data into the DB network. Most, if not all, local transport networks in Germany should work. Following ones are tested:
+- RMV (Rhein-Main/Hessen): missing delays for buses, trams and subway
 
 *Notes:* 
 * *The module is working fine. But I think some value combinations could still lead to strange behaviour. I'd appreciate any error report.*
@@ -25,23 +25,14 @@ The module looks like this:
 Just clone the module into your MagicMirror modules folder and execute `npm install` in the module directory:
 
 ```
-git clone https://github.com/deg0nz/MMM-PublicTransportBerlin.git
-cd MMM-PublicTransportBerlin
+git clone https://github.com/olexs/MMM-PublicTransportDB.git
+cd MMM-PublicTransportDB
 npm install
 ```
 
 ## How to get the `stationId`
 
-You will need a `stationId` for your module. You can get it as described in the [vbb-rest API documentation](https://github.com/derhuerst/vbb-rest/blob/21930eb2442ecdc8888e70d024391be29264f33f/docs/index.md).    
-This is a cURL example for getting all possible stations with the keyword "alexanderplatz":
-
-```
-curl 'https://transport.rest/stations?query=alexanderplatz'
-```
-
-The answer should contain one or more possible stations with valid station IDs. More queries are possible, 
-like searching via coordinates or autocompletion of stations. Please check the [vbb-rest API documentation](https://github.com/derhuerst/vbb-rest/blob/21930eb2442ecdc8888e70d024391be29264f33f/docs/index.md)
-for more options.
+You will need a `stationId` for your module from the DB network. *TODO* _Link full list or query target to get station IDs._
 
 ## Configuration
 
@@ -66,6 +57,8 @@ The module quite configurable. These are the possible options:
 |`fadeUnreachableDepartures`|Activates/deactivates fading for unreachable departures.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
 |`fadeReachableDepartures`|Activates/deactivates fading for reachable departures.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
 |`fadePointForReachableDepartures`|Fading point for reachable departures.<br><br>**Type:** `float`<br>**Default vaule:** `0.5` <br>**Possible values:** `0.0 - 1.0`|
+
+*TODO: Add new configuration values*
 
 Here is an example of an entry in `config.js`:
 
@@ -103,10 +96,11 @@ Multiple instances of this module are possible. Just add another entry of the MM
 ## Special Thanks
 
 * [Michael Teeuw](https://github.com/MichMich) for inspiring me and many others to build a MagicMirror.
-* [Jannis Redmann](https://github.com/derhuerst) for creating the [vbb-hafas](https://github.com/derhuerst/vbb-hafas) REST API. 
+* [deg0nz](https://github.com/deg0nz) for creating the [MMM-PublicTransportBerlin](https://github.com/deg0nz/MMM-PublicTransportBerlin) module, on which this one is heavily based.
+* [Jannis Redmann](https://github.com/derhuerst) for creating the [db-hafas](https://github.com/derhuerst/db-hafas) library. 
 You made my life a lot easier with this!
 * The community of [magicmirror.builders](https://magicmirror.builders) for help in the development process.
 
 ## Issues
 
-If you find any problems, bugs or have questions, please [open a GitHub issue](https://github.com/deg0nz/MMM-PublicTransportBerlin/issues) in this repository.
+If you find any problems, bugs or have questions, please [open a GitHub issue](https://github.com/olexs/MMM-PublicTransportDB/issues) in this repository.
