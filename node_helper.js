@@ -32,7 +32,7 @@ module.exports = NodeHelper.create({
         this.getDepartures(fetcher.getStationId());
     },
 
-    sendInit: function(fetcher){
+    sendInit: function (fetcher) {
         fetcher.getStationName().then((name) => {
             this.sendSocketNotification('FETCHER_INIT', {
                 stationId: fetcher.getStationId(),
@@ -66,8 +66,14 @@ module.exports = NodeHelper.create({
 
     getLineProperties: function (product) {
 
+        let lineColor = "";
+
+        if (typeof product.color !== 'undefined') {
+            lineColor = product.color;
+        }
+
         let out = {
-            color: "#000000",
+            color: lineColor,
             cssClass: ""
         };
 
@@ -84,15 +90,15 @@ module.exports = NodeHelper.create({
                 out.cssClass = "ubahnsign";
                 break;
             case "bus":
-                out.color = product.color;
+                out.color = lineColor;
                 out.cssClass = "bussign";
                 break;
             case "tram":
-                out.color = product.color;
+                out.color = lineColor;
                 out.cssClass = "tramsign";
                 break;
             case "regional":
-                out.color = product.color;
+                out.color = lineColor;
                 out.cssClass = "dbsign";
                 break;
         }
