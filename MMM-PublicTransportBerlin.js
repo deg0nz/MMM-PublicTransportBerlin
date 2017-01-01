@@ -285,7 +285,7 @@ Module.register("MMM-PublicTransportBerlin", {
         return new Promise((resolve, reject) => {
             this.departuresArray.forEach((current, i, depArray) => {
                 let currentWhen = moment(current.when);
-                if (i < depArray.length) {
+                if (depArray.length > 1 && i < depArray.length - 1) {
                     let nextWhen = moment(depArray[i + 1].when);
                     if ((currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay))
                         || (i === 0 && nextWhen.isSameOrAfter(nowWithDelay))) {
@@ -297,6 +297,8 @@ Module.register("MMM-PublicTransportBerlin", {
                 } else if (i === depArray.length - 1 && currentWhen.isBefore(nowWithDelay)) {
                     Log.log("--> No reachable departure for " + this.stationName + " found.");
 
+                    reject("No reachable departures found.");
+                } else {
                     reject("No reachable departures found.");
                 }
             });
