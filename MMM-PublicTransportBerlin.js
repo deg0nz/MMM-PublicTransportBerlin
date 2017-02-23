@@ -36,6 +36,7 @@ Module.register("MMM-PublicTransportBerlin", {
             this.config.delay = 0;
         }
 
+        // set minimum interval to 30 seconds
         if (this.config.interval < 30000) {
             this.config.interval = 30000;
         }
@@ -142,10 +143,25 @@ Module.register("MMM-PublicTransportBerlin", {
                 if (i < this.config.maxReachableDepartures) {
                     let row = this.getRow(current);
                     tBody.appendChild(row);
+
+                    // fading
+                    if (this.config.fadeReachableDepartures && this.config.fadePointForReachableDepartures < 1) {
+                        if (this.config.fadePointForReachableDepartures < 0) {
+                            this.config.fadePointForReachableDepartures = 0;
+                        }
+                        let startingPoint = this.config.maxReachableDepartures * this.config.fadePointForReachableDepartures;
+                        let steps = this.config.maxReachableDepartures - startingPoint;
+                        if (i >= startingPoint) {
+                            let currentStep = i - startingPoint;
+                            row.style.opacity = 1 - (1 / steps * currentStep);
+                        }
+                    }
                 }
             });
+
+        // handle delay > 0
         } else {
-            this.getFirstReachableDeparturePositionInArray().then((reachableDeparturePos) => {
+            this.getFirstReachableDeparturePosition().then((reachableDeparturePos) => {
                 this.departuresArray.forEach((current, i) => {
 
                     if (i >= reachableDeparturePos - this.config.maxUnreachableDepartures
@@ -278,7 +294,7 @@ Module.register("MMM-PublicTransportBerlin", {
         return row;
     },
 
-    getFirstReachableDeparturePositionInArray: function () {
+    getFirstReachableDeparturePosition: function () {
         let now = moment();
         let nowWithDelay = now.add(this.config.delay, 'minutes');
 
