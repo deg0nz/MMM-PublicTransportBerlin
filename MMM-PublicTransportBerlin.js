@@ -337,7 +337,10 @@ Module.register("MMM-PublicTransportBerlin", {
     },
 
     getStyles: function () {
-        return ['style.css'];
+        return [
+            'style.css',
+            'font-awesome.css'
+        ];
     },
 
     getScripts: function () {
