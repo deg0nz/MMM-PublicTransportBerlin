@@ -9,7 +9,6 @@ MMM-PublicTransportBerlin uses the [vbb-hafas](https://github.com/derhuerst/vbb-
 
 *Notes:* 
 * *The module is working fine. But I think some value combinations could still lead to strange behaviour. I'd appreciate any error report.*
-* *Fading for departures with delay = 0 is not yet implemented*
 
 You can enter a delay time for "How long does it take to get to my station?". 
 Then the module calculates the next reachable departures and draws a line between reachable and unreachable departures.
@@ -20,9 +19,15 @@ The module looks like this:
 
 ![Example for Alexanderplatz with time delay](img/MMM-PublicTransport_screenshot.png)
 
+## Preconditions
+
+* MagicMirror<sup>2</sup> instance
+* Node.js version > 6.0.0
+* npm
+
 ## Installation
 
-Just clone the module into your MagicMirror modules folder and execute `npm install` in the module directory:
+Just clone the module into your MagicMirror modules folder and execute `npm install` in the module's directory:
 
 ```
 git clone https://github.com/deg0nz/MMM-PublicTransportBerlin.git
@@ -65,7 +70,7 @@ The module quite configurable. These are the possible options:
 |`maxReachableDepartures`|How many reachable departures should be shown. If your `delay = 0`, this is the value for the number of departures you want to see.<br><br>**Type:** `integer`<br>**Default vaule:** `7`|
 |`fadeUnreachableDepartures`|Activates/deactivates fading for unreachable departures.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
 |`fadeReachableDepartures`|Activates/deactivates fading for reachable departures.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
-|`fadePointForReachableDepartures`|Fading point for reachable departures.<br><br>**Type:** `float`<br>**Default vaule:** `0.5` <br>**Possible values:** `0.0 - 1.0`|
+|`fadePointForReachableDepartures`|Fading point for reachable departures. Thìs value is also valid for `delay = 0` <br><br>**Type:** `float`<br>**Default vaule:** `0.5` <br>**Possible values:** `0.0 - 1.0`|
 
 Here is an example of an entry in `config.js`:
 
