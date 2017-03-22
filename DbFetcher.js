@@ -13,6 +13,10 @@ let typeData = {
     'Bus': {
         type: 'bus',
         color: '#a5037b'
+    },
+    's': {
+        type: 'subway',
+        color: '#006F35'
     }
 }
 
@@ -67,7 +71,8 @@ DbFetcher.prototype.processData = function (data) {
         if (!this.config.ignoredStations.includes(row.station.id)) {
 
             //console.log('------------------------------------------------------------------------------');
-            //console.log('Parsing: ' + row.product.name + ' nach ' + row.direction + ' um ' + row.when);
+            console.log('Parsing: ' + row.product.name + ' nach ' + row.direction + ' um ' + row.when);
+            console.log(JSON.stringify(row.product));
 
             let delay = row.delay;
             if (!delay) {
@@ -75,8 +80,11 @@ DbFetcher.prototype.processData = function (data) {
             }
 
             let productType = row.product.type;
-            if (!productType) {
+            if (!productType && typeData[row.product.productName]) {
                 productType = typeData[row.product.productName];
+            } 
+            if (!productType && row.product.productName) {
+                productType = { type: row.product.productName, color: "#006F35" }
             }
 
             let current = {
@@ -89,7 +97,7 @@ DbFetcher.prototype.processData = function (data) {
                 direction: row.direction
             };
 
-            //console.log(current);
+            console.log(current);
 
             departuresData.departuresArray.push(current);
         }
