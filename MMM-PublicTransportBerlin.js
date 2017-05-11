@@ -15,8 +15,8 @@ Module.register("MMM-PublicTransportBerlin", {
         departureMinutes: 30,               // For how many minutes should departures be shown?
         showColoredLineSymbols: true,       // Want colored line symbols?
         useColorForRealtimeInfo: true,      // Want colored real time information (delay, early)?
-        showTableHeadersAsSymbols: true,    // Table Headers as symbols or written?
         showTableHeaders: true,             // Show table headers?
+        showTableHeadersAsSymbols: true,    // Table Headers as symbols or written?
         maxUnreachableDepartures: 3,        // How many unreachable departures should be shown?
         maxReachableDepartures: 7,          // How many reachable departures should be shown?
         fadeUnreachableDepartures: true,
@@ -73,7 +73,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
         // Cell for departure time
         let headerTime = document.createElement("td");
-        if (this.config.showTableHeadersAsSymbols || this.config.showTableHeadersAs === 'symbol') {
+        if (this.config.showTableHeadersAsSymbols) {
             headerTime.className = "centeredTd";
             let timeIcon = document.createElement("span");
             timeIcon.className = "fa fa-clock-o";
@@ -91,7 +91,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
         // Cell for line symbol
         let headerLine = document.createElement("td");
-        if (this.config.showTableHeadersAsSymbols || this.config.showTableHeadersAs === 'symbol') {
+        if (this.config.showTableHeadersAsSymbols) {
             headerLine.className = "centeredTd";
             let lineIcon = document.createElement("span");
             lineIcon.className = "fa fa-tag";
@@ -104,7 +104,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
         // Cell for direction
         let headerDirection = document.createElement("td");
-        if (this.config.showTableHeadersAsSymbols || this.config.showTableHeadersAs === 'symbol') {
+        if (this.config.showTableHeadersAsSymbols) {
             headerDirection.className = "centeredTd";
             let directionIcon = document.createElement("span");
             directionIcon.className = "fa fa-exchange";
