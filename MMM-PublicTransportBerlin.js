@@ -16,7 +16,7 @@ Module.register("MMM-PublicTransportBerlin", {
         showColoredLineSymbols: true,       // Want colored line symbols?
         useColorForRealtimeInfo: true,      // Want colored real time information (delay, early)?
         showTableHeadersAsSymbols: true,    // Table Headers as symbols or written?
-        showTableHeadersAs: 'symbol',        // Table headers as symbols, text or hidden
+        showTableHeaders: true,             // Show table headers?
         maxUnreachableDepartures: 3,        // How many unreachable departures should be shown?
         maxReachableDepartures: 7,          // How many reachable departures should be shown?
         fadeUnreachableDepartures: true,
@@ -78,8 +78,6 @@ Module.register("MMM-PublicTransportBerlin", {
             let timeIcon = document.createElement("span");
             timeIcon.className = "fa fa-clock-o";
             headerTime.appendChild(timeIcon);
-        } else if (this.config.showTableHeadersAs==='hidden') {
-            headerTime.innerHTML = "";
         } else {
             headerTime.innerHTML = "Abfahrt";
         }
@@ -98,8 +96,6 @@ Module.register("MMM-PublicTransportBerlin", {
             let lineIcon = document.createElement("span");
             lineIcon.className = "fa fa-tag";
             headerLine.appendChild(lineIcon);
-        } else if (this.config.showTableHeadersAs==='hidden') {
-            headerLine.innerHTML = "";
         } else {
             headerLine.innerHTML = "Linie";
         }
@@ -113,8 +109,6 @@ Module.register("MMM-PublicTransportBerlin", {
             let directionIcon = document.createElement("span");
             directionIcon.className = "fa fa-exchange";
             headerDirection.appendChild(directionIcon);
-        } else if (this.config.showTableHeadersAs==='hidden') {
-            headerDirection.innerHTML = "";
         } else {
             headerDirection.innerHTML = "Nach";
         }
@@ -122,7 +116,10 @@ Module.register("MMM-PublicTransportBerlin", {
         headerRow.appendChild(headerDirection);
 
         headerRow.className = "bold dimmed";
-        tHead.appendChild(headerRow);
+
+        if (this.config.showTableHeaders) {
+            tHead.appendChild(headerRow);
+        }
 
         table.appendChild(tHead);
 
