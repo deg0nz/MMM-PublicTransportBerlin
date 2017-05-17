@@ -340,7 +340,12 @@ Module.register("MMM-PublicTransportBerlin", {
     getLineSymbol: function (product) {
         let symbol = document.createElement('div');
 
-        symbol.innerHTML = product.line;
+        if (product.type === 'express') {
+            symbol.innerHTML = product.productName;
+        } else {
+            symbol.innerHTML = product.line;
+        };
+        
         symbol.className = product.cssClass + " xsmall";
 
         if (this.config.showColoredLineSymbols) {

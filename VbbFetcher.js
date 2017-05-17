@@ -54,7 +54,7 @@ VbbFetcher.prototype.processData = function (data) {
             if (!delay) {
                 row.delay = 0
             }
-
+            
             let current = {
                 when: row.when,
                 delay: row.delay,
@@ -62,7 +62,8 @@ VbbFetcher.prototype.processData = function (data) {
                 nr: row.product.nr,
                 type: row.product.type.type,
                 color: row.product.type.color,
-                direction: row.direction
+                direction: row.direction,
+                productName: row.product.type.name
             };
 
             departuresData.departuresArray.push(current);
