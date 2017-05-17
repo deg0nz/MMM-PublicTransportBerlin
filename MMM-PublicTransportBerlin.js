@@ -15,6 +15,7 @@ Module.register("MMM-PublicTransportBerlin", {
         departureMinutes: 30,               // For how many minutes should departures be shown?
         showColoredLineSymbols: true,       // Want colored line symbols?
         useColorForRealtimeInfo: true,      // Want colored real time information (delay, early)?
+        showTableHeaders: true,             // Show table headers?
         showTableHeadersAsSymbols: true,    // Table Headers as symbols or written?
         maxUnreachableDepartures: 3,        // How many unreachable departures should be shown?
         maxReachableDepartures: 7,          // How many reachable departures should be shown?
@@ -72,7 +73,6 @@ Module.register("MMM-PublicTransportBerlin", {
 
         // Cell for departure time
         let headerTime = document.createElement("td");
-
         if (this.config.showTableHeadersAsSymbols) {
             headerTime.className = "centeredTd";
             let timeIcon = document.createElement("span");
@@ -91,7 +91,6 @@ Module.register("MMM-PublicTransportBerlin", {
 
         // Cell for line symbol
         let headerLine = document.createElement("td");
-
         if (this.config.showTableHeadersAsSymbols) {
             headerLine.className = "centeredTd";
             let lineIcon = document.createElement("span");
@@ -117,7 +116,10 @@ Module.register("MMM-PublicTransportBerlin", {
         headerRow.appendChild(headerDirection);
 
         headerRow.className = "bold dimmed";
-        tHead.appendChild(headerRow);
+
+        if (this.config.showTableHeaders) {
+            tHead.appendChild(headerRow);
+        }
 
         table.appendChild(tHead);
 
