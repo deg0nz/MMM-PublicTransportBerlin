@@ -383,6 +383,5 @@ Module.register("MMM-PublicTransportBerlin", {
                 this.updateDom(3000);
             }
         }
-
     }
 });
