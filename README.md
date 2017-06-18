@@ -57,7 +57,7 @@ The module quite configurable. These are the possible options:
 |`name`|The name of the module instance (if you want multiple modules).<br><br>**Type:** `string`<br>|
 |`stationId`|The ID of the station. How to get the ID for your station is described below.<br><br>**Type:** `integer` This value is **Required**.|
 |`ignoredStations`|To allow appearance of multiple transportation methods, `vbb-hafas` returns departures of multiple stations in the area of the main station (including bus and tram stations for example). You can exclude those stations by adding them to this array. Usually, this can be empty.<br><br>**Type:** `integer array` (comma separated `integers` in the array).<br>**Default value:** `<empty>`|
-|`ignoredLines`|You can exclude different lines of a station by adding them to this array. Usually, this can be empty.<br><br>**Type:** `string array` (comma separated `strings` in the array).<br>**Default value:** `<empty>` <br>**Possible values:** All valid line names like `'U5'` (for `subway`) , `'M10'`, (for `tram`) `'S75'` (for `suburban`) , `'200'`(for `bus`) etc.|
+|`ignoredLines`|You can exclude different lines of a station by adding them to this array. Usually, this can be empty.<br><br>**Type:** `string array` (comma separated `strings` in the array).<br>**Default value:** `<empty>` <br>**Possible values:** All valid line names like `'U5'` (for subway) , `'M10'` or `'21'` (for tram), `'S75'` (for suburban) , `'200'`(for bus), etc.|
 |`excludedTransportationTypes`|Transportation types to be excluded from appearing on a module instance can be listed here.<br><br>**Type:** `string`, comma-separated list<br>**Default vaule:** `<empty>` <br>**Possible values:** `bus`, `tram`, `suburban`, `subway`, `regional`, `ferry`|
 |`marqueeLongDirections`|Makes a marquee/ticker text out of all direction descriptions with more than 25 characters. If this value is false, the descriptions are trimmed to the station names. You can see a video of it [here](https://ds.kayuk.de/kAfzU/) (rendered by a regular computer).<br><br> *Note: The rendering on the mirror is not perfect, but it is OK in my opinion. If the movement is not fluent enough for you, you should turn it off.*<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
 |`interval`|How often the module should be updated. The value is given in milliseconds.<br><br>**Type:** `integer`<br>**Default value:** `120000 // 2 minutes`|
@@ -82,9 +82,9 @@ Here is an example of an entry in `config.js`:
     position: 'top_right',
     config: {
         name: "Alexanderplatz",
-        stationId: 9160003,
+        stationId: 900000100003,
         hidden: false,
-        ignoredStations: [9100003,2342,1337],
+        ignoredStations: [900000100003,2342,1337],
         ignoredLines: ['U5', 'U8', 'S75'],               
         excludedTransportationTypes: 'bus,suburban,subway',   
         delay: 10,
