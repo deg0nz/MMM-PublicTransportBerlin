@@ -364,8 +364,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
     getScripts: function () {
         return [
-            "moment.js",
-            this.file('./vendor/bluebird-3.4.5.min.js')
+            "moment.js"
         ];
     },
 

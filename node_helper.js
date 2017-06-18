@@ -1,7 +1,6 @@
 "use strict";
 const NodeHelper = require('node_helper');
 const VbbFetcher = require('./VbbFetcher');
-const Promise = require('./vendor/bluebird-3.4.5.min');
 
 module.exports = NodeHelper.create({
 
