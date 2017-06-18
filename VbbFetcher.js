@@ -47,7 +47,9 @@ VbbFetcher.prototype.processData = function (data) {
 
     data.forEach((row) => {
         if (!this.config.ignoredStations.includes(row.station.id)
-            && !this.config.excludedTransportationTypes.includes(row.line.product)) {
+            && !this.config.excludedTransportationTypes.includes(row.line.product)
+                && !this.config.ignoredLines.includes(row.line.name)
+        ) {
 
             let delay = row.delay;
 

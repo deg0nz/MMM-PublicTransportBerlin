@@ -6,8 +6,9 @@ Module.register("MMM-PublicTransportBerlin", {
     defaults: {
         name: "MMM-PublicTransportBerlin",
         hidden: false,
-        stationId: 9160003,
+        stationId: 900000160003,
         ignoredStations: [],                // Which stations should be ignored? (comma-separated list of station IDs)
+        ignoredLines: [],                   // Which lines should be ignored? (comma-separated list of line names)
         excludedTransportationTypes: '',    // Which transportation types should not be shown on the mirror? (comma-separated list of types) possible values: bus,tram,suburban,subway,ferry
         marqueeLongDirections: true,        // Use Marquee effect for long station names?
         delay: 10,                          // How long do you need to walk to the next Station?
