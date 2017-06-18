@@ -41,7 +41,7 @@ You will need a `stationId` for your module. You can get it as described in the 
 This is a cURL example for getting all possible stations with the keyword "alexanderplatz":
 
 ```
-curl 'https://transport.rest/stations?query=alexanderplatz'
+curl 'https://vbb.transport.rest/stations?query=alexanderplatz'
 ```
 
 The answer should contain one or more possible stations with valid station IDs. More queries are possible, 
