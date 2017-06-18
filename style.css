@@ -9,7 +9,7 @@
 }
 
 .ruleCell {
-    line-height: 0px;
+    line-height: 0;
     border-spacing: 10px;
     border-bottom: 1px solid #666;
 }
@@ -17,10 +17,10 @@
 .lineCell {
     width: 2.5em;
     height: 1.25em;
-    padding-left: 0px;
-    padding-right: 0px;
-    margin-left: 0px;
-    margin-right: 0px;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .timeCell {
@@ -71,7 +71,7 @@
 }
 
 .noPadding {
-    padding: 0px;
+    padding: 0;
 }
 
 .ellipsis {
@@ -89,8 +89,6 @@
     width: 2.5em;
     height: 1.25em;
     position: relative;
-    -moz-border-radius: 1.25em;
-    -webkit-border-radius: 1.25em;
     border-radius: 1.25em;
 }
 
@@ -127,5 +125,3 @@
     background: #BE1414;
     position: relative;
 }
-
-
