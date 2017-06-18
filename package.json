@@ -26,7 +26,10 @@
     "url": "https://github.com/deg0nz/MMM-PublicTransportBerlin/issues"
   },
   "homepage": "https://github.com/deg0nz/MMM-PublicTransportBerlin",
+  "engines": {
+    "node": ">=6"
+  },
   "dependencies": {
-    "vbb-client": "1.0.0"
+    "vbb-client": "2.0.0"
   }
 }

@@ -30,7 +30,7 @@ VbbFetcher.prototype.fetchDepartures = function () {
     let opt = {
         when: when,
         duration: this.config.departureMinutes,
-        // identifier: "Testing - MagicMirror module MMM-PublicTransportBerlin"    // send testing identifier
+        identifier: "Testing - MagicMirror module MMM-PublicTransportBerlin"    // send testing identifier
     };
 
     return vbbClient.departures(this.config.stationId, opt).then((response) => {
@@ -47,7 +47,7 @@ VbbFetcher.prototype.processData = function (data) {
 
     data.forEach((row) => {
         if (!this.config.ignoredStations.includes(row.station.id)
-            && !this.config.excludedTransportationTypes.includes(row.product.type.type)) {
+            && !this.config.excludedTransportationTypes.includes(row.line.product)) {
 
             let delay = row.delay;
 
@@ -58,10 +58,9 @@ VbbFetcher.prototype.processData = function (data) {
             let current = {
                 when: row.when,
                 delay: row.delay,
-                line: row.product.line,
-                nr: row.product.nr,
-                type: row.product.type.type,
-                color: row.product.type.color,
+                line: row.line.name,
+                nr: row.line.nr,
+                type: row.line.product,
                 direction: row.direction
             };
 
@@ -69,11 +68,11 @@ VbbFetcher.prototype.processData = function (data) {
         }
     });
 
-    departuresData.departuresArray.sort(compare);
+    departuresData.departuresArray.sort(compareTimes);
     return departuresData;
 };
 
-function compare(a, b) {
+function compareTimes(a, b) {
 
     // delay must be converted to milliseconds
     let timeA = a.when.getTime() + a.delay * 1000;

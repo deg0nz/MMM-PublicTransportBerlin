@@ -68,10 +68,6 @@ module.exports = NodeHelper.create({
 
         let lineColor = "";
 
-        if (typeof product.color !== 'undefined') {
-            lineColor = product.color;
-        }
-
         let out = {
             color: lineColor,
             cssClass: ""
@@ -90,15 +86,15 @@ module.exports = NodeHelper.create({
                 out.cssClass = "ubahnsign";
                 break;
             case "bus":
-                out.color = lineColor;
+                out.color = "#B60079";
                 out.cssClass = "bussign";
                 break;
             case "tram":
-                out.color = lineColor;
+                out.color = "#BE1414";
                 out.cssClass = "tramsign";
                 break;
             case "regional":
-                out.color = lineColor;
+                out.color = "#BE1414";
                 out.cssClass = "dbsign";
                 break;
         }
