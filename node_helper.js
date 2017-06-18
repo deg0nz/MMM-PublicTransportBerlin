@@ -66,23 +66,21 @@ module.exports = NodeHelper.create({
 
     getLineProperties: function (product) {
 
-        let lineColor = "";
-
         let out = {
-            color: lineColor,
+            color: "",
             cssClass: ""
         };
 
         let type = product.type;
-        let line = product.nr;
+        let lineNumber = product.nr;
 
         switch (type) {
             case "suburban":
-                out.color = this.getSuburbanLineColor(line);
+                out.color = this.getSuburbanLineColor(lineNumber);
                 out.cssClass = "sbahnsign";
                 break;
             case "subway":
-                out.color = this.getSubwayLineColor(line);
+                out.color = this.getSubwayLineColor(lineNumber);
                 out.cssClass = "ubahnsign";
                 break;
             case "bus":
