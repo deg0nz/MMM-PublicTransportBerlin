@@ -58,7 +58,7 @@ VbbFetcher.prototype.processData = function (data) {
             let current = {
                 when: row.when,
                 delay: row.delay,
-                line: row.line.name,
+                name: row.line.name,
                 nr: row.line.nr,
                 type: row.line.product,
                 direction: row.direction
