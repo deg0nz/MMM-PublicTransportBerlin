@@ -101,11 +101,11 @@ module.exports = NodeHelper.create({
                 out.cssClass = "dbsign";
                 break;
             case "express":
-                if (lineType == "LOCOMORE") {
+                if (lineType === "LOCOMORE") {
                     out.cssClass = "locsign";
                 } else {
                     out.cssClass = "expresssign";
-                };
+                }
                 out.color = this.getExpressLineColor(lineType);
                 break;
         }
