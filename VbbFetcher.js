@@ -18,6 +18,7 @@ VbbFetcher.prototype.getStationName = function () {
 VbbFetcher.prototype.fetchDepartures = function () {
 
     // when value for a request is calculated to be 5 minutes before delay time
+    // so we can also show the non-reachable departures in the module
     let when;
 
     if (this.config.delay > 0) {
@@ -46,6 +47,10 @@ VbbFetcher.prototype.processData = function (data) {
     };
 
     data.forEach((row) => {
+        // check for:
+        // ignored stations
+        // excluded transportation types
+        // ignored lines
         if (!this.config.ignoredStations.includes(row.station.id)
             && !this.config.excludedTransportationTypes.includes(row.line.product)
                 && !this.config.ignoredLines.includes(row.line.name)
