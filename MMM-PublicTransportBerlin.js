@@ -31,6 +31,7 @@ Module.register("MMM-PublicTransportBerlin", {
         this.departuresArray = [];
         this.stationName = "";
         this.loaded = false;
+        this.error = {};
 
         this.sendSocketNotification('CREATE_FETCHER', this.config);
 
@@ -53,6 +54,7 @@ Module.register("MMM-PublicTransportBerlin", {
         let wrapper = document.createElement("div");
         wrapper.className = "ptbWrapper";
 
+        // Handle loading sequence at init time
         if (this.departuresArray.length === 0 && !this.loaded) {
             wrapper.innerHTML = (this.loaded) ? this.translate("EMPTY") : this.translate("LOADING");
             wrapper.className = "small light dimmed";
@@ -63,6 +65,15 @@ Module.register("MMM-PublicTransportBerlin", {
         heading.innerHTML = this.stationName;
         wrapper.appendChild(heading);
 
+        // Handle departure fetcher error and show it on the screen
+        if (Object.keys(this.error).length > 0) {
+            let errorContent = document.createElement("div");
+            errorContent.innerHTML = "Error while fetching departures: " + this.error + "\n";
+            errorContent.innerHTML += "This could mean that VBB data is currently not available.";
+            errorContent.className = "small light dimmed";
+            wrapper.appendChild(errorContent);
+            return wrapper;
+        }
 
         // Table header
         let table = document.createElement("table");
@@ -303,19 +314,18 @@ Module.register("MMM-PublicTransportBerlin", {
 
         return new Promise((resolve, reject) => {
             this.departuresArray.forEach((current, i, depArray) => {
+
                 let currentWhen = moment(current.when);
+
                 if (depArray.length > 1 && i < depArray.length - 1) {
+
                     let nextWhen = moment(depArray[i + 1].when);
                     if ((currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay))
                         || (i === 0 && nextWhen.isSameOrAfter(nowWithDelay))) {
 
-                        Log.log("--> Reachable departure for " + this.stationName + ": " + i);
-
                         resolve(i);
                     }
                 } else if (i === depArray.length - 1 && currentWhen.isBefore(nowWithDelay)) {
-                    Log.log("--> No reachable departure for " + this.stationName + " found.");
-
                     reject("No reachable departures found.");
                 } else {
                     reject("No reachable departures found.");
@@ -342,8 +352,16 @@ Module.register("MMM-PublicTransportBerlin", {
 
     getLineSymbol: function (product) {
         let symbol = document.createElement('div');
-        console.log(product);
-        symbol.innerHTML = product.name;
+
+        if (product.type === 'express') {
+            if (product.name === 'LOCOMORE')
+                symbol.innerHTML = 'LOC';
+            else
+                symbol.innerHTML = 'ICE';
+        } else {
+            symbol.innerHTML = product.name;
+        }
+        
         symbol.className = product.cssClass + " xsmall";
 
         if (this.config.showColoredLineSymbols) {
@@ -379,7 +397,19 @@ Module.register("MMM-PublicTransportBerlin", {
         if (notification === 'DEPARTURES') {
             this.config.loaded = true;
             if (payload.stationId === this.config.stationId) {
+                // Empty error object
+                this.error = {};
+                // Proceed with normal operation
                 this.departuresArray = payload.departuresArray;
+                this.updateDom(3000);
+            }
+        }
+
+        if (notification === 'FETCH_ERROR') {
+            this.config.loaded = true;
+            if (payload.stationId === this.config.stationId) {
+                // Empty error object
+                this.error = payload;
                 this.updateDom(3000);
             }
         }

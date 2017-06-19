@@ -18,6 +18,7 @@ VbbFetcher.prototype.getStationName = function () {
 VbbFetcher.prototype.fetchDepartures = function () {
 
     // when value for a request is calculated to be 5 minutes before delay time
+    // so we can also show the non-reachable departures in the module
     let when;
 
     if (this.config.delay > 0) {
@@ -29,12 +30,14 @@ VbbFetcher.prototype.fetchDepartures = function () {
 
     let opt = {
         when: when,
-        duration: this.config.departureMinutes,
+        duration: this.config.departureMinutes
         // identifier: "Testing - MagicMirror module MMM-PublicTransportBerlin"    // send testing identifier
     };
 
     return vbbClient.departures(this.config.stationId, opt).then((response) => {
         return this.processData(response);
+    }).catch((e) => {
+        throw e;
     });
 };
 
@@ -46,6 +49,10 @@ VbbFetcher.prototype.processData = function (data) {
     };
 
     data.forEach((row) => {
+        // check for:
+        // ignored stations
+        // excluded transportation types
+        // ignored lines
         if (!this.config.ignoredStations.includes(row.station.id)
             && !this.config.excludedTransportationTypes.includes(row.line.product)
                 && !this.config.ignoredLines.includes(row.line.name)
@@ -56,7 +63,7 @@ VbbFetcher.prototype.processData = function (data) {
             if (!delay) {
                 row.delay = 0
             }
-
+            
             let current = {
                 when: row.when,
                 delay: row.delay,

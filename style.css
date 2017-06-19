@@ -125,3 +125,21 @@
     background: #BE1414;
     position: relative;
 }
+
+.locsign {
+    color: #4B2B1F;
+    text-align: center;
+    width: 2.5em;
+    height: 1.25em;
+    position: relative;
+}
+
+.expresssign {
+    color: #B4B4B4;
+    text-align: center;
+    font-style: italic;
+    font-weight: bold;
+    width: 2.5em;
+    height: 1.25em;
+    position: relative;
+}
