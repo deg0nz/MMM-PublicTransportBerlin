@@ -46,7 +46,7 @@ module.exports = NodeHelper.create({
             this.pimpDeparturesArray(departuresData.departuresArray);
             this.sendSocketNotification('DEPARTURES', departuresData);
         }).catch((e) => {
-            console.log("Error while fetching departures (for Station ID " + stationId + "): " + e.msg);
+            console.log("Error while fetching departures (for Station ID " + stationId + "): " + e);
         });
     },
 
