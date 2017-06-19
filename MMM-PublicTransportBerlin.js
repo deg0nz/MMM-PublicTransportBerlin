@@ -345,12 +345,12 @@ Module.register("MMM-PublicTransportBerlin", {
 
         console.log(product);
         if (product.type === 'express') {
-            if (product.line === 'LOCOMORE')
+            if (product.name === 'LOCOMORE')
                 symbol.innerHTML = 'LOC';
             else
                 symbol.innerHTML = 'ICE';
         } else {
-            symbol.innerHTML = product.line;
+            symbol.innerHTML = product.name;
         };
         
         symbol.className = product.cssClass + " xsmall";
