@@ -47,6 +47,9 @@ module.exports = NodeHelper.create({
             this.sendSocketNotification('DEPARTURES', departuresData);
         }).catch((e) => {
             console.log("Error while fetching departures (for Station ID " + stationId + "): " + e);
+            // Add stationId to error for identification in the main instance
+            e.stationId = stationId;
+            this.sendSocketNotification('FETCH_ERROR', e);
         });
     },
 

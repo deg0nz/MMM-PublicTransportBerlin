@@ -31,6 +31,7 @@ Module.register("MMM-PublicTransportBerlin", {
         this.departuresArray = [];
         this.stationName = "";
         this.loaded = false;
+        this.error = {};
 
         this.sendSocketNotification('CREATE_FETCHER', this.config);
 
@@ -53,6 +54,7 @@ Module.register("MMM-PublicTransportBerlin", {
         let wrapper = document.createElement("div");
         wrapper.className = "ptbWrapper";
 
+        // Handle loading sequence at init time
         if (this.departuresArray.length === 0 && !this.loaded) {
             wrapper.innerHTML = (this.loaded) ? this.translate("EMPTY") : this.translate("LOADING");
             wrapper.className = "small light dimmed";
@@ -63,6 +65,14 @@ Module.register("MMM-PublicTransportBerlin", {
         heading.innerHTML = this.stationName;
         wrapper.appendChild(heading);
 
+        // Handle departure fetcher error and show it on the screen
+        if (!Object.keys(this.error).length) {
+            let errorContent = document.createElement("div");
+            errorContent.innerHTML = "Error while fetching departures: " + this.error;
+            errorContent.className = "small light dimmed";
+            wrapper.appendChild(errorContent);
+            return wrapper;
+        }
 
         // Table header
         let table = document.createElement("table");
@@ -389,7 +399,19 @@ Module.register("MMM-PublicTransportBerlin", {
         if (notification === 'DEPARTURES') {
             this.config.loaded = true;
             if (payload.stationId === this.config.stationId) {
+                // Empty error object
+                this.error = {};
+                // Proceed with normal operation
                 this.departuresArray = payload.departuresArray;
+                this.updateDom(3000);
+            }
+        }
+
+        if (notification === 'FETCH_ERROR') {
+            this.config.loaded = true;
+            if (payload.stationId === this.config.stationId) {
+                // Empty error object
+                this.error = payload;
                 this.updateDom(3000);
             }
         }
