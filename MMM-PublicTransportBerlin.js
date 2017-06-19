@@ -172,7 +172,6 @@ Module.register("MMM-PublicTransportBerlin", {
                     }
                 }
             });
-
         // handle delay > 0
         } else {
             this.getFirstReachableDeparturePosition().then((reachableDeparturePos) => {

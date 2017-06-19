@@ -218,13 +218,9 @@ module.exports = NodeHelper.create({
     },
 
     socketNotificationReceived: function (notification, payload) {
-
         if (notification === 'GET_DEPARTURES') {
-
             this.getDepartures(payload);
-
         } else if (notification === 'CREATE_FETCHER') {
-
             this.createFetcher(payload);
         }
     }
