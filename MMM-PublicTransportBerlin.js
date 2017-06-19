@@ -6,10 +6,11 @@ Module.register("MMM-PublicTransportBerlin", {
     defaults: {
         name: "MMM-PublicTransportBerlin",
         hidden: false,
-        stationId: 9160003,
+        stationId: 900000160003,
         ignoredStations: [],                // Which stations should be ignored? (comma-separated list of station IDs)
+        ignoredLines: [],                   // Which lines should be ignored? (comma-separated list of line names)
         excludedTransportationTypes: '',    // Which transportation types should not be shown on the mirror? (comma-separated list of types) possible values: bus,tram,suburban,subway,ferry
-        marqueeLongDirections: true,
+        marqueeLongDirections: true,        // Use Marquee effect for long station names?
         delay: 10,                          // How long do you need to walk to the next Station?
         interval: 120000,                   // How often should the table be updated in ms?
         departureMinutes: 30,               // For how many minutes should departures be shown?
@@ -342,6 +343,7 @@ Module.register("MMM-PublicTransportBerlin", {
     getLineSymbol: function (product) {
         let symbol = document.createElement('div');
 
+        console.log(product);
         if (product.type === 'express') {
             if (product.line === 'LOCOMORE')
                 symbol.innerHTML = 'LOC';
@@ -391,6 +393,5 @@ Module.register("MMM-PublicTransportBerlin", {
                 this.updateDom(3000);
             }
         }
-
     }
 });

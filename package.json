@@ -1,6 +1,6 @@
 {
   "name": "MMM-PublicTransportBerlin",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "VBB-Hafas driven public transport module for MagicMirror 2.",
   "repository": {
     "type": "git",
@@ -16,9 +16,9 @@
     "module"
   ],
   "author": {
-    "name" : "deg0nz",
-    "email" : "b@kayuk.de",
-    "url" : "https://kayuk.de"
+    "name": "deg0nz",
+    "email": "b@kayuk.de",
+    "url": "https://kayuk.de"
   },
   "contributors": "https://github.com/deg0nz/MMM-PublicTransportBerlin/graphs/contributors",
   "license": "MIT",
@@ -26,7 +26,10 @@
     "url": "https://github.com/deg0nz/MMM-PublicTransportBerlin/issues"
   },
   "homepage": "https://github.com/deg0nz/MMM-PublicTransportBerlin",
+  "engines": {
+    "node": ">=6"
+  },
   "dependencies": {
-    "vbb-client": "latest"
+    "vbb-client": "2.0.0"
   }
 }

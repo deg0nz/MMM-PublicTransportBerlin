@@ -34,7 +34,7 @@ VbbFetcher.prototype.fetchDepartures = function () {
     };
 
     return vbbClient.departures(this.config.stationId, opt).then((response) => {
-        return this.processData(response)
+        return this.processData(response);
     });
 };
 
@@ -47,7 +47,9 @@ VbbFetcher.prototype.processData = function (data) {
 
     data.forEach((row) => {
         if (!this.config.ignoredStations.includes(row.station.id)
-            && !this.config.excludedTransportationTypes.includes(row.product.type.type)) {
+            && !this.config.excludedTransportationTypes.includes(row.line.product)
+                && !this.config.ignoredLines.includes(row.line.name)
+        ) {
 
             let delay = row.delay;
 
@@ -58,23 +60,21 @@ VbbFetcher.prototype.processData = function (data) {
             let current = {
                 when: row.when,
                 delay: row.delay,
-                line: row.product.line,
-                nr: row.product.nr,
-                type: row.product.type.type,
-                color: row.product.type.color,
-                direction: row.direction,
-                productName: row.product.type.name
+                name: row.line.name,
+                nr: row.line.nr,
+                type: row.line.product,
+                direction: row.direction
             };
 
             departuresData.departuresArray.push(current);
         }
     });
 
-    departuresData.departuresArray.sort(compare);
+    departuresData.departuresArray.sort(compareTimes);
     return departuresData;
 };
 
-function compare(a, b) {
+function compareTimes(a, b) {
 
     // delay must be converted to milliseconds
     let timeA = a.when.getTime() + a.delay * 1000;

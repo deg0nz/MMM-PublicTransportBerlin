@@ -67,49 +67,43 @@ module.exports = NodeHelper.create({
 
     getLineProperties: function (product) {
 
-        let lineColor = "";
-
-        if (typeof product.color !== 'undefined') {
-            lineColor = product.color;
-        }
-
         let out = {
-            color: lineColor,
+            color: "",
             cssClass: ""
         };
 
         let type = product.type;
-        let line = product.nr;
-        let linetype = product.line;
+        let lineType = product.line;
+        let lineNumber = product.nr;
 
         switch (type) {
             case "suburban":
-                out.color = this.getSuburbanLineColor(line);
+                out.color = this.getSuburbanLineColor(lineNumber);
                 out.cssClass = "sbahnsign";
                 break;
             case "subway":
-                out.color = this.getSubwayLineColor(line);
+                out.color = this.getSubwayLineColor(lineNumber);
                 out.cssClass = "ubahnsign";
                 break;
             case "bus":
-                out.color = lineColor;
+                out.color = "#B60079";
                 out.cssClass = "bussign";
                 break;
             case "tram":
-                out.color = lineColor;
+                out.color = "#BE1414";
                 out.cssClass = "tramsign";
                 break;
             case "regional":
-                out.color = lineColor;
+                out.color = "#BE1414";
                 out.cssClass = "dbsign";
                 break;
             case "express":
-                if (linetype == "LOCOMORE") {
+                if (lineType == "LOCOMORE") {
                     out.cssClass = "locsign";
                 } else {
                     out.cssClass = "expresssign";
                 };
-                out.color = this.getExpressLineColor(linetype);
+                out.color = this.getExpressLineColor(lineType);
                 break;
         }
         
@@ -205,10 +199,10 @@ module.exports = NodeHelper.create({
         return color;
     },
 
-    getExpressLineColor: function (line) {
+    getExpressLineColor: function (lineNumber) {
         let color;
 
-        switch (line) {
+        switch (lineNumber) {
             case "LOCOMORE":
                 color = "#E5690B";
                 break;
