@@ -49,6 +49,7 @@ module.exports = NodeHelper.create({
     },
 
     pimpDeparturesArray: function (departuresArray) {
+        //console.log(departuresArray);
         let currentProperties = {};
 
         departuresArray.forEach((current) => {
@@ -72,6 +73,7 @@ module.exports = NodeHelper.create({
         };
 
         let type = product.type;
+        let lineType = product.line;
         let lineNumber = product.nr;
 
         switch (type) {
@@ -95,8 +97,16 @@ module.exports = NodeHelper.create({
                 out.color = "#BE1414";
                 out.cssClass = "dbsign";
                 break;
+            case "express":
+                if (lineType == "LOCOMORE") {
+                    out.cssClass = "locsign";
+                } else {
+                    out.cssClass = "expresssign";
+                };
+                out.color = this.getExpressLineColor(lineType);
+                break;
         }
-
+        
         return out;
     },
 
@@ -183,6 +193,21 @@ module.exports = NodeHelper.create({
                 break;
             case 9:
                 color = "#F3791D";
+                break;
+        }
+
+        return color;
+    },
+
+    getExpressLineColor: function (lineNumber) {
+        let color;
+
+        switch (lineNumber) {
+            case "LOCOMORE":
+                color = "#E5690B";
+                break;
+            default:
+                color = "#000000";
                 break;
         }
 

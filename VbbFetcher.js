@@ -56,7 +56,7 @@ VbbFetcher.prototype.processData = function (data) {
             if (!delay) {
                 row.delay = 0
             }
-
+            
             let current = {
                 when: row.when,
                 delay: row.delay,

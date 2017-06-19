@@ -342,8 +342,17 @@ Module.register("MMM-PublicTransportBerlin", {
 
     getLineSymbol: function (product) {
         let symbol = document.createElement('div');
+
         console.log(product);
-        symbol.innerHTML = product.name;
+        if (product.type === 'express') {
+            if (product.line === 'LOCOMORE')
+                symbol.innerHTML = 'LOC';
+            else
+                symbol.innerHTML = 'ICE';
+        } else {
+            symbol.innerHTML = product.line;
+        };
+        
         symbol.className = product.cssClass + " xsmall";
 
         if (this.config.showColoredLineSymbols) {
