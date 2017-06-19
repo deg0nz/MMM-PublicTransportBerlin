@@ -36,6 +36,8 @@ VbbFetcher.prototype.fetchDepartures = function () {
 
     return vbbClient.departures(this.config.stationId, opt).then((response) => {
         return this.processData(response);
+    }).catch((e) => {
+        throw e;
     });
 };
 
