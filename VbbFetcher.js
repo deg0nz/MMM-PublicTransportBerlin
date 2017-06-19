@@ -30,7 +30,7 @@ VbbFetcher.prototype.fetchDepartures = function () {
 
     let opt = {
         when: when,
-        duration: this.config.departureMinutes,
+        duration: this.config.departureMinutes
         // identifier: "Testing - MagicMirror module MMM-PublicTransportBerlin"    // send testing identifier
     };
 

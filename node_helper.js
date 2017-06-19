@@ -54,7 +54,6 @@ module.exports = NodeHelper.create({
     },
 
     pimpDeparturesArray: function (departuresArray) {
-        //console.log(departuresArray);
         let currentProperties = {};
 
         departuresArray.forEach((current) => {
