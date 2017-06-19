@@ -318,17 +318,14 @@ Module.register("MMM-PublicTransportBerlin", {
                 let currentWhen = moment(current.when);
 
                 if (depArray.length > 1 && i < depArray.length - 1) {
+
                     let nextWhen = moment(depArray[i + 1].when);
                     if ((currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay))
                         || (i === 0 && nextWhen.isSameOrAfter(nowWithDelay))) {
 
-                        Log.log("--> Reachable departure for " + this.stationName + ": " + i);
-
                         resolve(i);
                     }
                 } else if (i === depArray.length - 1 && currentWhen.isBefore(nowWithDelay)) {
-                    Log.log("--> No reachable departure for " + this.stationName + " found.");
-
                     reject("No reachable departures found.");
                 } else {
                     reject("No reachable departures found.");
@@ -356,7 +353,6 @@ Module.register("MMM-PublicTransportBerlin", {
     getLineSymbol: function (product) {
         let symbol = document.createElement('div');
 
-        console.log(product);
         if (product.type === 'express') {
             if (product.name === 'LOCOMORE')
                 symbol.innerHTML = 'LOC';
@@ -364,7 +360,7 @@ Module.register("MMM-PublicTransportBerlin", {
                 symbol.innerHTML = 'ICE';
         } else {
             symbol.innerHTML = product.name;
-        };
+        }
         
         symbol.className = product.cssClass + " xsmall";
 
