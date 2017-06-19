@@ -343,7 +343,10 @@ Module.register("MMM-PublicTransportBerlin", {
         let symbol = document.createElement('div');
 
         if (product.type === 'express') {
-            symbol.innerHTML = product.productName;
+            if (product.line === 'LOCOMORE')
+                symbol.innerHTML = 'LOC';
+            else
+                symbol.innerHTML = 'ICE';
         } else {
             symbol.innerHTML = product.line;
         };

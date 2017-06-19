@@ -213,7 +213,7 @@ module.exports = NodeHelper.create({
                 color = "#E5690B";
                 break;
             default:
-                color = "#F4E613";
+                color = "#000000";
                 break;
         }
 
