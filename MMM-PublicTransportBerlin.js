@@ -68,7 +68,8 @@ Module.register("MMM-PublicTransportBerlin", {
         // Handle departure fetcher error and show it on the screen
         if (Object.keys(this.error).length > 0) {
             let errorContent = document.createElement("div");
-            errorContent.innerHTML = "Error while fetching departures: " + this.error;
+            errorContent.innerHTML = "Error while fetching departures: " + this.error + "\n";
+            errorContent.innerHTML += "This could mean that VBB data is currently not available.";
             errorContent.className = "small light dimmed";
             wrapper.appendChild(errorContent);
             return wrapper;
@@ -313,7 +314,9 @@ Module.register("MMM-PublicTransportBerlin", {
 
         return new Promise((resolve, reject) => {
             this.departuresArray.forEach((current, i, depArray) => {
+
                 let currentWhen = moment(current.when);
+
                 if (depArray.length > 1 && i < depArray.length - 1) {
                     let nextWhen = moment(depArray[i + 1].when);
                     if ((currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay))
