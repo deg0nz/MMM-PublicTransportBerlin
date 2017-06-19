@@ -66,7 +66,7 @@ Module.register("MMM-PublicTransportBerlin", {
         wrapper.appendChild(heading);
 
         // Handle departure fetcher error and show it on the screen
-        if (!Object.keys(this.error).length) {
+        if (Object.keys(this.error).length > 0) {
             let errorContent = document.createElement("div");
             errorContent.innerHTML = "Error while fetching departures: " + this.error;
             errorContent.className = "small light dimmed";
