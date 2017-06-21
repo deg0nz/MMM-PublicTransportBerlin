@@ -35,6 +35,15 @@ cd MMM-PublicTransportBerlin
 npm install
 ```
 
+## Update
+
+Just enter your MMM-PublicTransportBerlin folder in the MagicMirror's modules folder and execute the following commands in the module's directory:
+
+```
+git pull
+npm install
+```
+
 ## How to get the `stationId`
 
 You will need a `stationId` for your module. You can get it as described in the [vbb-rest API documentation](https://github.com/derhuerst/vbb-rest/blob/21930eb2442ecdc8888e70d024391be29264f33f/docs/index.md).    
