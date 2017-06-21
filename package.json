@@ -30,6 +30,6 @@
     "node": ">=6"
   },
   "dependencies": {
-    "vbb-client": "^2.0.0"
+    "vbb-client": "^2.0.1"
   }
 }

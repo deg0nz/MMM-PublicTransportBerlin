@@ -1,7 +1,6 @@
 "use strict";
 const NodeHelper = require('node_helper');
 const VbbFetcher = require('./VbbFetcher');
-const Promise = require('./vendor/bluebird-3.4.5.min');
 
 module.exports = NodeHelper.create({
 
@@ -102,11 +101,11 @@ module.exports = NodeHelper.create({
                 out.cssClass = "dbsign";
                 break;
             case "express":
-                if (lineType == "LOCOMORE") {
+                if (lineType === "LOCOMORE") {
                     out.cssClass = "locsign";
                 } else {
                     out.cssClass = "expresssign";
-                };
+                }
                 out.color = this.getExpressLineColor(lineType);
                 break;
         }
@@ -219,13 +218,9 @@ module.exports = NodeHelper.create({
     },
 
     socketNotificationReceived: function (notification, payload) {
-
         if (notification === 'GET_DEPARTURES') {
-
             this.getDepartures(payload);
-
         } else if (notification === 'CREATE_FETCHER') {
-
             this.createFetcher(payload);
         }
     }

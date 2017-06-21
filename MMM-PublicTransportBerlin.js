@@ -172,7 +172,6 @@ Module.register("MMM-PublicTransportBerlin", {
                     }
                 }
             });
-
         // handle delay > 0
         } else {
             this.getFirstReachableDeparturePosition().then((reachableDeparturePos) => {
@@ -382,8 +381,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
     getScripts: function () {
         return [
-            "moment.js",
-            this.file('./vendor/bluebird-3.4.5.min.js')
+            "moment.js"
         ];
     },
 
