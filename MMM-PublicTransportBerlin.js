@@ -7,6 +7,7 @@ Module.register("MMM-PublicTransportBerlin", {
         name: "MMM-PublicTransportBerlin",
         hidden: false,
         stationId: 900000160003,
+     //   directionStationId: 0,             // The stationId of the next station in which direction departures should be shown
         ignoredStations: [],                // Which stations should be ignored? (comma-separated list of station IDs)
         ignoredLines: [],                   // Which lines should be ignored? (comma-separated list of line names)
         excludedTransportationTypes: '',    // Which transportation types should not be shown on the mirror? (comma-separated list of types) possible values: bus,tram,suburban,subway,ferry
@@ -39,6 +40,10 @@ Module.register("MMM-PublicTransportBerlin", {
             this.config.delay = 0;
         }
 
+        if(typeof this.config.ignoredLines === 'undefined') {
+            this.config.ignoredLines = [];
+        }
+
         // set minimum interval to 30 seconds
         if (this.config.interval < 30000) {
             this.config.interval = 30000;
@@ -68,7 +73,7 @@ Module.register("MMM-PublicTransportBerlin", {
         // Handle departure fetcher error and show it on the screen
         if (Object.keys(this.error).length > 0) {
             let errorContent = document.createElement("div");
-            errorContent.innerHTML = "Error while fetching departures: " + this.error + "\n";
+            errorContent.innerHTML = "Error while fetching departures: " + JSON.stringify(this.error.message) + "<br>";
             errorContent.innerHTML += "This could mean that VBB data is currently not available.";
             errorContent.className = "small light dimmed";
             wrapper.appendChild(errorContent);

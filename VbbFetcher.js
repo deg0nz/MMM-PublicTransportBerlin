@@ -28,17 +28,32 @@ VbbFetcher.prototype.fetchDepartures = function () {
         when = Date.now();
     }
 
-    let opt = {
-        when: when,
-        duration: this.config.departureMinutes
-        // identifier: "Testing - MagicMirror module MMM-PublicTransportBerlin"    // send testing identifier
-    };
+    let opt;
 
-    return vbbClient.departures(this.config.stationId, opt).then((response) => {
-        return this.processData(response);
-    }).catch((e) => {
-        throw e;
-    });
+    // Handle single direction case
+    if(!this.config.directionStationId) {
+        opt = {
+            when: when,
+            duration: this.config.departureMinutes
+        };
+    } else {
+        let results = this.config.maxUnreachableDepartures + this.config.maxReachableDepartures;
+        opt = {
+            nextStation: this.config.directionStationId,
+            when: when,
+            results: results
+        };
+    }
+
+    // For use in testing environments:
+    // opt.identifier = "Testing - MagicMirror module MMM-PublicTransportBerlin";    // send testing identifier
+
+    return vbbClient.departures(this.config.stationId, opt)
+        .then((response) => {
+            return this.processData(response);
+        }).catch((e) => {
+            throw e;
+        });
 };
 
 VbbFetcher.prototype.processData = function (data) {
