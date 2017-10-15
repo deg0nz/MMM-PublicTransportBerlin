@@ -124,7 +124,7 @@ Multiple instances of this module are possible. Just add another entry of the MM
 * [Michael Teeuw](https://github.com/MichMich) for inspiring me and many others to build a MagicMirror.
 * [Jannis Redmann](https://github.com/derhuerst) for creating the [vbb-hafas](https://github.com/derhuerst/vbb-hafas) REST API. 
 You made my life a lot easier with this!
-* The community of [magicmirror.builders](https://magicmirror.builders) for help in the development process.
+* The community of [magicmirror.builders](https://magicmirror.builders) for help in the development process and all contributors for finding and fixing errors in this module.
 
 ## Issues
 
