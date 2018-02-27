@@ -83,9 +83,7 @@ VbbFetcher.prototype.processData = function (data) {
                 type: row.line.product,
                 direction: row.direction
             };
-
-            printDeparture(row);
-
+            
             departuresData.departuresArray.push(current);
         }
     });
