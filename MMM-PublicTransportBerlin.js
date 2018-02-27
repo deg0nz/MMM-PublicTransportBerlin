@@ -34,6 +34,14 @@ Module.register("MMM-PublicTransportBerlin", {
         this.loaded = false;
         this.error = {};
 
+        // Check for stationId as string for now, to keep backwards compatibility
+        if (typeof this.stationId === 'number') {
+            Log.warn("Deprecation warning: The stationId must be a String in the future! Please check your MMM-PublicTransportBerlin configuration!")
+
+            // We'll convert an integer to string here for now
+            this.stationId = this.stationId.toString();
+        }
+
         this.sendSocketNotification('CREATE_FETCHER', this.config);
 
         if(this.config.delay < 0) {
