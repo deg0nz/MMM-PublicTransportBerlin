@@ -94,8 +94,8 @@ VbbFetcher.prototype.processData = function (data) {
 function compareTimes(a, b) {
 
     // delay must be converted to milliseconds
-    let timeA = a.when.getTime() + a.delay * 1000;
-    let timeB = b.when.getTime() + b.delay * 1000;
+    let timeA = a.when.getTime();
+    let timeB = b.when.getTime();
 
     if (timeA < timeB) {
         return -1;
