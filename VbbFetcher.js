@@ -31,7 +31,7 @@ VbbFetcher.prototype.fetchDepartures = function () {
     let opt;
 
     // Handle single direction case
-    if(!this.config.directionStationId) {
+    if(!this.config.directionStationId || this.config.directionStationId === '') {
         opt = {
             when: when,
             duration: this.config.departureMinutes
