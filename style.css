@@ -11,7 +11,7 @@
 .ruleCell {
     line-height: 0;
     border-spacing: 10px;
-    border-bottom: 1px solid #666;
+    border-bottom: 1px dotted #666;
 }
 
 .lineCell {
