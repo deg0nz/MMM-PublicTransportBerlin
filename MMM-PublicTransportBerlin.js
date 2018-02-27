@@ -12,7 +12,7 @@ Module.register("MMM-PublicTransportBerlin", {
         ignoredLines: [],                   // Which lines should be ignored? (comma-separated list of line names)
         excludedTransportationTypes: '',    // Which transportation types should not be shown on the mirror? (comma-separated list of types) possible values: bus,tram,suburban,subway,ferry
         marqueeLongDirections: true,        // Use Marquee effect for long station names?
-        delay: 10,                          // How long do you need to walk to the next Station?
+        travelTimeToStation: 10,            // How long do you need to walk/bike to the next Station?
         interval: 120000,                   // How often should the table be updated in ms?
         departureMinutes: 30,               // For how many minutes should departures be shown?
         showColoredLineSymbols: true,       // Want colored line symbols?
@@ -36,16 +36,27 @@ Module.register("MMM-PublicTransportBerlin", {
 
         // Check for stationId as string for now, to keep backwards compatibility
         if (typeof this.stationId === 'number') {
-            Log.warn("Deprecation warning: The stationId must be a String in the future! Please check your MMM-PublicTransportBerlin configuration!")
+            let warning = "MMM-PublicTransportBerlin deprecation warning: The stationId must be a String in the future! Please check your configuration!";
+            Log.warn(warning);
+            console.log(warning);
 
             // We'll convert an integer to string here for now
             this.stationId = this.stationId.toString();
         }
 
+        // Provide backwards compatibility for refactoring of config.delay to config.travelTimeToStation
+        if (this.config.delay) {
+          let warning = "MMM-PublicTransportBerlin deprecation warning: The delay option has been renamed to travelTimeToStation. Please change your configuration!";
+          Log.warn(warning);
+          console.log(warning);
+
+          this.config.travelTimeToStation = this.config.delay;
+        }
+
         this.sendSocketNotification('CREATE_FETCHER', this.config);
 
-        if(this.config.delay < 0) {
-            this.config.delay = 0;
+        if(this.config.travelTimeToStation < 0) {
+            this.config.travelTimeToStation = 0;
         }
 
         if(typeof this.config.ignoredLines === 'undefined') {
@@ -109,7 +120,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
         headerRow.appendChild(headerTime);
 
-        // Cell for delay time
+        // Cell for travelTimeToStation time
         let delayTime = document.createElement("td");
         delayTime.innerHTML = "&nbsp;";
         headerRow.appendChild(delayTime);
@@ -164,8 +175,8 @@ Module.register("MMM-PublicTransportBerlin", {
             return wrapper;
         }
 
-        // handle delay === 0
-        if (this.config.delay === 0) {
+        // handle travelTimeToStation === 0
+        if (this.config.travelTimeToStation === 0) {
             this.departuresArray.forEach((current, i) => {
                 if (i < this.config.maxReachableDepartures) {
                     let row = this.getRow(current);
@@ -185,7 +196,7 @@ Module.register("MMM-PublicTransportBerlin", {
                     }
                 }
             });
-        // handle delay > 0
+        // handle travelTimeToStation > 0
         } else {
             this.getFirstReachableDeparturePosition().then((reachableDeparturePos) => {
                 this.departuresArray.forEach((current, i) => {
@@ -214,8 +225,8 @@ Module.register("MMM-PublicTransportBerlin", {
                         // create standard row
                         let row = this.getRow(current);
 
-                        // fading for entries before "delay rule"
-                        if (this.config.fadeUnreachableDepartures && this.config.delay > 0) {
+                        // fading for entries before "travelTimeToStation rule"
+                        if (this.config.fadeUnreachableDepartures && this.config.travelTimeToStation > 0) {
                             let steps = this.config.maxUnreachableDepartures;
                             if (i >= reachableDeparturePos - steps && i < reachableDeparturePos) {
                                 let currentStep = reachableDeparturePos - i;
@@ -223,7 +234,7 @@ Module.register("MMM-PublicTransportBerlin", {
                             }
                         }
 
-                        // fading for entries after "delay rule"
+                        // fading for entries after "travelTimeToStation rule"
                         if (this.config.fadeReachableDepartures && this.config.fadePointForReachableDepartures < 1) {
                             if (this.config.fadePointForReachableDepartures < 0) {
                                 this.config.fadePointForReachableDepartures = 0;
@@ -267,6 +278,7 @@ Module.register("MMM-PublicTransportBerlin", {
     getRow: function (current) {
 
         let currentWhen = moment(current.when);
+        let delay = this.convertDelayToMinutes(current.delay);
 
         let row = document.createElement("tr");
 
@@ -277,8 +289,6 @@ Module.register("MMM-PublicTransportBerlin", {
 
         let delayCell = document.createElement("td");
         delayCell.className = "delayTimeCell";
-
-        let delay = Math.floor((((current.delay % 31536000) % 86400) % 3600) / 60);
 
         if (delay > 0) {
             delayCell.innerHTML = "+" + delay + " ";
@@ -327,7 +337,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
     getFirstReachableDeparturePosition: function () {
         let now = moment();
-        let nowWithDelay = now.add(this.config.delay, 'minutes');
+        let nowWithDelay = now.add(this.config.travelTimeToStation, 'minutes');
 
         return new Promise((resolve, reject) => {
             this.departuresArray.forEach((current, i, depArray) => {
@@ -393,6 +403,10 @@ Module.register("MMM-PublicTransportBerlin", {
         }
 
         return symbol;
+    },
+
+    convertDelayToMinutes: function (delay) {
+        return Math.floor((((delay % 31536000) % 86400) % 3600) / 60);
     },
 
     getStyles: function () {

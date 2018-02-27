@@ -17,13 +17,13 @@ VbbFetcher.prototype.getStationName = function () {
 
 VbbFetcher.prototype.fetchDepartures = function () {
 
-    // when value for a request is calculated to be 5 minutes before delay time
+    // when value for a request is calculated to be 5 minutes before travelTimeToStation time
     // so we can also show the non-reachable departures in the module
     let when;
 
-    if (this.config.delay > 0) {
+    if (this.config.travelTimeToStation > 0) {
         when = new Date();
-        when.setTime((Date.now() + this.config.delay * 60000) - (5 * 60000));
+        when.setTime((Date.now() + this.config.travelTimeToStation * 60000) - (5 * 60000));
     } else {
         when = Date.now();
     }
