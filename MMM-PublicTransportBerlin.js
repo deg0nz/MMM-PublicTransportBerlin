@@ -4,9 +4,9 @@ Module.register("MMM-PublicTransportBerlin", {
 
     // default values
     defaults: {
-        name: "MMM-PublicTransportBerlin",
-        hidden: false,
-        stationId: 900000160003,
+        name: "MMM-PublicTransportBerlin",  // The name of this module
+        hidden: false,                      // Hide this module?
+        stationId: '900000160003',          // The ID of the station
      //   directionStationId: 0,             // The stationId of the next station in which direction departures should be shown
         ignoredStations: [],                // Which stations should be ignored? (comma-separated list of station IDs)
         ignoredLines: [],                   // Which lines should be ignored? (comma-separated list of line names)
@@ -21,9 +21,9 @@ Module.register("MMM-PublicTransportBerlin", {
         showTableHeadersAsSymbols: true,    // Table Headers as symbols or written?
         maxUnreachableDepartures: 3,        // How many unreachable departures should be shown?
         maxReachableDepartures: 7,          // How many reachable departures should be shown?
-        fadeUnreachableDepartures: true,
-        fadeReachableDepartures: true,
-        fadePointForReachableDepartures: 0.25
+        fadeUnreachableDepartures: true,    // Should unreachable departures be faded away from the reachable departures line?
+        fadeReachableDepartures: true,      // Should reachable departures be faded away from the reachable departures line?
+        fadePointForReachableDepartures: 0.25 // The point to start fading the reachable departures
     },
 
     start: function () {
