@@ -35,14 +35,11 @@ Module.register("MMM-PublicTransportBerlin", {
         this.loaded = false;
         this.error = {};
 
-        // Check for stationId as string for now, to keep backwards compatibility
-        if (typeof this.stationId === 'number') {
-            let warning = "MMM-PublicTransportBerlin deprecation warning: The stationId must be a String in the future! Please check your configuration!";
+        // If the stationId is not a string, we'll print a warning
+        if (typeof this.config.stationId === 'number') {
+            let warning = "MMM-PublicTransportBerlin deprecation warning: The stationId must be a String! Please check your configuration!";
             Log.warn(warning);
             console.log(warning);
-
-            // We'll convert an integer to string here for now
-            this.stationId = this.stationId.toString();
         }
 
         // Provide backwards compatibility for refactoring of config.delay to config.travelTimeToStation
