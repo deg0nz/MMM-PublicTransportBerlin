@@ -23,7 +23,8 @@ Module.register("MMM-PublicTransportBerlin", {
         maxReachableDepartures: 7,          // How many reachable departures should be shown?
         fadeUnreachableDepartures: true,    // Should unreachable departures be faded away from the reachable departures line?
         fadeReachableDepartures: true,      // Should reachable departures be faded away from the reachable departures line?
-        fadePointForReachableDepartures: 0.25 // The point to start fading the reachable departures
+        fadePointForReachableDepartures: 0.25, // The point to start fading the reachable departures
+        excludeDelayFromTimeLabel: false     // Should the delay time be excluded from the time label?
     },
 
     start: function () {
@@ -280,6 +281,10 @@ Module.register("MMM-PublicTransportBerlin", {
         let currentWhen = moment(current.when);
         let delay = this.convertDelayToMinutes(current.delay);
 
+        if (this.config.excludeDelayFromTimeLabel) {
+            currentWhen = this.getDepartureTimeWithoutDelay(currentWhen, delay);
+        }
+
         let row = document.createElement("tr");
 
         let timeCell = document.createElement("td");
@@ -333,6 +338,16 @@ Module.register("MMM-PublicTransportBerlin", {
         }
 
         return row;
+    },
+
+    getDepartureTimeWithoutDelay: function (departureTime, delay) {
+        if (delay > 0) {
+            departureTime.subtract(delay, 'minutes');
+        } else if (delay < 0) {
+            departureTime.add(Math.abs(delay), 'minutes');
+        }
+
+        return departureTime;
     },
 
     getFirstReachableDeparturePosition: function () {
