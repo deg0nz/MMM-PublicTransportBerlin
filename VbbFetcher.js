@@ -71,17 +71,20 @@ VbbFetcher.prototype.processData = function (data) {
         if (!this.config.ignoredStations.includes(row.station.id)
             && !this.config.excludedTransportationTypes.includes(row.line.product)
                 && !this.config.ignoredLines.includes(row.line.name)
+                    && row.when !== null    // Sort out trips without when, because we can't sort them
         ) {
 
             let current = {
                 when: row.when,
-                delay: row.delay | 0,
-                cancelled: row.cancelled | false,
+                delay: row.delay || 0,
+                cancelled: row.cancelled || false,
                 name: row.line.name,
                 nr: row.line.nr,
                 type: row.line.product,
                 direction: row.direction
             };
+
+            printDeparture(row);
 
             departuresData.departuresArray.push(current);
         }
@@ -93,7 +96,6 @@ VbbFetcher.prototype.processData = function (data) {
 
 function compareTimes(a, b) {
 
-    // delay must be converted to milliseconds
     let timeA = a.when.getTime();
     let timeB = b.when.getTime();
 
@@ -109,11 +111,11 @@ function compareTimes(a, b) {
 // helper function to print departure for debugging
 function printDeparture(row) {
 
-    let delayMinutes = Math.floor((((delay % 31536000) % 86400) % 3600) / 60);
+    let delayMinutes = Math.floor((((row.delay % 31536000) % 86400) % 3600) / 60);
 
     let time = row.when.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
 
-    console.log(time + " " + delayMinutes + " " + row.product.type.unicode + " " + row.direction + " | stationId: " + row.station.id);
+    console.log(time + " " + delayMinutes + " " + row.line.product + " " + row.direction + " | stationId: " + row.station.id);
 }
 
 module.exports = VbbFetcher;
