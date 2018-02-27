@@ -40,6 +40,10 @@
     max-width: 22ch;
 }
 
+.cancelled {
+    text-decoration: line-through;
+}
+
 .marquee {
     margin: 0 auto;
     white-space: nowrap;

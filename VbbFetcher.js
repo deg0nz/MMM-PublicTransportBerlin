@@ -73,15 +73,10 @@ VbbFetcher.prototype.processData = function (data) {
                 && !this.config.ignoredLines.includes(row.line.name)
         ) {
 
-            let delay = row.delay;
-
-            if (!delay) {
-                row.delay = 0
-            }
-            
             let current = {
                 when: row.when,
-                delay: row.delay,
+                delay: row.delay | 0,
+                cancelled: row.cancelled | false,
                 name: row.line.name,
                 nr: row.line.nr,
                 type: row.line.product,

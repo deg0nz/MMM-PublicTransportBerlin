@@ -317,6 +317,11 @@ Module.register("MMM-PublicTransportBerlin", {
 
         row.appendChild(directionCell);
 
+        // Add cancelled class to this row if the trip was cancelled
+        if (current.cancelled) {
+            row.classList.add('cancelled');
+        }
+
         return row;
     },
 
@@ -378,12 +383,13 @@ Module.register("MMM-PublicTransportBerlin", {
             symbol.innerHTML = product.name;
         }
         
-        symbol.className = product.cssClass + " xsmall";
+        symbol.classList.add(product.cssClass);
+        symbol.classList.add('xsmall');
 
         if (this.config.showColoredLineSymbols) {
             symbol.style.backgroundColor = product.color;
         } else {
-            symbol.style.backgroundColor = "#333333";
+            symbol.style.backgroundColor = '#333333';
         }
 
         return symbol;
