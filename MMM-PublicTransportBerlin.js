@@ -370,6 +370,10 @@ Module.register("MMM-PublicTransportBerlin", {
                 symbol.innerHTML = 'LOC';
             else
                 symbol.innerHTML = 'ICE';
+
+        } else if (product.type === 'bus') {
+            symbol.innerHTML = product.nr;
+
         } else {
             symbol.innerHTML = product.name;
         }
