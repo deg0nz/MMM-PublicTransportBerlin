@@ -67,6 +67,11 @@ Module.register("MMM-PublicTransportBerlin", {
         }
 
         setInterval(() => {
+            // If the module started without getting the stationName for some reason, we try to get the stationName again
+            if(this.loaded && this.stationName === ""){
+                this.sendSocketNotification('STATION_NAME_MISSING_AFTER_INIT', this.config.stationId);
+            }
+
             this.sendSocketNotification('GET_DEPARTURES', this.config.stationId);
         }, this.config.interval)
     },
@@ -455,7 +460,6 @@ Module.register("MMM-PublicTransportBerlin", {
         if (notification === 'FETCH_ERROR') {
             if (payload.stationId === this.config.stationId) {
                 this.loaded = true;
-              // Empty error object
                 this.error = payload;
                 this.updateDom(3000);
             }

@@ -222,8 +222,14 @@ module.exports = NodeHelper.create({
     socketNotificationReceived: function (notification, payload) {
         if (notification === 'GET_DEPARTURES') {
             this.getDepartures(payload);
-        } else if (notification === 'CREATE_FETCHER') {
+        }
+
+        if (notification === 'CREATE_FETCHER') {
             this.createFetcher(payload);
+        }
+
+        if (notification === 'STATION_NAME_MISSING_AFTER_INIT') {
+            this.sendInit(this.departuresFetchers[payload]);
         }
     }
 });
