@@ -92,7 +92,7 @@ Module.register("MMM-PublicTransportBerlin", {
             let errorContent = document.createElement("div");
             errorContent.innerHTML = "Error while fetching departures: " + JSON.stringify(this.error.message) + "<br>";
             errorContent.innerHTML += "This could mean that VBB data is currently not available.";
-            errorContent.className = "small light dimmed";
+            errorContent.className = "small light dimmed errorCell";
             wrapper.appendChild(errorContent);
             return wrapper;
         }

@@ -40,6 +40,11 @@
     max-width: 22ch;
 }
 
+.errorCell {
+    max-width: 28ch;
+    word-wrap: break-word;
+}
+
 .cancelled {
     text-decoration: line-through;
 }
