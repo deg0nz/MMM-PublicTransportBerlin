@@ -442,8 +442,8 @@ Module.register("MMM-PublicTransportBerlin", {
         }
 
         if (notification === 'DEPARTURES') {
-            this.config.loaded = true;
             if (payload.stationId === this.config.stationId) {
+                this.loaded = true;
                 // Empty error object
                 this.error = {};
                 // Proceed with normal operation
@@ -453,9 +453,9 @@ Module.register("MMM-PublicTransportBerlin", {
         }
 
         if (notification === 'FETCH_ERROR') {
-            this.config.loaded = true;
             if (payload.stationId === this.config.stationId) {
-                // Empty error object
+                this.loaded = true;
+              // Empty error object
                 this.error = payload;
                 this.updateDom(3000);
             }
