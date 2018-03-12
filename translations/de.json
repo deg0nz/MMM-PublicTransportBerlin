@@ -1,0 +1,11 @@
+{
+  "LOADING": "Lade &hellip;",
+
+  "DIRECTION": "Richtung",
+  "WHEN": "Abfahrt",
+  "LINE": "Linie",
+  "NO_VBBDATA_ERROR_HINT": "Das k&ouml;nnte hei&szlig;en, dass VBB-Daten gerade nicht verf&uuml;gbar sind.",
+  "FETCHER_ERROR": "Fehler bei Daten abrufen",
+  "NO_DEPARTURES_AVAILABLE": "Momentan sind keine Abfahrten von dieser Station vorhanden.",
+  "NO_REACHABLE_DEPARTURES": "Keine erreichbaren Abfahrten vorhanden."
+}

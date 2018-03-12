@@ -78,47 +78,48 @@ Module.register("MMM-PublicTransportBerlin", {
 
     getDom: function () {
 
-        let wrapper = document.createElement("div");
-        wrapper.className = "ptbWrapper";
+      let wrapper = document.createElement("div");
+      wrapper.className = "ptbWrapper";
 
-        // Handle loading sequence at init time
-        if (this.departuresArray.length === 0 && !this.loaded) {
-            wrapper.innerHTML = (this.loaded) ? this.translate("EMPTY") : this.translate("LOADING");
-            wrapper.className = "small light dimmed";
-            return wrapper;
-        }
+      // Handle loading sequence at init time
+      if (this.departuresArray.length === 0 && !this.loaded) {
+          wrapper.innerHTML = (this.loaded) ? this.translate("EMPTY") : this.translate("LOADING");
+          wrapper.className = "small light dimmed";
+          return wrapper;
+      }
 
-        let heading = document.createElement("header");
-        heading.innerHTML = this.stationName;
-        wrapper.appendChild(heading);
+      let heading = document.createElement("header");
+      heading.innerHTML = this.stationName;
+      wrapper.appendChild(heading);
 
-        // Handle departure fetcher error and show it on the screen
-        if (Object.keys(this.error).length > 0) {
-            let errorContent = document.createElement("div");
-            errorContent.innerHTML = "Error while fetching departures: " + JSON.stringify(this.error.message) + "<br>";
-            errorContent.innerHTML += "This could mean that VBB data is currently not available.";
-            errorContent.className = "small light dimmed errorCell";
-            wrapper.appendChild(errorContent);
-            return wrapper;
-        }
+      // Handle departure fetcher error and show it on the screen
+      if (Object.keys(this.error).length > 0) {
+          let errorContent = document.createElement("div");
+          errorContent.innerHTML = this.translate("FETCHER_ERROR") + ": " + JSON.stringify(this.error.message) + "<br>";
+          errorContent.innerHTML += this.translate("NO_VBBDATA_ERROR_HINT");
+          errorContent.className = "small light dimmed errorCell";
+          wrapper.appendChild(errorContent);
+          return wrapper;
+      }
 
-        // Table header
-        let table = document.createElement("table");
-        table.className = "ptbTable small light";
+      // Table header
+      let table = document.createElement("table");
+      table.className = "ptbTable small light";
 
-        let tHead = document.createElement("thead");
+      let tHead = document.createElement("thead");
 
-        let headerRow = document.createElement("tr");
+      let headerRow = document.createElement("tr");
 
-        // Cell for departure time
-        let headerTime = document.createElement("td");
-        if (this.config.showTableHeadersAsSymbols) {
-            headerTime.className = "centeredTd";
+      // Cell for departure time
+      let headerTime = document.createElement("td");
+      headerTime.className = "centeredTd";
+
+      if (this.config.showTableHeadersAsSymbols) {
             let timeIcon = document.createElement("span");
             timeIcon.className = "fa fa-clock-o";
             headerTime.appendChild(timeIcon);
         } else {
-            headerTime.innerHTML = "Abfahrt";
+            headerTime.innerHTML = this.translate("WHEN");
         }
 
         headerRow.appendChild(headerTime);
@@ -130,26 +131,28 @@ Module.register("MMM-PublicTransportBerlin", {
 
         // Cell for line symbol
         let headerLine = document.createElement("td");
+        headerLine.className = "centeredTd";
+
         if (this.config.showTableHeadersAsSymbols) {
-            headerLine.className = "centeredTd";
             let lineIcon = document.createElement("span");
             lineIcon.className = "fa fa-tag";
             headerLine.appendChild(lineIcon);
         } else {
-            headerLine.innerHTML = "Linie";
+            headerLine.innerHTML = this.translate("LINE");
         }
 
         headerRow.appendChild(headerLine);
 
         // Cell for direction
         let headerDirection = document.createElement("td");
-        if (this.config.showTableHeadersAsSymbols) {
-            headerDirection.className = "centeredTd";
+        headerDirection.className = "centeredTd";
+
+      if (this.config.showTableHeadersAsSymbols) {
             let directionIcon = document.createElement("span");
             directionIcon.className = "fa fa-exchange";
             headerDirection.appendChild(directionIcon);
         } else {
-            headerDirection.innerHTML = "Nach";
+            headerDirection.innerHTML = this.translate("DIRECTION");
         }
 
         headerRow.appendChild(headerDirection);
@@ -167,12 +170,10 @@ Module.register("MMM-PublicTransportBerlin", {
 
         // Handle empty departures array
         if (this.departuresArray.length === 0) {
-            let row = this.getNoDeparturesRow("There are currently no departures.");
+            let row = this.getNoDeparturesRow(this.translate("NO_DEPARTURES_AVAILABLE"));
 
             tBody.appendChild(row);
-
             table.appendChild(tBody);
-
             wrapper.appendChild(table);
 
             return wrapper;
@@ -370,9 +371,9 @@ Module.register("MMM-PublicTransportBerlin", {
                         resolve(i);
                     }
                 } else if (i === depArray.length - 1 && currentWhen.isBefore(nowWithDelay)) {
-                    reject("No reachable departures found.");
+                    reject(this.translate("NO_REACHABLE_DEPARTURES"));
                 } else {
-                    reject("No reachable departures found.");
+                    reject(this.translate("NO_REACHABLE_DEPARTURES"));
                 }
             });
         });
@@ -423,6 +424,13 @@ Module.register("MMM-PublicTransportBerlin", {
 
     convertDelayToMinutes: function (delay) {
         return Math.floor((((delay % 31536000) % 86400) % 3600) / 60);
+    },
+
+    getTranslations: function() {
+        return {
+          en: "translations/en.json",
+          de: "translations/de.json"
+        }
     },
 
     getStyles: function () {

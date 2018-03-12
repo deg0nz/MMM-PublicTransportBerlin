@@ -1,0 +1,11 @@
+{
+  "LOADING": "Loading &hellip;",
+
+  "DIRECTION": "Direction",
+  "WHEN": "When",
+  "LINE": "Line",
+  "NO_VBBDATA_ERROR_HINT": "This could mean that VBB data is currently not available.",
+  "FETCHER_ERROR": "Error while fetching",
+  "NO_DEPARTURES_AVAILABLE": "There are currently no departures on this station.",
+  "NO_REACHABLE_DEPARTURES": "No reachable departures found."
+}
