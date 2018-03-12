@@ -402,7 +402,7 @@ Module.register("MMM-PublicTransportBerlin", {
       else
         symbol.innerHTML = "ICE";
 
-    } else if (product.type === "bus" || product.type == "tram") {
+    } else if (product.type === "bus" || product.type === "tram") {
       symbol.innerHTML = product.name.split(" ")[1]
     } else {
       symbol.innerHTML = product.name;
