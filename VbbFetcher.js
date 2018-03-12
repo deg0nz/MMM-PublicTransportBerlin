@@ -75,7 +75,7 @@ VbbFetcher.prototype.processData = function (data) {
         ) {
 
             let current = {
-                when: row.when,
+                when: row.when || row.formerScheduledWhen,
                 delay: row.delay || 0,
                 cancelled: row.cancelled || false,
                 name: row.line.name,
