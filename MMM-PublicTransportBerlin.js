@@ -5,11 +5,11 @@ Module.register("MMM-PublicTransportBerlin", {
   defaults: {
     name: "MMM-PublicTransportBerlin",  // The name of this module
     hidden: false,                      // Hide this module?
-    stationId: '900000160003',          // The ID of the station
+    stationId: "900000160003",          // The ID of the station
  //   directionStationId: 0,             // The stationId of the next station in which direction departures should be shown
     ignoredStations: [],                // Which stations should be ignored? (comma-separated list of station IDs)
     ignoredLines: [],                   // Which lines should be ignored? (comma-separated list of line names)
-    excludedTransportationTypes: '',    // Which transportation types should not be shown on the mirror? (comma-separated list of types) possible values: bus,tram,suburban,subway,ferry
+    excludedTransportationTypes: "",    // Which transportation types should not be shown on the mirror? (comma-separated list of types) possible values: bus,tram,suburban,subway,ferry
     marqueeLongDirections: true,        // Use Marquee effect for long station names?
     travelTimeToStation: 10,            // How long do you need to walk/bike to the next Station?
     interval: 120000,                   // How often should the table be updated in ms?
@@ -35,7 +35,7 @@ Module.register("MMM-PublicTransportBerlin", {
     this.error = {};
 
     // If the stationId is not a string, we'll print a warning
-    if (typeof this.config.stationId === 'number') {
+    if (typeof this.config.stationId === "number") {
       let warning = "MMM-PublicTransportBerlin deprecation warning: The stationId must be a String! Please check your configuration!";
       Log.warn(warning);
       console.log(warning);
@@ -50,13 +50,13 @@ Module.register("MMM-PublicTransportBerlin", {
       this.config.travelTimeToStation = this.config.delay;
     }
 
-    this.sendSocketNotification('CREATE_FETCHER', this.config);
+    this.sendSocketNotification("CREATE_FETCHER", this.config);
 
     if(this.config.travelTimeToStation < 0) {
       this.config.travelTimeToStation = 0;
     }
 
-    if(typeof this.config.ignoredLines === 'undefined') {
+    if(typeof this.config.ignoredLines === "undefined") {
       this.config.ignoredLines = [];
     }
 
@@ -68,10 +68,10 @@ Module.register("MMM-PublicTransportBerlin", {
     setInterval(() => {
       // If the module started without getting the stationName for some reason, we try to get the stationName again
       if(this.loaded && this.stationName === ""){
-          this.sendSocketNotification('STATION_NAME_MISSING_AFTER_INIT', this.config.stationId);
+          this.sendSocketNotification("STATION_NAME_MISSING_AFTER_INIT", this.config.stationId);
       }
 
-      this.sendSocketNotification('GET_DEPARTURES', this.config.stationId);
+      this.sendSocketNotification("GET_DEPARTURES", this.config.stationId);
     }, this.config.interval)
   },
 
@@ -336,7 +336,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
     // Add cancelled class to this row if the trip was cancelled
     if (current.cancelled) {
-        row.classList.add('cancelled');
+        row.classList.add("cancelled");
     }
 
     return row;
@@ -344,9 +344,9 @@ Module.register("MMM-PublicTransportBerlin", {
 
   getDepartureTimeWithoutDelay: function (departureTime, delay) {
     if (delay > 0) {
-      departureTime.subtract(delay, 'minutes');
+      departureTime.subtract(delay, "minutes");
     } else if (delay < 0) {
-      departureTime.add(Math.abs(delay), 'minutes');
+      departureTime.add(Math.abs(delay), "minutes");
     }
 
     return departureTime;
@@ -354,7 +354,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
   getFirstReachableDeparturePosition: function () {
     let now = moment();
-    let nowWithDelay = now.add(this.config.travelTimeToStation, 'minutes');
+    let nowWithDelay = now.add(this.config.travelTimeToStation, "minutes");
 
     return new Promise((resolve, reject) => {
       this.departuresArray.forEach((current, i, depArray) => {
@@ -381,8 +381,8 @@ Module.register("MMM-PublicTransportBerlin", {
   trimDirectionString: function (string) {
     let dirString = string;
 
-    if (dirString.indexOf(',') > -1) {
-      dirString = dirString.split(',')[0]
+    if (dirString.indexOf(",") > -1) {
+      dirString = dirString.split(",")[0]
     }
 
     let viaIndex = dirString.search(/( via )/g);
@@ -394,27 +394,27 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   getLineSymbol: function (product) {
-    let symbol = document.createElement('div');
+    let symbol = document.createElement("div");
 
-    if (product.type === 'express') {
-      if (product.name === 'LOCOMORE')
-        symbol.innerHTML = 'LOC';
+    if (product.type === "express") {
+      if (product.name === "LOCOMORE")
+        symbol.innerHTML = "LOC";
       else
-        symbol.innerHTML = 'ICE';
+        symbol.innerHTML = "ICE";
 
-    } else if (product.type === 'bus' || product.type == 'tram') {
-      symbol.innerHTML = product.name.split(' ')[1]
+    } else if (product.type === "bus" || product.type == "tram") {
+      symbol.innerHTML = product.name.split(" ")[1]
     } else {
       symbol.innerHTML = product.name;
     }
 
     symbol.classList.add(product.cssClass);
-    symbol.classList.add('xsmall');
+    symbol.classList.add("xsmall");
 
     if (this.config.showColoredLineSymbols) {
       symbol.style.backgroundColor = product.color;
     } else {
-      symbol.style.backgroundColor = '#333333';
+      symbol.style.backgroundColor = "#333333";
     }
 
     return symbol;
@@ -433,8 +433,8 @@ Module.register("MMM-PublicTransportBerlin", {
 
   getStyles: function () {
     return [
-      'style.css',
-      'font-awesome.css'
+      "style.css",
+      "font-awesome.css"
     ];
   },
 
@@ -445,14 +445,14 @@ Module.register("MMM-PublicTransportBerlin", {
 },
 
 socketNotificationReceived: function (notification, payload) {
-  if (notification === 'FETCHER_INIT') {
+  if (notification === "FETCHER_INIT") {
     if (payload.stationId === this.config.stationId) {
       this.stationName = payload.stationName;
       this.loaded = true;
       }
     }
 
-    if (notification === 'DEPARTURES') {
+    if (notification === "DEPARTURES") {
       if (payload.stationId === this.config.stationId) {
         this.loaded = true;
         // Empty error object
@@ -463,7 +463,7 @@ socketNotificationReceived: function (notification, payload) {
       }
     }
 
-    if (notification === 'FETCH_ERROR') {
+    if (notification === "FETCH_ERROR") {
       if (payload.stationId === this.config.stationId) {
         this.loaded = true;
         this.error = payload;

@@ -1,6 +1,6 @@
 "use strict";
-const NodeHelper = require('node_helper');
-const VbbFetcher = require('./VbbFetcher');
+const NodeHelper = require("node_helper");
+const VbbFetcher = require("./VbbFetcher");
 
 module.exports = NodeHelper.create({
 
@@ -33,7 +33,7 @@ module.exports = NodeHelper.create({
 
     sendInit: function (fetcher) {
         fetcher.getStationName().then((name) => {
-            this.sendSocketNotification('FETCHER_INIT', {
+            this.sendSocketNotification("FETCHER_INIT", {
                 stationId: fetcher.getStationId(),
                 stationName: name
             });
@@ -43,14 +43,14 @@ module.exports = NodeHelper.create({
     getDepartures: function (stationId) {
         this.departuresFetchers[stationId].fetchDepartures().then((departuresData) => {
             this.pimpDeparturesArray(departuresData.departuresArray);
-            this.sendSocketNotification('DEPARTURES', departuresData);
+            this.sendSocketNotification("DEPARTURES", departuresData);
         }).catch((e) => {
             let error = {};
             console.log("Error while fetching departures (for Station ID " + stationId + "): " + e);
             // Add stationId to error for identification in the main instance
             error.stationId = stationId;
             error.message = e;
-            this.sendSocketNotification('FETCH_ERROR', error);
+            this.sendSocketNotification("FETCH_ERROR", error);
         });
     },
 
@@ -220,15 +220,15 @@ module.exports = NodeHelper.create({
     },
 
     socketNotificationReceived: function (notification, payload) {
-        if (notification === 'GET_DEPARTURES') {
+        if (notification === "GET_DEPARTURES") {
             this.getDepartures(payload);
         }
 
-        if (notification === 'CREATE_FETCHER') {
+        if (notification === "CREATE_FETCHER") {
             this.createFetcher(payload);
         }
 
-        if (notification === 'STATION_NAME_MISSING_AFTER_INIT') {
+        if (notification === "STATION_NAME_MISSING_AFTER_INIT") {
             this.sendInit(this.departuresFetchers[payload]);
         }
     }

@@ -1,5 +1,5 @@
 "use strict";
-const vbbClient = require('vbb-client');
+const vbbClient = require("vbb-client");
 
 let VbbFetcher = function (config) {
     this.config = config;
@@ -31,7 +31,7 @@ VbbFetcher.prototype.fetchDepartures = function () {
     let opt;
 
     // Handle single direction case
-    if(!this.config.directionStationId || this.config.directionStationId === '') {
+    if(!this.config.directionStationId || this.config.directionStationId === "") {
         opt = {
             when: when,
             duration: this.config.departureMinutes
@@ -111,7 +111,7 @@ function printDeparture(row) {
 
     let delayMinutes = Math.floor((((row.delay % 31536000) % 86400) % 3600) / 60);
 
-    let time = row.when.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+    let time = row.when.toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"});
 
     console.log(time + " " + delayMinutes + " " + row.line.product + " " + row.direction + " | stationId: " + row.station.id);
 }

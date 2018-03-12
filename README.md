@@ -89,15 +89,15 @@ Here is an example of an entry in `config.js`:
 
 ``` JavaScript
 {
-    module: 'MMM-PublicTransportBerlin',
-    position: 'top_right',
+    module: "MMM-PublicTransportBerlin",
+    position: "top_right",
     config: {
-        name: 'Alexanderplatz',
-        stationId: '90000010000',
+        name: "Alexanderplatz",
+        stationId: "90000010000",
         hidden: false,
         ignoredStations: [900000100003,2342,1337],
-        ignoredLines: ['U5', 'U8', 'S75' 'Bus 100'],               
-        excludedTransportationTypes: 'bus,suburban,subway',   
+        ignoredLines: ["U5", "U8", "S75" "Bus 100"],               
+        excludedTransportationTypes: "bus,suburban,subway",   
         travelTimeToStation: 10,
         interval: 120000,
         departureMinutes: 10,          
