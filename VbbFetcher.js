@@ -16,7 +16,6 @@ VbbFetcher.prototype.getStationName = function () {
 };
 
 VbbFetcher.prototype.fetchDepartures = function () {
-
     // when value for a request is calculated to be 5 minutes before travelTimeToStation time
     // so we can also show the non-reachable departures in the module
     let when;
@@ -57,7 +56,6 @@ VbbFetcher.prototype.fetchDepartures = function () {
 };
 
 VbbFetcher.prototype.processData = function (data) {
-
     let departuresData = {
         stationId: this.config.stationId,
         departuresArray: []
@@ -73,7 +71,6 @@ VbbFetcher.prototype.processData = function (data) {
                 && !this.config.ignoredLines.includes(row.line.name)
                     && row.when !== null    // Sort out trips without when, because we can't sort them
         ) {
-
             let current = {
                 when: row.when || row.formerScheduledWhen,
                 delay: row.delay || 0,
@@ -93,7 +90,6 @@ VbbFetcher.prototype.processData = function (data) {
 };
 
 function compareTimes(a, b) {
-
     let timeA = a.when.getTime();
     let timeB = b.when.getTime();
 
@@ -108,7 +104,6 @@ function compareTimes(a, b) {
 
 // helper function to print departure for debugging
 function printDeparture(row) {
-
     let delayMinutes = Math.floor((((row.delay % 31536000) % 86400) % 3600) / 60);
 
     let time = row.when.toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"});
