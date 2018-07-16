@@ -64,6 +64,14 @@ VbbFetcher.prototype.processData = function (data) {
         // ignored stations
         // excluded transportation types
         // ignored lines
+
+      // TODO: Make real stop/station handling here
+      // Quick fix to work around missing station objects
+      if(!row.station)
+      {
+          row.station = row.stop;
+      }
+
         if (!this.config.ignoredStations.includes(row.station.id)
             && !this.config.excludedTransportationTypes.includes(row.line.product)
                 && !this.config.ignoredLines.includes(row.line.name)
