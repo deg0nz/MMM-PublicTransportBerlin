@@ -6,7 +6,7 @@ Module.register("MMM-PublicTransportBerlin", {
     name: "MMM-PublicTransportBerlin",  // The name of this module
     hidden: false,                      // Hide this module?
     stationId: "900000160003",          // The ID of the station
- //   directionStationId: 0,             // The stationId of the next station in which direction departures should be shown
+    //directionStationId: 0,              // The stationId of the next station in which direction departures should be shown
     ignoredStations: [],                // Which stations should be ignored? (comma-separated list of station IDs)
     ignoredLines: [],                   // Which lines should be ignored? (comma-separated list of line names)
     excludedTransportationTypes: "",    // Which transportation types should not be shown on the mirror? (comma-separated list of types) possible values: bus,tram,suburban,subway,ferry
@@ -76,7 +76,6 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   getDom: function () {
-
     let wrapper = document.createElement("div");
     wrapper.className = "ptbWrapper";
 
@@ -279,7 +278,6 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   getRow: function (current) {
-
     let currentWhen = moment(current.when);
     let delay = this.convertDelayToMinutes(current.delay);
 
@@ -401,9 +399,6 @@ Module.register("MMM-PublicTransportBerlin", {
         symbol.innerHTML = "LOC";
       else
         symbol.innerHTML = "ICE";
-
-    } else if (product.type === "bus" || product.type === "tram") {
-      symbol.innerHTML = product.name.split(" ")[1]
     } else {
       symbol.innerHTML = product.name;
     }

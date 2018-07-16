@@ -71,7 +71,6 @@ module.exports = NodeHelper.create({
     },
 
     getLineProperties: function (product) {
-
         let out = {
             color: "",
             cssClass: ""
