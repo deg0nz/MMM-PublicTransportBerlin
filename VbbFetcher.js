@@ -40,12 +40,10 @@ VbbFetcher.prototype.fetchDepartures = function () {
         opt = {
             nextStation: this.config.directionStationId,
             when: when,
-            results: results
+            results: results,
+            identifier: "MagicMirror module MMM-PublicTransportBerlin"
         };
     }
-
-    // For use in testing environments:
-    // opt.identifier = "Testing - MagicMirror module MMM-PublicTransportBerlin";    // send testing identifier
 
     return vbbClient.departures(this.config.stationId, opt)
         .then((response) => {
@@ -69,7 +67,6 @@ VbbFetcher.prototype.processData = function (data) {
         if (!this.config.ignoredStations.includes(row.station.id)
             && !this.config.excludedTransportationTypes.includes(row.line.product)
                 && !this.config.ignoredLines.includes(row.line.name)
-                    && row.when !== null    // Sort out trips without when, because we can't sort them
         ) {
             let current = {
                 when: row.when || row.formerScheduledWhen,
@@ -90,13 +87,10 @@ VbbFetcher.prototype.processData = function (data) {
 };
 
 function compareTimes(a, b) {
-    let timeA = a.when.getTime();
-    let timeB = b.when.getTime();
-
-    if (timeA < timeB) {
+    if (a < b) {
         return -1;
     }
-    if (timeA > timeB) {
+    if (a > b) {
         return 1
     }
     return 0
