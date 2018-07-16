@@ -1,6 +1,6 @@
 {
   "name": "MMM-PublicTransportBerlin",
-  "version": "1.2.2",
+  "version": "1.2.4",
   "description": "VBB-Hafas driven public transport module for MagicMirror 2.",
   "repository": {
     "type": "git",
