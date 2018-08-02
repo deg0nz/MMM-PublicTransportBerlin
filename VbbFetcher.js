@@ -1,5 +1,5 @@
 "use strict";
-const vbbClient = require("vbb-client");
+const vbbClient = require("vbb-hafas");
 
 let VbbFetcher = function (config) {
     this.config = config;
@@ -10,7 +10,7 @@ VbbFetcher.prototype.getStationId = function () {
 };
 
 VbbFetcher.prototype.getStationName = function () {
-    return vbbClient.station(this.config.stationId).then((response) => {
+    return vbbClient.location(this.config.stationId).then((response) => {
         return response.name;
     });
 };

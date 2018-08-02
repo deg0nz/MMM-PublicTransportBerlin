@@ -30,7 +30,7 @@
     "node": ">=6"
   },
   "dependencies": {
-    "vbb-client": "^3.0.3",
+    "vbb-hafas": "^4.2.1",
     "vbb-short-station-name": "^1.0.1"
   }
 }
