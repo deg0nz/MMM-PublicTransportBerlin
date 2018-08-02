@@ -41,11 +41,13 @@ VbbFetcher.prototype.fetchDepartures = function () {
             nextStation: this.config.directionStationId,
             when: when,
             results: results,
-            identifier: "MagicMirror module MMM-PublicTransportBerlin"
         };
     }
 
-    return vbbClient.departures(this.config.stationId, opt)
+    opt.identifier = "MagicMirror2 module MMM-PublicTransportBerlin";
+
+
+  return vbbClient.departures(this.config.stationId, opt)
         .then((response) => {
             return this.processData(response);
         }).catch((e) => {
