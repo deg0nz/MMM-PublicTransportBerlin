@@ -1,7 +1,6 @@
 "use strict";
 const createClient = require('hafas-client');
 const bvgProfile = require('hafas-client/p/bvg');
-
 const vbbClient = createClient(bvgProfile, 'MagicMirror module MMM-PublicTransportBerlin v1.2.5');
 
 let VbbFetcher = function (config) {

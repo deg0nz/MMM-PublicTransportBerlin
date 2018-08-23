@@ -50,12 +50,12 @@ You will need a `stationId` for your module. You can get it as described in the 
 This is a cURL example for getting all possible stations with the keyword "alexanderplatz":
 
 ```
-curl 'https://2.vbb.transport.rest/stations?query=alexanderplatz'
+curl 'https://1.bvg.transport.rest/stations?query=alexanderplatz'
 ```
 
 The answer should contain one or more possible stations with valid station IDs. More queries are possible, 
 like searching via coordinates or autocompletion of stations. Please check the [vbb-rest API documentation](https://github.com/derhuerst/vbb-rest/blob/21930eb2442ecdc8888e70d024391be29264f33f/docs/index.md)
-for more options.
+for more options. Please note, that you need to query `1.bvg.transport.rest`.
 
 ## Configuration
 
@@ -124,8 +124,8 @@ Multiple instances of this module are possible. Just add another entry of the MM
 ## Special Thanks
 
 * [Michael Teeuw](https://github.com/MichMich) for inspiring me and many others to build a MagicMirror.
-* [Jannis Redmann](https://github.com/derhuerst) for creating the [vbb-hafas](https://github.com/derhuerst/vbb-hafas) REST API. 
-You made my life a lot easier with this!
+* [Jannis Redmann](https://github.com/derhuerst) for creating the [hafas-client](https://github.com/public-transport/hafas-client).
+You made my life a lot easier with this! Please consider supporting him on [Patreon](https://patreon.com/derhuerst)!
 * The community of [magicmirror.builders](https://magicmirror.builders) for help in the development process and all contributors for finding and fixing errors in this module.
 
 ## Issues
