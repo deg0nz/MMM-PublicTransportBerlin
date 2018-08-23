@@ -1,5 +1,8 @@
 "use strict";
-const vbbClient = require("vbb-hafas");
+const createClient = require('hafas-client');
+const bvgProfile = require('hafas-client/p/bvg');
+
+const vbbClient = createClient(bvgProfile, 'MagicMirror module MMM-PublicTransportBerlin v1.2.5');
 
 let VbbFetcher = function (config) {
     this.config = config;
@@ -10,7 +13,7 @@ VbbFetcher.prototype.getStationId = function () {
 };
 
 VbbFetcher.prototype.getStationName = function () {
-    return vbbClient.location(this.config.stationId).then((response) => {
+    return vbbClient.station(this.config.stationId).then((response) => {
         return response.name;
     });
 };
