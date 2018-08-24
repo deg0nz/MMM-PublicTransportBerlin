@@ -3,9 +3,9 @@
 MMM-PublicTransportBerlin is a module for the [MagicMirror](https://github.com/MichMich/MagicMirror) project by 
 [Michael Teeuw](https://github.com/MichMich).
 
-It shows live public transport information for Berlin and Brandenburg based on [VBB-Hafas](http://www.hafas.de/company/referenzen/vbb) data.
-Since it uses VBB data, the whole transport network is covered. So public transport in Brandenburg will work as well. 
-MMM-PublicTransportBerlin uses the [vbb-hafas](https://github.com/derhuerst/vbb-hafas) REST API by [derhuerst](https://github.com/derhuerst).
+It shows live public transport information for Berlin and Brandenburg based on <strike>[VBB-Hafas](http://www.hafas.de/company/referenzen/vbb)</strike> BVG data.
+<strike>Since it uses VBB data, the whole transport network is covered.</strike> Public transport in Brandenburg will should as well.
+MMM-PublicTransportBerlin uses the <strike>[vbb-hafas](https://github.com/derhuerst/vbb-hafas) REST API</strike> [hafas-client](https://github.com/public-transport/hafas-client) with a BVG-specific profile by [derhuerst](https://github.com/derhuerst).
 
 *Notes:* 
 * *The module is working fine. But I think some value combinations could still lead to strange behaviour. I'd appreciate any error report.*
@@ -50,12 +50,18 @@ You will need a `stationId` for your module. You can get it as described in the 
 This is a cURL example for getting all possible stations with the keyword "alexanderplatz":
 
 ```
-curl 'https://1.bvg.transport.rest/stations?query=alexanderplatz'
+curl 'https://1.bvg.transport.rest/locations?query=alexanderplatz'
 ```
 
 The answer should contain one or more possible stations with valid station IDs. More queries are possible, 
 like searching via coordinates or autocompletion of stations. Please check the [vbb-rest API documentation](https://github.com/derhuerst/vbb-rest/blob/21930eb2442ecdc8888e70d024391be29264f33f/docs/index.md)
 for more options. Please note, that you need to query `1.bvg.transport.rest`.
+
+You can prettify the JSON output with [`jq`](https://stedolan.github.io/jq/) if you have it installed:
+
+```
+curl 'https://1.bvg.transport.rest/locations?query=alexanderplatz' | jq
+```
 
 ## Configuration
 
