@@ -3,8 +3,8 @@
 MMM-PublicTransportBerlin is a module for the [MagicMirror](https://github.com/MichMich/MagicMirror) project by 
 [Michael Teeuw](https://github.com/MichMich).
 
-It shows live public transport information for Berlin and Brandenburg based on <strike>[VBB-Hafas](http://www.hafas.de/company/referenzen/vbb)</strike> BVG data.
-<strike>Since it uses VBB data, the whole transport network is covered.</strike> Public transport in Brandenburg will should as well.
+It shows live public transport information for Berlin and Brandenburg based on <strike>[VBB-Hafas](http://www.hafas.de/company/referenzen/vbb)</strike> [BVG-Hafas](https://github.com/derhuerst/bvg-rest) data.
+<strike>Since it uses VBB data, the whole transport network is covered.</strike> Public transport in Brandenburg should work as well.
 MMM-PublicTransportBerlin uses the <strike>[vbb-hafas](https://github.com/derhuerst/vbb-hafas) REST API</strike> [hafas-client](https://github.com/public-transport/hafas-client) with a BVG-specific profile by [derhuerst](https://github.com/derhuerst).
 
 *Notes:* 
