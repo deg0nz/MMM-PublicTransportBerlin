@@ -54,7 +54,7 @@ curl 'https://1.bvg.transport.rest/locations?query=alexanderplatz'
 ```
 
 The answer should contain one or more possible stations with valid station IDs. More queries are possible, 
-like searching via coordinates or autocompletion of stations. Please check the [vbb-rest API documentation](https://github.com/derhuerst/vbb-rest/blob/21930eb2442ecdc8888e70d024391be29264f33f/docs/index.md)
+like searching via coordinates or autocompletion of stations. Please check the [BVG-rest API documentation](https://github.com/derhuerst/bvg-rest/blob/master/docs/index.md)
 for more options. Please note, that you need to query `1.bvg.transport.rest`.
 
 You can prettify the JSON output with [`jq`](https://stedolan.github.io/jq/) if you have it installed:
