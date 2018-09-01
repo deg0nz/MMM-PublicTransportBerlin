@@ -102,7 +102,7 @@ Here is an example of an entry in `config.js`:
         stationId: "90000010000",
         hidden: false,
         ignoredStations: [900000100003,2342,1337],
-        ignoredLines: ["U5", "U8", "S75" "Bus 100"],               
+        ignoredLines: ["U5", "U8", "S75", "Bus 100"],
         excludedTransportationTypes: "bus,suburban,subway",   
         travelTimeToStation: 10,
         interval: 120000,
