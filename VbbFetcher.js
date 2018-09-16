@@ -18,43 +18,39 @@ VbbFetcher.prototype.getStationName = function () {
 };
 
 VbbFetcher.prototype.fetchDepartures = function () {
-    // when value for a request is calculated to be 5 minutes before travelTimeToStation time
-    // so we can also show the non-reachable departures in the module
-    let when;
+  // when value for a request is calculated to be 5 minutes before travelTimeToStation time
+  // so we can also show the non-reachable departures in the module
+  let when;
 
-    if (this.config.travelTimeToStation > 0) {
-        when = new Date();
-        when.setTime((Date.now() + this.config.travelTimeToStation * 60000) - (5 * 60000));
-    } else {
-        when = Date.now();
-    }
+  if (this.config.travelTimeToStation > 0) {
+      when = new Date();
+      when.setTime((Date.now() + this.config.travelTimeToStation * 60000) - (5 * 60000));
+  } else {
+      when = Date.now();
+  }
 
-    let opt;
+  let opt;
 
-    // Handle single direction case
-    if(!this.config.directionStationId || this.config.directionStationId === "") {
-        opt = {
-            when: when,
-            duration: this.config.departureMinutes
-        };
-    } else {
-        let results = this.config.maxUnreachableDepartures + this.config.maxReachableDepartures;
-        opt = {
-            nextStation: this.config.directionStationId,
-            when: when,
-            results: results,
-        };
-    }
-
-    opt.identifier = "MagicMirror2 module MMM-PublicTransportBerlin";
-
+  // Handle single direction case
+  if(!this.config.directionStationId || this.config.directionStationId === "") {
+    opt = {
+          when: when,
+          duration: this.config.departureMinutes
+      };
+  } else {
+      opt = {
+          direction: this.config.directionStationId,
+          when: when,
+          duration: this.config.departureMinutes
+      };
+  }
 
   return vbbClient.departures(this.config.stationId, opt)
-        .then((response) => {
-            return this.processData(response);
-        }).catch((e) => {
-            throw e;
-        });
+    .then((response) => {
+        return this.processData(response);
+    }).catch((e) => {
+        throw e;
+    });
 };
 
 VbbFetcher.prototype.processData = function (data) {
