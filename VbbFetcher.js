@@ -4,17 +4,17 @@ const bvgProfile = require('hafas-client/p/bvg');
 const vbbClient = createClient(bvgProfile, 'MagicMirror module MMM-PublicTransportBerlin v1.2.5 (https://github.com/deg0nz/MMM-PublicTransportBerlin)');
 
 let VbbFetcher = function (config) {
-    this.config = config;
+  this.config = config;
 };
 
 VbbFetcher.prototype.getStationId = function () {
-    return this.config.stationId;
+  return this.config.stationId;
 };
 
 VbbFetcher.prototype.getStationName = function () {
-    return vbbClient.station(this.config.stationId).then((response) => {
-        return response.name;
-    });
+  return vbbClient.station(this.config.stationId).then((response) => {
+    return response.name;
+  });
 };
 
 VbbFetcher.prototype.fetchDepartures = function () {
@@ -23,10 +23,10 @@ VbbFetcher.prototype.fetchDepartures = function () {
   let when;
 
   if (this.config.travelTimeToStation > 0) {
-      when = new Date();
-      when.setTime((Date.now() + this.config.travelTimeToStation * 60000) - (5 * 60000));
+    when = new Date();
+    when.setTime((Date.now() + this.config.travelTimeToStation * 60000) - (5 * 60000));
   } else {
-      when = Date.now();
+    when = Date.now();
   }
 
   let opt;
@@ -34,15 +34,15 @@ VbbFetcher.prototype.fetchDepartures = function () {
   // Handle single direction case
   if(!this.config.directionStationId || this.config.directionStationId === "") {
     opt = {
-          when: when,
-          duration: this.config.departureMinutes
+      when: when,
+      duration: this.config.departureMinutes
       };
   } else {
-      opt = {
-          direction: this.config.directionStationId,
-          when: when,
-          duration: this.config.departureMinutes
-      };
+    opt = {
+      direction: this.config.directionStationId,
+      when: when,
+      duration: this.config.departureMinutes
+    };
   }
 
   return vbbClient.departures(this.config.stationId, opt)
@@ -55,8 +55,8 @@ VbbFetcher.prototype.fetchDepartures = function () {
 
 VbbFetcher.prototype.processData = function (data) {
     let departuresData = {
-        stationId: this.config.stationId,
-        departuresArray: []
+      stationId: this.config.stationId,
+      departuresArray: []
     };
 
     data.forEach((row) => {
@@ -67,27 +67,26 @@ VbbFetcher.prototype.processData = function (data) {
 
       // TODO: Make real stop/station handling here
       // Quick fix to work around missing station objects
-      if(!row.station)
-      {
+      if(!row.station) {
           row.station = row.stop;
       }
 
-        if (!this.config.ignoredStations.includes(row.station.id)
-            && !this.config.excludedTransportationTypes.includes(row.line.product)
-                && !this.config.ignoredLines.includes(row.line.name)
-        ) {
-            let current = {
-                when: row.when || row.formerScheduledWhen,
-                delay: row.delay || 0,
-                cancelled: row.cancelled || false,
-                name: row.line.name,
-                nr: row.line.nr,
-                type: row.line.product,
-                direction: row.direction
-            };
-            
-            departuresData.departuresArray.push(current);
-        }
+      if (!this.config.ignoredStations.includes(row.station.id)
+        && !this.config.excludedTransportationTypes.includes(row.line.product)
+          && !this.config.ignoredLines.includes(row.line.name)
+      ) {
+        let current = {
+            when: row.when || row.formerScheduledWhen,
+            delay: row.delay || 0,
+            cancelled: row.cancelled || false,
+            name: row.line.name,
+            nr: row.line.nr,
+            type: row.line.product,
+            direction: row.direction
+        };
+
+        departuresData.departuresArray.push(current);
+      }
     });
 
     departuresData.departuresArray.sort(compareTimes);
@@ -106,11 +105,11 @@ function compareTimes(a, b) {
 
 // helper function to print departure for debugging
 function printDeparture(row) {
-    let delayMinutes = Math.floor((((row.delay % 31536000) % 86400) % 3600) / 60);
+  let delayMinutes = Math.floor((((row.delay % 31536000) % 86400) % 3600) / 60);
 
-    let time = row.when.toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"});
+  let time = row.when.toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"});
 
-    console.log(time + " " + delayMinutes + " " + row.line.product + " " + row.direction + " | stationId: " + row.station.id);
+  console.log(time + " " + delayMinutes + " " + row.line.product + " " + row.direction + " | stationId: " + row.station.id);
 }
 
 module.exports = VbbFetcher;
