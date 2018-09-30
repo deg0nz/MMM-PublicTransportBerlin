@@ -94,13 +94,13 @@ VbbFetcher.prototype.processData = function (data) {
 };
 
 function compareTimes(a, b) {
-    if (a < b) {
-        return -1;
-    }
-    if (a > b) {
-        return 1
-    }
-    return 0
+  if (a.when < b.when) {
+    return -1;
+  }
+  if (a.when > b.when) {
+    return 1
+  }
+  return 0
 }
 
 // helper function to print departure for debugging
