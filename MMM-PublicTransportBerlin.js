@@ -409,9 +409,11 @@ Module.register("MMM-PublicTransportBerlin", {
     symbol.classList.add("xsmall");
 
     if (this.config.showColoredLineSymbols) {
-      symbol.style.backgroundColor = product.color;
+      symbol.style.backgroundColor = product.bgColor;
+      symbol.style.color = product.fgColor;
     } else {
       symbol.style.backgroundColor = "#333333";
+      symbol.style.color = "#FFFFFF";
     }
 
     return symbol;

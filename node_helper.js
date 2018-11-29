@@ -1,6 +1,7 @@
 "use strict";
 const NodeHelper = require("node_helper");
 const VbbFetcher = require("./VbbFetcher");
+const lineColors = require("vbb-line-colors");
 
 module.exports = NodeHelper.create({
 
@@ -63,7 +64,8 @@ module.exports = NodeHelper.create({
             //if (!this.config.marqueeLongDirections) {
             //    current.direction = this.trimDirectionString(current.direction);
             //}
-            current.color = currentProperties.color;
+            current.bgColor = currentProperties.bgColor;
+            current.fgColor = currentProperties.fgColor;
             current.cssClass = currentProperties.cssClass;
         });
 
@@ -71,48 +73,49 @@ module.exports = NodeHelper.create({
     },
 
     getLineProperties: function (product) {
-        let out = {
-            color: "",
+        let properties = {
+            bgColor: "#333",
+            fgColor: "#FFF",
             cssClass: ""
         };
 
         let type = product.type;
         let lineType = product.line;
-        let lineNumber = product.nr;
+        let name = product.name;
+        let colors = {};
 
         switch (type) {
             case "suburban":
-                out.color = this.getSuburbanLineColor(lineNumber);
-                out.cssClass = "sbahnsign";
+                colors = lineColors.suburban[name];
+                properties.cssClass = "sbahnsign";
                 break;
             case "subway":
-                out.color = this.getSubwayLineColor(lineNumber);
-                out.cssClass = "ubahnsign";
+                colors = lineColors.subway[name];
+                properties.cssClass = "ubahnsign";
                 break;
             case "bus":
-                out.color = "#B60079";
-                out.cssClass = "bussign";
+                colors.bg = "#B60079";
+                colors.fg = "#FFF";
+                properties.cssClass = "bussign";
                 break;
             case "tram":
-                out.color = "#BE1414";
-                out.cssClass = "tramsign";
+                colors = lineColors.tram[name];
+                properties.cssClass = "tramsign";
                 break;
             case "regional":
-                out.color = "#BE1414";
-                out.cssClass = "dbsign";
+                colors = lineColors.regional[name];
+                properties.cssClass = "dbsign";
                 break;
             case "express":
                 if (lineType === "LOCOMORE") {
-                    out.cssClass = "locsign";
+                    colors.bg = "#E5690B";
+                    colors.fg = "#3E1717";
+                    properties.cssClass = "locsign";
                 } else {
-                    out.cssClass = "expresssign";
+                    properties.cssClass = "expresssign";
                 }
-                out.color = this.getExpressLineColor(lineType);
                 break;
         }
-        
-        return out;
-    },
 
     getSuburbanLineColor: function (lineNumber) {
         let color;
@@ -216,6 +219,7 @@ module.exports = NodeHelper.create({
         }
 
         return color;
+        return properties;
     },
 
     socketNotificationReceived: function (notification, payload) {
