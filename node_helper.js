@@ -117,108 +117,15 @@ module.exports = NodeHelper.create({
                 break;
         }
 
-    getSuburbanLineColor: function (lineNumber) {
-        let color;
-
-        switch (lineNumber) {
-
-            case 1:
-                color = "#F414A0";
-                break;
-            case 2:
-                color = "#006529";
-                break;
-            case 3:
-                color = "#053983";
-                break;
-            case 5:
-                color = "#FF3E00";
-                break;
-            case 7:
-                color = "#7A3F9D";
-                break;
-            case 8:
-                color = "#00B123";
-                break;
-            case 9:
-                color = "#980026";
-                break;
-            case 25:
-                color = "#006529";
-                break;
-            case 41:
-                color = "#B02C00";
-                break;
-            case 42:
-                color = "#CF6423";
-                break;
-            case 45:
-            case 46:
-            case 47:
-                color = "#CC8625";
-                break;
-            case 75:
-                color = "#7A3F9D";
-                break;
-            case 85:
-                color = "#00B123";
-                break;
+        // Change default values if we changed them
+        if ("bg" in colors) {
+          properties.bgColor = colors.bg;
         }
 
-        return color;
-    },
-
-    getSubwayLineColor: function (lineNumber) {
-        let color;
-
-        switch (lineNumber) {
-            case 1:
-            case 12:
-                color = "#7DAD4C";
-                break;
-            case 2:
-                color = "#DA421E";
-                break;
-            case 3:
-                color = "#007A5B";
-                break;
-            case 4:
-                color = "#F0D722";
-                break;
-            case 5:
-            case 55:
-                color = "#7E5330";
-                break;
-            case 6:
-                color = "#8C6DAB";
-                break;
-            case 7:
-                color = "#528DBA";
-                break;
-            case 8:
-                color = "#224F86";
-                break;
-            case 9:
-                color = "#F3791D";
-                break;
+        if ("fg" in colors) {
+          properties.fgColor = colors.fg;
         }
 
-        return color;
-    },
-
-    getExpressLineColor: function (lineNumber) {
-        let color;
-
-        switch (lineNumber) {
-            case "LOCOMORE":
-                color = "#E5690B";
-                break;
-            default:
-                color = "#000000";
-                break;
-        }
-
-        return color;
         return properties;
     },
 
