@@ -31,6 +31,8 @@
   },
   "dependencies": {
     "hafas-client": "latest",
+    "moment": "^2.22.2",
+    "vbb-line-colors": "^1.0.0",
     "vbb-short-station-name": "^1.0.1"
   }
 }
