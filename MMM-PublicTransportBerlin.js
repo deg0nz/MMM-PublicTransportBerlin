@@ -362,8 +362,10 @@ Module.register("MMM-PublicTransportBerlin", {
         if (depArray.length > 1 && i < depArray.length - 1) {
 
           let nextWhen = moment(depArray[i + 1].when);
-          if ((currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay))
-              || (i === 0 && nextWhen.isSameOrAfter(nowWithDelay))) {
+          if (
+            (currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay))
+              || (i === 0 && nextWhen.isSameOrAfter(nowWithDelay))
+          ) {
 
               resolve(i);
           }
