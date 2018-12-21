@@ -7,11 +7,13 @@ It shows live public transport information for Berlin and Brandenburg based on <
 <strike>Since it uses VBB data, the whole transport network is covered.</strike> Public transport in Brandenburg should work as well.
 MMM-PublicTransportBerlin uses the <strike>[vbb-hafas](https://github.com/derhuerst/vbb-hafas) REST API</strike> [hafas-client](https://github.com/public-transport/hafas-client) with a BVG-specific profile by [derhuerst](https://github.com/derhuerst).
 
-*Notes:* 
-* *The module is working fine. But I think some value combinations could still lead to strange behaviour. I'd appreciate any error report.*
-
 You can enter a delay time for "How long does it take to get to my station?". 
 Then the module calculates the next reachable departures and draws a line between reachable and unreachable departures.
+
+## Status
+
+The current development status of this module is: **maintained**   
+This means: I'm open for feature requests, pull requests, bug reports, ...
 
 ## Screenshot
 
