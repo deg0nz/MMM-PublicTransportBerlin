@@ -22,7 +22,7 @@ The module looks like this:
 ## Preconditions
 
 * MagicMirror<sup>2</sup> instance
-* Node.js version > 6.0.0
+* Node.js version > 8
 * npm
 
 ## Installation

@@ -13,7 +13,7 @@ VbbFetcher.prototype.getStationId = function () {
 };
 
 VbbFetcher.prototype.getStationName = function () {
-  return vbbClient.station(this.config.stationId).then((response) => {
+  return vbbClient.stop(this.config.stationId).then((response) => {
     return response.name;
   });
 };
@@ -77,7 +77,7 @@ VbbFetcher.prototype.processData = function (data) {
           && !this.config.ignoredLines.includes(row.line.name)
       ) {
         let current = {
-            when: row.when || row.formerScheduledWhen,
+            when: row.when || row.scheduledWhen,
             delay: row.delay || 0,
             cancelled: row.cancelled || false,
             name: row.line.name,
