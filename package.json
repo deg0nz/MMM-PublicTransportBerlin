@@ -30,7 +30,7 @@
     "node": ">=8"
   },
   "dependencies": {
-    "hafas-client": "^4.0.0",
+    "hafas-client": "^4.0.3",
     "moment": "^2.24.0",
     "vbb-line-colors": "^1.0.0",
     "vbb-short-station-name": "^1.0.1"
