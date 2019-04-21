@@ -1,5 +1,7 @@
 # MMM-PublicTransportBerlin
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/deg0nz/MMM-PublicTransportBerlin.svg)](https://greenkeeper.io/)
+
 MMM-PublicTransportBerlin is a module for the [MagicMirror](https://github.com/MichMich/MagicMirror) project by 
 [Michael Teeuw](https://github.com/MichMich).
 
