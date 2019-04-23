@@ -185,17 +185,7 @@ Module.register("MMM-PublicTransportBerlin", {
                 tBody.appendChild(row);
 
                 // fading
-                if (this.config.fadeReachableDepartures && this.config.fadePointForReachableDepartures < 1) {
-                    if (this.config.fadePointForReachableDepartures < 0) {
-                        this.config.fadePointForReachableDepartures = 0;
-                    }
-                    let startingPoint = this.config.maxReachableDepartures * this.config.fadePointForReachableDepartures;
-                    let steps = this.config.maxReachableDepartures - startingPoint;
-                    if (i >= startingPoint) {
-                        let currentStep = i - startingPoint;
-                        row.style.opacity = 1 - (1 / steps * currentStep);
-                    }
-                }
+                row.style.opacity = this.getRowOpacity(i, 0);
             }
         });
       // handle travelTimeToStation > 0
@@ -226,28 +216,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
                     // create standard row
                     let row = this.getRow(currentDeparture);
-
-                    // fading for entries before "travelTimeToStation rule"
-                    if (this.config.fadeUnreachableDepartures && this.config.travelTimeToStation > 0) {
-                        let steps = this.config.maxUnreachableDepartures;
-                        if (i >= reachableDeparturePos - steps && i < reachableDeparturePos) {
-                            let currentStep = reachableDeparturePos - i;
-                            row.style.opacity = 1 - ((1 / steps * currentStep) - 0.2);
-                        }
-                    }
-
-                    // fading for entries after "travelTimeToStation rule"
-                    if (this.config.fadeReachableDepartures && this.config.fadePointForReachableDepartures < 1) {
-                        if (this.config.fadePointForReachableDepartures < 0) {
-                            this.config.fadePointForReachableDepartures = 0;
-                        }
-                        let startingPoint = this.config.maxReachableDepartures * this.config.fadePointForReachableDepartures;
-                        let steps = this.config.maxReachableDepartures - startingPoint;
-                        if (i >= reachableDeparturePos + startingPoint) {
-                            let currentStep = (i - reachableDeparturePos) - startingPoint;
-                            row.style.opacity = 1 - (1 / steps * currentStep);
-                        }
-                    }
+                    row.style.opacity = this.getRowOpacity(i, reachableDeparturePos);
 
                     tBody.appendChild(row);
                 }
@@ -263,6 +232,39 @@ Module.register("MMM-PublicTransportBerlin", {
     wrapper.appendChild(table);
 
     return wrapper;
+  },
+
+  getRowOpacity: function (i, reachableDeparturePos) {
+    let opacity = 1;
+
+    // Handle unreachable departures
+    if (this.config.fadeUnreachableDepartures && this.config.travelTimeToStation > 0) {
+      let steps = this.config.maxUnreachableDepartures;
+      if (i >= reachableDeparturePos - steps && i < reachableDeparturePos) {
+        let currentStep = reachableDeparturePos - i;
+        opacity = 1 - ((1 / steps * currentStep) - 0.2);
+      }
+    }
+
+    // Handle reachable departures
+    if (this.config.fadeReachableDepartures && this.config.fadePointForReachableDepartures < 1) {
+      if (this.config.fadePointForReachableDepartures < 0) {
+        this.config.fadePointForReachableDepartures = 0;
+      }
+      let startingPoint = this.config.maxReachableDepartures * this.config.fadePointForReachableDepartures;
+      let steps = this.config.maxReachableDepartures - startingPoint;
+      if (i >= startingPoint) {
+        let currentStep = i - startingPoint;
+        opacity = 1 - (1 / steps * currentStep);
+      }
+    }
+
+    // If no fading is set, just return 1
+    return opacity;
+  },
+
+  getHeaderRow: function () {
+
   },
 
   getNoDeparturesRow: function (message) {
