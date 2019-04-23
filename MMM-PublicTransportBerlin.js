@@ -179,9 +179,9 @@ Module.register("MMM-PublicTransportBerlin", {
 
     // handle travelTimeToStation === 0
     if (this.config.travelTimeToStation === 0) {
-        this.departuresArray.forEach((current, i) => {
+        this.departuresArray.forEach((currentDeparture, i) => {
             if (i < this.config.maxReachableDepartures) {
-                let row = this.getRow(current);
+                let row = this.getRow(currentDeparture);
                 tBody.appendChild(row);
 
                 // fading
@@ -201,7 +201,7 @@ Module.register("MMM-PublicTransportBerlin", {
       // handle travelTimeToStation > 0
     } else {
         this.getFirstReachableDeparturePosition().then((reachableDeparturePos) => {
-            this.departuresArray.forEach((current, i) => {
+            this.departuresArray.forEach((currentDeparture, i) => {
 
                 if (i >= reachableDeparturePos - this.config.maxUnreachableDepartures
                     && i < reachableDeparturePos + this.config.maxReachableDepartures) {
@@ -225,7 +225,7 @@ Module.register("MMM-PublicTransportBerlin", {
                     }
 
                     // create standard row
-                    let row = this.getRow(current);
+                    let row = this.getRow(currentDeparture);
 
                     // fading for entries before "travelTimeToStation rule"
                     if (this.config.fadeUnreachableDepartures && this.config.travelTimeToStation > 0) {
@@ -277,9 +277,9 @@ Module.register("MMM-PublicTransportBerlin", {
     return row;
   },
 
-  getRow: function (current) {
-    let currentWhen = moment(current.when);
-    let delay = this.convertDelayToMinutes(current.delay);
+  getRow: function (currentDeparture) {
+    let currentWhen = moment(currentDeparture.when);
+    let delay = this.convertDelayToMinutes(currentDeparture.delay);
 
     if (this.config.excludeDelayFromTimeLabel) {
       currentWhen = this.getDepartureTimeWithoutDelay(currentWhen, delay);
@@ -312,7 +312,7 @@ Module.register("MMM-PublicTransportBerlin", {
     row.appendChild(delayCell);
 
     let lineCell = document.createElement("td");
-    let lineSymbol = this.getLineSymbol(current);
+    let lineSymbol = this.getLineSymbol(currentDeparture);
     lineCell.className = "centeredTd noPadding lineCell";
 
     lineCell.appendChild(lineSymbol);
@@ -321,19 +321,19 @@ Module.register("MMM-PublicTransportBerlin", {
     let directionCell = document.createElement("td");
     directionCell.className = "directionCell";
 
-    if (this.config.marqueeLongDirections && current.direction.length >= 26) {
+    if (this.config.marqueeLongDirections && currentDeparture.direction.length >= 26) {
       directionCell.className = "directionCell marquee";
       let directionSpan = document.createElement("span");
-      directionSpan.innerHTML = current.direction;
+      directionSpan.innerHTML = currentDeparture.direction;
       directionCell.appendChild(directionSpan);
     } else {
-      directionCell.innerHTML = this.trimDirectionString(current.direction);
+      directionCell.innerHTML = this.trimDirectionString(currentDeparture.direction);
     }
 
     row.appendChild(directionCell);
 
     // Add cancelled class to this row if the trip was cancelled
-    if (current.cancelled) {
+    if (currentDeparture.cancelled) {
         row.classList.add("cancelled");
     }
 
