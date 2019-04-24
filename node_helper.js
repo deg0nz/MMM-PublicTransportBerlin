@@ -9,6 +9,7 @@ module.exports = NodeHelper.create({
         this.departuresFetchers = []
     },
 
+    //TODO: Make this function async
     createFetcher: function (config) {
         let fetcher;
 
@@ -32,6 +33,7 @@ module.exports = NodeHelper.create({
         this.getDepartures(fetcher.getStationId());
     },
 
+    //TODO: Make this function async
     sendInit: function (fetcher) {
         fetcher.getStationName().then((name) => {
             this.sendSocketNotification("FETCHER_INIT", {
@@ -41,6 +43,7 @@ module.exports = NodeHelper.create({
         });
     },
 
+    //TODO: Make this function async
     getDepartures: function (stationId) {
         this.departuresFetchers[stationId].fetchDepartures().then((departuresData) => {
             this.pimpDeparturesArray(departuresData.departuresArray);

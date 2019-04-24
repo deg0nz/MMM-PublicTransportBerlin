@@ -12,12 +12,14 @@ VbbFetcher.prototype.getStationId = function () {
   return this.config.stationId;
 };
 
+//TODO: Make this function async
 VbbFetcher.prototype.getStationName = function () {
   return vbbClient.stop(this.config.stationId).then((response) => {
     return response.name;
   });
 };
 
+//TODO: Make this function async
 VbbFetcher.prototype.fetchDepartures = function () {
   // when value for a request is calculated to be 5 minutes before travelTimeToStation time
   // so we can also show the non-reachable departures in the module
