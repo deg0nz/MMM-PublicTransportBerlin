@@ -100,64 +100,15 @@ Module.register("MMM-PublicTransportBerlin", {
       return wrapper;
     }
 
-    // Table header
+    // The table
     let table = document.createElement("table");
     table.className = "ptbTable small light";
 
+    // Table header ( thead tag is mandatory)
     let tHead = document.createElement("thead");
 
-    let headerRow = document.createElement("tr");
-
-    // Cell for departure time
-    let headerTime = document.createElement("td");
-    headerTime.className = "centeredTd";
-
-    if (this.config.showTableHeadersAsSymbols) {
-      let timeIcon = document.createElement("span");
-      timeIcon.className = "fa fa-clock-o";
-      headerTime.appendChild(timeIcon);
-    } else {
-      headerTime.innerHTML = this.translate("WHEN");
-    }
-
-    headerRow.appendChild(headerTime);
-
-    // Cell for travelTimeToStation time
-    let delayTime = document.createElement("td");
-    delayTime.innerHTML = "&nbsp;";
-    headerRow.appendChild(delayTime);
-
-    // Cell for line symbol
-    let headerLine = document.createElement("td");
-    headerLine.className = "centeredTd";
-
-    if (this.config.showTableHeadersAsSymbols) {
-      let lineIcon = document.createElement("span");
-      lineIcon.className = "fa fa-tag";
-      headerLine.appendChild(lineIcon);
-    } else {
-      headerLine.innerHTML = this.translate("LINE");
-    }
-
-    headerRow.appendChild(headerLine);
-
-    // Cell for direction
-    let headerDirection = document.createElement("td");
-    headerDirection.className = "centeredTd";
-
-    if (this.config.showTableHeadersAsSymbols) {
-      let directionIcon = document.createElement("span");
-      directionIcon.className = "fa fa-exchange";
-      headerDirection.appendChild(directionIcon);
-    } else {
-      headerDirection.innerHTML = this.translate("DIRECTION");
-    }
-
-    headerRow.appendChild(headerDirection);
-
-    headerRow.className = "bold dimmed";
-
     if (this.config.showTableHeaders) {
+      let headerRow = this.getTableHeaderRow();
       tHead.appendChild(headerRow);
     }
 
@@ -263,15 +214,66 @@ Module.register("MMM-PublicTransportBerlin", {
     return opacity;
   },
 
-  getHeaderRow: function () {
+  getTableHeaderRow: function () {
+    let headerRow = document.createElement("tr");
 
+    // Cell for departure time
+    let headerTime = document.createElement("td");
+    headerTime.className = "centeredTd";
+
+    if (this.config.showTableHeadersAsSymbols) {
+      let timeIcon = document.createElement("span");
+      timeIcon.className = "fa fa-clock-o";
+      headerTime.appendChild(timeIcon);
+    } else {
+      headerTime.innerHTML = this.translate("WHEN");
+    }
+
+    headerRow.appendChild(headerTime);
+
+    // Cell for travelTimeToStation time
+    let delayTime = document.createElement("td");
+    delayTime.innerHTML = "&nbsp;";
+    headerRow.appendChild(delayTime);
+
+    // Cell for line symbol
+    let headerLine = document.createElement("td");
+    headerLine.className = "centeredTd";
+
+    if (this.config.showTableHeadersAsSymbols) {
+      let lineIcon = document.createElement("span");
+      lineIcon.className = "fa fa-tag";
+      headerLine.appendChild(lineIcon);
+    } else {
+      headerLine.innerHTML = this.translate("LINE");
+    }
+
+    headerRow.appendChild(headerLine);
+
+    // Cell for direction
+    let headerDirection = document.createElement("td");
+    headerDirection.className = "centeredTd";
+
+    if (this.config.showTableHeadersAsSymbols) {
+      let directionIcon = document.createElement("span");
+      directionIcon.className = "fa fa-exchange";
+      headerDirection.appendChild(directionIcon);
+    } else {
+      headerDirection.innerHTML = this.translate("DIRECTION");
+    }
+
+    headerRow.appendChild(headerDirection);
+
+    headerRow.className = "bold dimmed";
+
+    return headerRow;
   },
 
   getNoDeparturesRow: function (message) {
     let row = document.createElement("tr");
     let cell = document.createElement("td");
-    cell.colSpan = 4;
 
+    cell.colSpan = 4;
     cell.innerHTML = message;
 
     row.appendChild(cell);
