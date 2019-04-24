@@ -77,7 +77,7 @@ Module.register("MMM-PublicTransportBerlin", {
     }, this.config.interval)
   },
 
-  getDom: function () {
+  getDom: async function () {
     let wrapper = document.createElement("div");
     wrapper.className = "ptbWrapper";
 
@@ -130,67 +130,44 @@ Module.register("MMM-PublicTransportBerlin", {
       return wrapper;
     }
 
-    // handle travelTimeToStation === 0
-    //   this.departuresArray.forEach((currentDeparture, i) => {
-    //
-    //     if (this.config.travelTimeToStation > 0) {
-    //
-    //     }
-    //
-    //     if (i < this.config.maxReachableDepartures) {
-    //       let row = this.getRow(currentDeparture);
-    //       tBody.appendChild(row);
-    //       row.style.opacity = this.getRowOpacity(i, 0);
-    //     }
-    //   });
-    //   // handle travelTimeToStation > 0
+    try {
+      let reachableDeparturePos = await this.getFirstReachableDeparturePosition();
+      Log.info(this.config.name + " rdp: " + reachableDeparturePos);
 
-    // handle travelTimeToStation === 0
-    if (this.config.travelTimeToStation === 0) {
-        this.departuresArray.forEach((currentDeparture, i) => {
-            if (i < this.config.maxReachableDepartures) {
-                let row = this.getRow(currentDeparture);
-                tBody.appendChild(row);
-                row.style.opacity = this.getRowOpacity(i, 0);
-            }
-        });
-      // handle travelTimeToStation > 0
-    } else {
-        this.getFirstReachableDeparturePosition().then((reachableDeparturePos) => {
-            this.departuresArray.forEach((currentDeparture, i) => {
+      this.departuresArray.forEach((currentDeparture, i) => {
 
-                if (i >= reachableDeparturePos - this.config.maxUnreachableDepartures
-                    && i < reachableDeparturePos + this.config.maxReachableDepartures) {
+        if (i >= reachableDeparturePos - this.config.maxUnreachableDepartures
+          && i < reachableDeparturePos + this.config.maxReachableDepartures) {
 
-                    // insert rule to separate reachable departures
-                    if (i === reachableDeparturePos
-                        && reachableDeparturePos !== 0
-                        && this.config.maxUnreachableDepartures !== 0) {
+          // insert rule to separate reachable departures
+          if (i === reachableDeparturePos
+            && reachableDeparturePos !== 0
+            && this.config.maxUnreachableDepartures !== 0) {
 
-                        let ruleRow = document.createElement("tr");
+            let ruleRow = document.createElement("tr");
 
-                        let ruleTimeCell = document.createElement("td");
-                        ruleRow.appendChild(ruleTimeCell);
+            let ruleTimeCell = document.createElement("td");
+            ruleRow.appendChild(ruleTimeCell);
 
-                        let ruleCell = document.createElement("td");
-                        ruleCell.colSpan = 3;
-                        ruleCell.className = "ruleCell";
-                        ruleRow.appendChild(ruleCell);
+            let ruleCell = document.createElement("td");
+            ruleCell.colSpan = 3;
+            ruleCell.className = "ruleCell";
+            ruleRow.appendChild(ruleCell);
 
-                        tBody.appendChild(ruleRow);
-                    }
+            tBody.appendChild(ruleRow);
+          }
 
-                    // create standard row
-                    let row = this.getRow(currentDeparture);
-                    row.style.opacity = this.getRowOpacity(i, reachableDeparturePos);
+          // create standard row
+          let row = this.getRow(currentDeparture);
+          row.style.opacity = this.getRowOpacity(i, reachableDeparturePos);
 
-                    tBody.appendChild(row);
-                }
-            });
-        }, (message) => {
-            let row = this.getNoDeparturesRow(message);
-            tBody.appendChild(row);
-        });
+          tBody.appendChild(row);
+        }
+      });
+
+    } catch (e) {
+      let row = this.getNoDeparturesRow(e.message);
+      tBody.appendChild(row);
     }
 
     table.appendChild(tBody);
@@ -379,11 +356,18 @@ Module.register("MMM-PublicTransportBerlin", {
     return departureTime;
   },
 
-  getFirstReachableDeparturePosition: function () {
+  getFirstReachableDeparturePosition: async function () {
+
     let now = moment();
     let nowWithDelay = now.add(this.config.travelTimeToStation, "minutes");
 
-    return new Promise((resolve, reject) => {
+    return await new Promise((resolve, reject) => {
+
+      if(this.config.travelTimeToStation === 0)
+      {
+        resolve (0);
+      }
+
       this.departuresArray.forEach((current, i, depArray) => {
 
         let currentWhen = moment(current.when);
@@ -395,13 +379,12 @@ Module.register("MMM-PublicTransportBerlin", {
             (currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay))
               || (i === 0 && nextWhen.isSameOrAfter(nowWithDelay))
           ) {
-
               resolve(i);
           }
         } else if (i === depArray.length - 1 && currentWhen.isBefore(nowWithDelay)) {
-          reject(this.translate("NO_REACHABLE_DEPARTURES"));
+          throw new Error(this.translate("NO_REACHABLE_DEPARTURES"));
         } else {
-          reject(this.translate("NO_REACHABLE_DEPARTURES"));
+          throw new Error(this.translate("NO_REACHABLE_DEPARTURES"));
         }
       });
     });
