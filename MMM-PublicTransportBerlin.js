@@ -133,7 +133,6 @@ Module.register("MMM-PublicTransportBerlin", {
     // Create all the content rows
     try {
       let reachableDeparturePos = await this.getFirstReachableDeparturePosition();
-      Log.info(this.config.name + " rdp: " + reachableDeparturePos);
 
       this.departuresArray.forEach((currentDeparture, i) => {
 
