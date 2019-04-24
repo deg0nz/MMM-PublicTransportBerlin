@@ -130,6 +130,7 @@ Module.register("MMM-PublicTransportBerlin", {
       return wrapper;
     }
 
+    // Create all the content rows
     try {
       let reachableDeparturePos = await this.getFirstReachableDeparturePosition();
       Log.info(this.config.name + " rdp: " + reachableDeparturePos);
@@ -139,21 +140,12 @@ Module.register("MMM-PublicTransportBerlin", {
         if (i >= reachableDeparturePos - this.config.maxUnreachableDepartures
           && i < reachableDeparturePos + this.config.maxReachableDepartures) {
 
-          // insert rule to separate reachable departures
-          if (i === reachableDeparturePos
-            && reachableDeparturePos !== 0
-            && this.config.maxUnreachableDepartures !== 0) {
-
-            let ruleRow = document.createElement("tr");
-
-            let ruleTimeCell = document.createElement("td");
-            ruleRow.appendChild(ruleTimeCell);
-
-            let ruleCell = document.createElement("td");
-            ruleCell.colSpan = 3;
-            ruleCell.className = "ruleCell";
-            ruleRow.appendChild(ruleCell);
-
+          // Insert rule to separate reachable from unreachable departures
+          if(reachableDeparturePos !== 0 &&
+            reachableDeparturePos === i &&
+            this.config.maxUnreachableDepartures !== 0
+          ) {
+            let ruleRow = this.getRuleRow();
             tBody.appendChild(ruleRow);
           }
 
@@ -214,6 +206,20 @@ Module.register("MMM-PublicTransportBerlin", {
     }
 
     return opacity;
+  },
+
+  getRuleRow: function() {
+    let ruleRow = document.createElement("tr");
+
+    let ruleTimeCell = document.createElement("td");
+    ruleRow.appendChild(ruleTimeCell);
+
+    let ruleCell = document.createElement("td");
+    ruleCell.colSpan = 3;
+    ruleCell.className = "ruleCell";
+    ruleRow.appendChild(ruleCell);
+
+    return ruleRow;
   },
 
   getTableHeaderRow: function () {
