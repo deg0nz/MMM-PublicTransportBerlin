@@ -186,11 +186,14 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   getRowOpacity: function (i, reachableDeparturePos) {
+    // Per default, opacity is at 100%
     let opacity = 1;
 
     // Handle unreachable departures
     if (this.config.fadeUnreachableDepartures && this.config.travelTimeToStation > 0) {
+
       let steps = this.config.maxUnreachableDepartures;
+
       if (i >= reachableDeparturePos - steps && i < reachableDeparturePos) {
         let currentStep = reachableDeparturePos - i;
         opacity = 1 - ((1 / steps * currentStep) - 0.2);
@@ -199,9 +202,11 @@ Module.register("MMM-PublicTransportBerlin", {
 
     // Handle reachable departures
     if (this.config.fadeReachableDepartures && this.config.fadePointForReachableDepartures < 1) {
+
       if (this.config.fadePointForReachableDepartures < 0) {
         this.config.fadePointForReachableDepartures = 0;
       }
+
       let startingPoint = this.config.maxReachableDepartures * this.config.fadePointForReachableDepartures;
       let steps = this.config.maxReachableDepartures - startingPoint;
       if (i >= startingPoint) {
