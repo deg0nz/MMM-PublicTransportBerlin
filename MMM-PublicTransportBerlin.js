@@ -52,10 +52,12 @@ Module.register("MMM-PublicTransportBerlin", {
 
     this.sendSocketNotification("CREATE_FETCHER", this.config);
 
+    // Handle negative travelTimeToStation
     if(this.config.travelTimeToStation < 0) {
       this.config.travelTimeToStation = 0;
     }
 
+    // Handle missing ignored lines
     if(typeof this.config.ignoredLines === "undefined") {
       this.config.ignoredLines = [];
     }
@@ -104,7 +106,7 @@ Module.register("MMM-PublicTransportBerlin", {
     let table = document.createElement("table");
     table.className = "ptbTable small light";
 
-    // Table header ( thead tag is mandatory)
+    // Table header (thead tag is mandatory)
     let tHead = document.createElement("thead");
 
     if (this.config.showTableHeaders) {
@@ -129,13 +131,26 @@ Module.register("MMM-PublicTransportBerlin", {
     }
 
     // handle travelTimeToStation === 0
+    //   this.departuresArray.forEach((currentDeparture, i) => {
+    //
+    //     if (this.config.travelTimeToStation > 0) {
+    //
+    //     }
+    //
+    //     if (i < this.config.maxReachableDepartures) {
+    //       let row = this.getRow(currentDeparture);
+    //       tBody.appendChild(row);
+    //       row.style.opacity = this.getRowOpacity(i, 0);
+    //     }
+    //   });
+    //   // handle travelTimeToStation > 0
+
+    // handle travelTimeToStation === 0
     if (this.config.travelTimeToStation === 0) {
         this.departuresArray.forEach((currentDeparture, i) => {
             if (i < this.config.maxReachableDepartures) {
                 let row = this.getRow(currentDeparture);
                 tBody.appendChild(row);
-
-                // fading
                 row.style.opacity = this.getRowOpacity(i, 0);
             }
         });
@@ -179,7 +194,6 @@ Module.register("MMM-PublicTransportBerlin", {
     }
 
     table.appendChild(tBody);
-
     wrapper.appendChild(table);
 
     return wrapper;
@@ -190,19 +204,26 @@ Module.register("MMM-PublicTransportBerlin", {
     let opacity = 1;
 
     // Handle unreachable departures
-    if (this.config.fadeUnreachableDepartures && this.config.travelTimeToStation > 0) {
+    if (this.config.fadeUnreachableDepartures &&
+      this.config.travelTimeToStation > 0) {
 
       let steps = this.config.maxUnreachableDepartures;
 
-      if (i >= reachableDeparturePos - steps && i < reachableDeparturePos) {
+      if (i >= reachableDeparturePos - steps &&
+          i < reachableDeparturePos
+      ) {
         let currentStep = reachableDeparturePos - i;
         opacity = 1 - ((1 / steps * currentStep) - 0.2);
       }
     }
 
     // Handle reachable departures
-    if (this.config.fadeReachableDepartures && this.config.fadePointForReachableDepartures < 1) {
+    if (this.config.fadeReachableDepartures &&
+        this.config.fadePointForReachableDepartures < 1 &&
+        i >= reachableDeparturePos
+    ) {
 
+      // Handle negative fading point
       if (this.config.fadePointForReachableDepartures < 0) {
         this.config.fadePointForReachableDepartures = 0;
       }
@@ -210,12 +231,11 @@ Module.register("MMM-PublicTransportBerlin", {
       let startingPoint = this.config.maxReachableDepartures * this.config.fadePointForReachableDepartures;
       let steps = this.config.maxReachableDepartures - startingPoint;
       if (i >= startingPoint) {
-        let currentStep = i - startingPoint;
+        let currentStep = (i - reachableDeparturePos) - startingPoint;
         opacity = 1 - (1 / steps * currentStep);
       }
     }
 
-    // If no fading is set, just return 1
     return opacity;
   },
 
