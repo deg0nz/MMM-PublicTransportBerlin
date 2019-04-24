@@ -69,7 +69,9 @@ Module.register("MMM-PublicTransportBerlin", {
 
     setInterval(() => {
       // If the module started without getting the stationName for some reason, we try to get the stationName again
-      if(this.loaded && this.stationName === ""){
+      if(this.loaded &&
+          this.stationName === "")
+      {
           this.sendSocketNotification("STATION_NAME_MISSING_AFTER_INIT", this.config.stationId);
       }
 
@@ -82,7 +84,9 @@ Module.register("MMM-PublicTransportBerlin", {
     wrapper.className = "ptbWrapper";
 
     // Handle loading sequence at init time
-    if (this.departuresArray.length === 0 && !this.loaded) {
+    if (this.departuresArray.length === 0 &&
+          !this.loaded)
+    {
       wrapper.innerHTML = (this.loaded) ? this.translate("EMPTY") : this.translate("LOADING");
       wrapper.className = "small light dimmed";
       return wrapper;
@@ -136,14 +140,14 @@ Module.register("MMM-PublicTransportBerlin", {
 
       this.departuresArray.forEach((currentDeparture, i) => {
 
-        if (i >= reachableDeparturePos - this.config.maxUnreachableDepartures
-          && i < reachableDeparturePos + this.config.maxReachableDepartures) {
-
+        if (i >= reachableDeparturePos - this.config.maxUnreachableDepartures &&
+              i < reachableDeparturePos + this.config.maxReachableDepartures)
+        {
           // Insert rule to separate reachable from unreachable departures
           if(reachableDeparturePos !== 0 &&
-            reachableDeparturePos === i &&
-            this.config.maxUnreachableDepartures !== 0
-          ) {
+              reachableDeparturePos === i &&
+                this.config.maxUnreachableDepartures !== 0)
+          {
             let ruleRow = this.getRuleRow();
             tBody.appendChild(ruleRow);
           }
@@ -173,13 +177,13 @@ Module.register("MMM-PublicTransportBerlin", {
 
     // Handle unreachable departures
     if (this.config.fadeUnreachableDepartures &&
-      this.config.travelTimeToStation > 0) {
-
+          this.config.travelTimeToStation > 0)
+    {
       let steps = this.config.maxUnreachableDepartures;
 
       if (i >= reachableDeparturePos - steps &&
-          i < reachableDeparturePos
-      ) {
+            i < reachableDeparturePos)
+      {
         let currentStep = reachableDeparturePos - i;
         opacity = 1 - ((1 / steps * currentStep) - 0.2);
       }
@@ -187,10 +191,9 @@ Module.register("MMM-PublicTransportBerlin", {
 
     // Handle reachable departures
     if (this.config.fadeReachableDepartures &&
-        this.config.fadePointForReachableDepartures < 1 &&
-        i >= reachableDeparturePos
-    ) {
-
+          this.config.fadePointForReachableDepartures < 1 &&
+            i >= reachableDeparturePos)
+    {
       // Handle negative fading point
       if (this.config.fadePointForReachableDepartures < 0) {
         this.config.fadePointForReachableDepartures = 0;
@@ -270,7 +273,6 @@ Module.register("MMM-PublicTransportBerlin", {
     }
 
     headerRow.appendChild(headerDirection);
-
     headerRow.className = "bold dimmed";
 
     return headerRow;
@@ -332,7 +334,9 @@ Module.register("MMM-PublicTransportBerlin", {
     let directionCell = document.createElement("td");
     directionCell.className = "directionCell";
 
-    if (this.config.marqueeLongDirections && currentDeparture.direction.length >= 26) {
+    if (this.config.marqueeLongDirections &&
+          currentDeparture.direction.length >= 26)
+    {
       directionCell.className = "directionCell marquee";
       let directionSpan = document.createElement("span");
       directionSpan.innerHTML = currentDeparture.direction;
@@ -362,7 +366,6 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   getFirstReachableDeparturePosition: async function () {
-
     let now = moment();
     let nowWithDelay = now.add(this.config.travelTimeToStation, "minutes");
 
@@ -380,13 +383,14 @@ Module.register("MMM-PublicTransportBerlin", {
         if (depArray.length > 1 && i < depArray.length - 1) {
 
           let nextWhen = moment(depArray[i + 1].when);
-          if (
-            (currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay))
-              || (i === 0 && nextWhen.isSameOrAfter(nowWithDelay))
-          ) {
+          if ((currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay)) ||
+              (i === 0 && nextWhen.isSameOrAfter(nowWithDelay)))
+          {
               resolve(i);
           }
-        } else if (i === depArray.length - 1 && currentWhen.isBefore(nowWithDelay)) {
+        } else if (i === depArray.length - 1 &&
+                    currentWhen.isBefore(nowWithDelay))
+        {
           throw new Error(this.translate("NO_REACHABLE_DEPARTURES"));
         } else {
           throw new Error(this.translate("NO_REACHABLE_DEPARTURES"));
@@ -458,13 +462,13 @@ Module.register("MMM-PublicTransportBerlin", {
     return [
       "moment.js"
     ];
-},
+  },
 
-socketNotificationReceived: function (notification, payload) {
-  if (notification === "FETCHER_INIT") {
-    if (payload.stationId === this.config.stationId) {
-      this.stationName = payload.stationName;
-      this.loaded = true;
+  socketNotificationReceived: function (notification, payload) {
+    if (notification === "FETCHER_INIT") {
+      if (payload.stationId === this.config.stationId) {
+        this.stationName = payload.stationName;
+        this.loaded = true;
       }
     }
 

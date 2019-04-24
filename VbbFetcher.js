@@ -33,7 +33,9 @@ VbbFetcher.prototype.fetchDepartures = function () {
   let opt;
 
   // Handle single direction case
-  if(!this.config.directionStationId || this.config.directionStationId === "") {
+  if(!this.config.directionStationId ||
+      this.config.directionStationId === "")
+  {
     opt = {
       when: when,
       duration: this.config.departureMinutes
@@ -55,43 +57,43 @@ VbbFetcher.prototype.fetchDepartures = function () {
 };
 
 VbbFetcher.prototype.processData = function (data) {
-    let departuresData = {
-      stationId: this.config.stationId,
-      departuresArray: []
-    };
+  let departuresData = {
+    stationId: this.config.stationId,
+    departuresArray: []
+  };
 
-    data.forEach((row) => {
-        // check for:
-        // ignored stations
-        // excluded transportation types
-        // ignored lines
+  data.forEach((row) => {
+      // check for:
+      // ignored stations
+      // excluded transportation types
+      // ignored lines
 
-      // TODO: Make real stop/station handling here
-      // Quick fix to work around missing station objects
-      if(!row.station) {
-          row.station = row.stop;
-      }
+    // TODO: Make real stop/station handling here
+    // Quick fix to work around missing station objects
+    if(!row.station) {
+        row.station = row.stop;
+    }
 
-      if (!this.config.ignoredStations.includes(row.station.id)
-        && !this.config.excludedTransportationTypes.includes(row.line.product)
-          && !this.config.ignoredLines.includes(row.line.name)
-      ) {
-        let current = {
-            when: row.when || row.scheduledWhen,
-            delay: row.delay || 0,
-            cancelled: row.cancelled || false,
-            name: row.line.name,
-            nr: row.line.nr,
-            type: row.line.product,
-            direction: row.direction
-        };
+    if (!this.config.ignoredStations.includes(row.station.id) &&
+         !this.config.excludedTransportationTypes.includes(row.line.product) &&
+           !this.config.ignoredLines.includes(row.line.name))
+    {
+      let current = {
+          when: row.when || row.scheduledWhen,
+          delay: row.delay || 0,
+          cancelled: row.cancelled || false,
+          name: row.line.name,
+          nr: row.line.nr,
+          type: row.line.product,
+          direction: row.direction
+      };
 
-        departuresData.departuresArray.push(current);
-      }
-    });
+      departuresData.departuresArray.push(current);
+    }
+  });
 
-    departuresData.departuresArray.sort(compareTimes);
-    return departuresData;
+  departuresData.departuresArray.sort(compareTimes);
+  return departuresData;
 };
 
 function compareTimes(a, b) {
