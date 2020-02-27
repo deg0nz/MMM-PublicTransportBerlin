@@ -23,7 +23,8 @@ Module.register("MMM-PublicTransportBerlin", {
     fadeUnreachableDepartures: true,    // Should unreachable departures be faded away from the reachable departures line?
     fadeReachableDepartures: true,      // Should reachable departures be faded away from the reachable departures line?
     fadePointForReachableDepartures: 0.25, // The point to start fading the reachable departures
-    excludeDelayFromTimeLabel: false     // Should the delay time be excluded from the time label?
+    excludeDelayFromTimeLabel: false,    // Should the delay time be excluded from the time label?
+    animationSpeed: 3000                // Speed of the update animation. (Milliseconds)
   },
 
   start: function () {
@@ -458,7 +459,7 @@ socketNotificationReceived: function (notification, payload) {
         this.error = {};
         // Proceed with normal operation
         this.departuresArray = payload.departuresArray;
-        this.updateDom(3000);
+        this.updateDom(this.config.animationSpeed);
       }
     }
 
@@ -466,7 +467,7 @@ socketNotificationReceived: function (notification, payload) {
       if (payload.stationId === this.config.stationId) {
         this.loaded = true;
         this.error = payload;
-        this.updateDom(3000);
+        this.updateDom(this.config.animationSpeed);
       }
     }
   }
