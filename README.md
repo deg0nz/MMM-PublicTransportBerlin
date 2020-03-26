@@ -54,7 +54,7 @@ You will need a `stationId` for your module. You can get it as described in the 
 This is a cURL example for getting all possible stations with the keyword "alexanderplatz":
 
 ```
-curl 'https://1.bvg.transport.rest/locations?query=alexanderplatz'
+curl 'https://2.bvg.transport.rest/locations?query=alexanderplatz'
 ```
 
 The answer should contain one or more possible stations with valid station IDs. More queries are possible, 
@@ -64,7 +64,7 @@ for more options. Please note, that you need to query `1.bvg.transport.rest`.
 You can prettify the JSON output with [`jq`](https://stedolan.github.io/jq/) if you have it installed:
 
 ```
-curl 'https://1.bvg.transport.rest/locations?query=alexanderplatz' | jq
+curl 'https://2.bvg.transport.rest/locations?query=alexanderplatz' | jq
 ```
 
 ## Configuration
