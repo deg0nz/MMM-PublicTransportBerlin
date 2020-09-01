@@ -54,7 +54,7 @@ You will need a `stationId` for your module. You can get it as described in the 
 This is a cURL example for getting all possible stations with the keyword "alexanderplatz":
 
 ```
-curl 'https://1.bvg.transport.rest/locations?query=alexanderplatz'
+curl 'https://2.bvg.transport.rest/locations?query=alexanderplatz'
 ```
 
 The answer should contain one or more possible stations with valid station IDs. More queries are possible, 
@@ -64,7 +64,7 @@ for more options. Please note, that you need to query `1.bvg.transport.rest`.
 You can prettify the JSON output with [`jq`](https://stedolan.github.io/jq/) if you have it installed:
 
 ```
-curl 'https://1.bvg.transport.rest/locations?query=alexanderplatz' | jq
+curl 'https://2.bvg.transport.rest/locations?query=alexanderplatz' | jq
 ```
 
 ## Configuration
@@ -94,6 +94,7 @@ The module quite configurable. These are the possible options:
 |`fadeReachableDepartures`|Activates/deactivates fading for reachable departures.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
 |`fadePointForReachableDepartures`|Fading point for reachable departures. Thìs value is also valid for `travelTimeToSteation= 0` <br><br>**Type:** `float`<br>**Default vaule:** `0.5` <br>**Possible values:** `0.0 - 1.0`|
 |`excludeDelayFromTimeLabel`|The API provides time labels which include the delay time of the departure. This flag removes the delay time to show times like they are shown in the BVG-App.<br><br>**Type:** `boolean`<br>**Default vaule:** `false`|
+|`animationSpeed`|Speed of the update animation. The value is given in milliseconds.<br><br>**Type:** `integer`<br>**Default value:** `3000 // 3 seconds`|
 
 Here is an example of an entry in `config.js`:
 
