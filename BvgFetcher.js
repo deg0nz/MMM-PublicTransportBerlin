@@ -9,10 +9,6 @@ const bvgClient = createClient(
     " (https://github.com/deg0nz/MMM-PublicTransportBerlin)"
 );
 
-let BvgFetcher = function (config) {
-  this.config = config;
-};
-
 class BvgFetcher {
   constructor(config) {
     this.config = config;
