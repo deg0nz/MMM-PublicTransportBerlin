@@ -53,10 +53,12 @@ Module.register("MMM-PublicTransportBerlin", {
 
     this.sendSocketNotification("CREATE_FETCHER", this.config);
 
+    // Handle negative travelTimeToStation
     if(this.config.travelTimeToStation < 0) {
       this.config.travelTimeToStation = 0;
     }
 
+    // Handle missing ignored lines
     if(typeof this.config.ignoredLines === "undefined") {
       this.config.ignoredLines = [];
     }
@@ -68,7 +70,9 @@ Module.register("MMM-PublicTransportBerlin", {
 
     setInterval(() => {
       // If the module started without getting the stationName for some reason, we try to get the stationName again
-      if(this.loaded && this.stationName === ""){
+      if(this.loaded &&
+          this.stationName === "")
+      {
           this.sendSocketNotification("STATION_NAME_MISSING_AFTER_INIT", this.config.stationId);
       }
 
@@ -76,12 +80,14 @@ Module.register("MMM-PublicTransportBerlin", {
     }, this.config.interval)
   },
 
-  getDom: function () {
+  getDom: async function () {
     let wrapper = document.createElement("div");
     wrapper.className = "ptbWrapper";
 
     // Handle loading sequence at init time
-    if (this.departuresArray.length === 0 && !this.loaded) {
+    if (this.departuresArray.length === 0 &&
+          !this.loaded)
+    {
       wrapper.innerHTML = (this.loaded) ? this.translate("EMPTY") : this.translate("LOADING");
       wrapper.className = "small light dimmed";
       return wrapper;
@@ -101,12 +107,125 @@ Module.register("MMM-PublicTransportBerlin", {
       return wrapper;
     }
 
-    // Table header
+    // The table
     let table = document.createElement("table");
     table.className = "ptbTable small light";
 
+    // Table header (thead tag is mandatory)
     let tHead = document.createElement("thead");
 
+    if (this.config.showTableHeaders) {
+      let headerRow = this.getTableHeaderRow();
+      tHead.appendChild(headerRow);
+    }
+
+    table.appendChild(tHead);
+
+    // Create table body from data
+    let tBody = document.createElement("tbody");
+
+    // Handle empty departures array
+    if (this.departuresArray.length === 0) {
+      let row = this.getNoDeparturesRow(this.translate("NO_DEPARTURES_AVAILABLE"));
+
+      tBody.appendChild(row);
+      table.appendChild(tBody);
+      wrapper.appendChild(table);
+
+      return wrapper;
+    }
+
+    // Create all the content rows
+    try {
+      let reachableDeparturePos = await this.getFirstReachableDeparturePosition();
+
+      this.departuresArray.forEach((currentDeparture, i) => {
+
+        if (i >= reachableDeparturePos - this.config.maxUnreachableDepartures &&
+              i < reachableDeparturePos + this.config.maxReachableDepartures)
+        {
+          // Insert rule to separate reachable from unreachable departures
+          if(reachableDeparturePos !== 0 &&
+              reachableDeparturePos === i &&
+                this.config.maxUnreachableDepartures !== 0)
+          {
+            let ruleRow = this.getRuleRow();
+            tBody.appendChild(ruleRow);
+          }
+
+          // create standard row
+          let row = this.getRow(currentDeparture);
+          row.style.opacity = this.getRowOpacity(i, reachableDeparturePos);
+
+          tBody.appendChild(row);
+        }
+      });
+
+    } catch (e) {
+      let row = this.getNoDeparturesRow(e.message);
+      tBody.appendChild(row);
+    }
+
+    table.appendChild(tBody);
+    wrapper.appendChild(table);
+
+    return wrapper;
+  },
+
+  getRowOpacity: function (i, reachableDeparturePos) {
+    // Per default, opacity is at 100%
+    let opacity = 1;
+
+    // Handle unreachable departures
+    if (this.config.fadeUnreachableDepartures &&
+          this.config.travelTimeToStation > 0)
+    {
+      let steps = this.config.maxUnreachableDepartures;
+
+      if (i >= reachableDeparturePos - steps &&
+            i < reachableDeparturePos)
+      {
+        let currentStep = reachableDeparturePos - i;
+        opacity = 1 - ((1 / steps * currentStep) - 0.2);
+      }
+    }
+
+    // Handle reachable departures
+    if (this.config.fadeReachableDepartures &&
+          this.config.fadePointForReachableDepartures < 1 &&
+            i >= reachableDeparturePos)
+    {
+      // Handle negative fading point
+      if (this.config.fadePointForReachableDepartures < 0) {
+        this.config.fadePointForReachableDepartures = 0;
+      }
+
+      let startingPoint = this.config.maxReachableDepartures * this.config.fadePointForReachableDepartures;
+      let steps = this.config.maxReachableDepartures - startingPoint;
+      if (i >= startingPoint) {
+        let currentStep = (i - reachableDeparturePos) - startingPoint;
+        opacity = 1 - (1 / steps * currentStep);
+      }
+    }
+
+    return opacity;
+  },
+
+  getRuleRow: function() {
+    let ruleRow = document.createElement("tr");
+
+    let ruleTimeCell = document.createElement("td");
+    ruleRow.appendChild(ruleTimeCell);
+
+    let ruleCell = document.createElement("td");
+    ruleCell.colSpan = 3;
+    ruleCell.className = "ruleCell";
+    ruleRow.appendChild(ruleCell);
+
+    return ruleRow;
+  },
+
+  getTableHeaderRow: function () {
     let headerRow = document.createElement("tr");
 
     // Cell for departure time
@@ -155,122 +274,16 @@ Module.register("MMM-PublicTransportBerlin", {
     }
 
     headerRow.appendChild(headerDirection);
-
     headerRow.className = "bold dimmed";
 
-    if (this.config.showTableHeaders) {
-      tHead.appendChild(headerRow);
-    }
-
-    table.appendChild(tHead);
-
-    // Create table body from data
-    let tBody = document.createElement("tbody");
-
-    // Handle empty departures array
-    if (this.departuresArray.length === 0) {
-      let row = this.getNoDeparturesRow(this.translate("NO_DEPARTURES_AVAILABLE"));
-
-      tBody.appendChild(row);
-      table.appendChild(tBody);
-      wrapper.appendChild(table);
-
-      return wrapper;
-    }
-
-    // handle travelTimeToStation === 0
-    if (this.config.travelTimeToStation === 0) {
-        this.departuresArray.forEach((current, i) => {
-            if (i < this.config.maxReachableDepartures) {
-                let row = this.getRow(current);
-                tBody.appendChild(row);
-
-                // fading
-                if (this.config.fadeReachableDepartures && this.config.fadePointForReachableDepartures < 1) {
-                    if (this.config.fadePointForReachableDepartures < 0) {
-                        this.config.fadePointForReachableDepartures = 0;
-                    }
-                    let startingPoint = this.config.maxReachableDepartures * this.config.fadePointForReachableDepartures;
-                    let steps = this.config.maxReachableDepartures - startingPoint;
-                    if (i >= startingPoint) {
-                        let currentStep = i - startingPoint;
-                        row.style.opacity = 1 - (1 / steps * currentStep);
-                    }
-                }
-            }
-        });
-      // handle travelTimeToStation > 0
-    } else {
-        this.getFirstReachableDeparturePosition().then((reachableDeparturePos) => {
-            this.departuresArray.forEach((current, i) => {
-
-                if (i >= reachableDeparturePos - this.config.maxUnreachableDepartures
-                    && i < reachableDeparturePos + this.config.maxReachableDepartures) {
-
-                    // insert rule to separate reachable departures
-                    if (i === reachableDeparturePos
-                        && reachableDeparturePos !== 0
-                        && this.config.maxUnreachableDepartures !== 0) {
-
-                        let ruleRow = document.createElement("tr");
-
-                        let ruleTimeCell = document.createElement("td");
-                        ruleRow.appendChild(ruleTimeCell);
-
-                        let ruleCell = document.createElement("td");
-                        ruleCell.colSpan = 3;
-                        ruleCell.className = "ruleCell";
-                        ruleRow.appendChild(ruleCell);
-
-                        tBody.appendChild(ruleRow);
-                    }
-
-                    // create standard row
-                    let row = this.getRow(current);
-
-                    // fading for entries before "travelTimeToStation rule"
-                    if (this.config.fadeUnreachableDepartures && this.config.travelTimeToStation > 0) {
-                        let steps = this.config.maxUnreachableDepartures;
-                        if (i >= reachableDeparturePos - steps && i < reachableDeparturePos) {
-                            let currentStep = reachableDeparturePos - i;
-                            row.style.opacity = 1 - ((1 / steps * currentStep) - 0.2);
-                        }
-                    }
-
-                    // fading for entries after "travelTimeToStation rule"
-                    if (this.config.fadeReachableDepartures && this.config.fadePointForReachableDepartures < 1) {
-                        if (this.config.fadePointForReachableDepartures < 0) {
-                            this.config.fadePointForReachableDepartures = 0;
-                        }
-                        let startingPoint = this.config.maxReachableDepartures * this.config.fadePointForReachableDepartures;
-                        let steps = this.config.maxReachableDepartures - startingPoint;
-                        if (i >= reachableDeparturePos + startingPoint) {
-                            let currentStep = (i - reachableDeparturePos) - startingPoint;
-                            row.style.opacity = 1 - (1 / steps * currentStep);
-                        }
-                    }
-
-                    tBody.appendChild(row);
-                }
-            });
-        }, (message) => {
-            let row = this.getNoDeparturesRow(message);
-            tBody.appendChild(row);
-        });
-    }
-
-    table.appendChild(tBody);
-
-    wrapper.appendChild(table);
-
-    return wrapper;
+    return headerRow;
   },
 
   getNoDeparturesRow: function (message) {
     let row = document.createElement("tr");
     let cell = document.createElement("td");
-    cell.colSpan = 4;
 
+    cell.colSpan = 4;
     cell.innerHTML = message;
 
     row.appendChild(cell);
@@ -278,9 +291,9 @@ Module.register("MMM-PublicTransportBerlin", {
     return row;
   },
 
-  getRow: function (current) {
-    let currentWhen = moment(current.when);
-    let delay = this.convertDelayToMinutes(current.delay);
+  getRow: function (currentDeparture) {
+    let currentWhen = moment(currentDeparture.when);
+    let delay = this.convertDelayToMinutes(currentDeparture.delay);
 
     if (this.config.excludeDelayFromTimeLabel) {
       currentWhen = this.getDepartureTimeWithoutDelay(currentWhen, delay);
@@ -313,7 +326,7 @@ Module.register("MMM-PublicTransportBerlin", {
     row.appendChild(delayCell);
 
     let lineCell = document.createElement("td");
-    let lineSymbol = this.getLineSymbol(current);
+    let lineSymbol = this.getLineSymbol(currentDeparture);
     lineCell.className = "centeredTd noPadding lineCell";
 
     lineCell.appendChild(lineSymbol);
@@ -322,19 +335,21 @@ Module.register("MMM-PublicTransportBerlin", {
     let directionCell = document.createElement("td");
     directionCell.className = "directionCell";
 
-    if (this.config.marqueeLongDirections && current.direction.length >= 26) {
+    if (this.config.marqueeLongDirections &&
+          currentDeparture.direction.length >= 26)
+    {
       directionCell.className = "directionCell marquee";
       let directionSpan = document.createElement("span");
-      directionSpan.innerHTML = current.direction;
+      directionSpan.innerHTML = currentDeparture.direction;
       directionCell.appendChild(directionSpan);
     } else {
-      directionCell.innerHTML = this.trimDirectionString(current.direction);
+      directionCell.innerHTML = this.trimDirectionString(currentDeparture.direction);
     }
 
     row.appendChild(directionCell);
 
     // Add cancelled class to this row if the trip was cancelled
-    if (current.cancelled) {
+    if (currentDeparture.cancelled) {
         row.classList.add("cancelled");
     }
 
@@ -351,11 +366,17 @@ Module.register("MMM-PublicTransportBerlin", {
     return departureTime;
   },
 
-  getFirstReachableDeparturePosition: function () {
+  getFirstReachableDeparturePosition: async function () {
     let now = moment();
     let nowWithDelay = now.add(this.config.travelTimeToStation, "minutes");
 
-    return new Promise((resolve, reject) => {
+    return await new Promise((resolve, reject) => {
+
+      if(this.config.travelTimeToStation === 0)
+      {
+        resolve (0);
+      }
+
       this.departuresArray.forEach((current, i, depArray) => {
 
         let currentWhen = moment(current.when);
@@ -363,17 +384,17 @@ Module.register("MMM-PublicTransportBerlin", {
         if (depArray.length > 1 && i < depArray.length - 1) {
 
           let nextWhen = moment(depArray[i + 1].when);
-          if (
-            (currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay))
-              || (i === 0 && nextWhen.isSameOrAfter(nowWithDelay))
-          ) {
-
+          if ((currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay)) ||
+              (i === 0 && nextWhen.isSameOrAfter(nowWithDelay)))
+          {
               resolve(i);
           }
-        } else if (i === depArray.length - 1 && currentWhen.isBefore(nowWithDelay)) {
-          reject(this.translate("NO_REACHABLE_DEPARTURES"));
+        } else if (i === depArray.length - 1 &&
+                    currentWhen.isBefore(nowWithDelay))
+        {
+          throw new Error(this.translate("NO_REACHABLE_DEPARTURES"));
         } else {
-          reject(this.translate("NO_REACHABLE_DEPARTURES"));
+          throw new Error(this.translate("NO_REACHABLE_DEPARTURES"));
         }
       });
     });
@@ -442,13 +463,13 @@ Module.register("MMM-PublicTransportBerlin", {
     return [
       "moment.js"
     ];
-},
+  },
 
-socketNotificationReceived: function (notification, payload) {
-  if (notification === "FETCHER_INIT") {
-    if (payload.stationId === this.config.stationId) {
-      this.stationName = payload.stationName;
-      this.loaded = true;
+  socketNotificationReceived: function (notification, payload) {
+    if (notification === "FETCHER_INIT") {
+      if (payload.stationId === this.config.stationId) {
+        this.stationName = payload.stationName;
+        this.loaded = true;
       }
     }
 
