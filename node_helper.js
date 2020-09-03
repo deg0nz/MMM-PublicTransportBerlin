@@ -22,7 +22,7 @@ module.exports = NodeHelper.create({
           "Transportation fetcher for station " + stationName + " created. (Station ID: " + fetcher.getStationId() + ")"
         );
       } catch (error) {
-        console.error(error); 
+        console.error(error);
       }
 
     } else {
@@ -32,7 +32,7 @@ module.exports = NodeHelper.create({
       try {
         let stationName = await fetcher.getStationName();
         console.log(
-          "Using existing transportation fetcher for station " + res + " (Station ID: " + fetcher.getStationId() + ")"
+          "Using existing transportation fetcher for station " + stationName + " (Station ID: " + fetcher.getStationId() + ")"
         );
       } catch (error) {
         console.error(error)
@@ -44,7 +44,7 @@ module.exports = NodeHelper.create({
 
   sendInit: async function (fetcher) {
     try {
-      let stationName = fetcher.getStationName();
+      let stationName = await fetcher.getStationName();
 
       this.sendSocketNotification("FETCHER_INIT", {
         stationId: fetcher.getStationId(),
