@@ -64,7 +64,7 @@ for more options. Please note, that you need to query `1.bvg.transport.rest`.
 You can prettify the JSON output with [`jq`](https://stedolan.github.io/jq/) if you have it installed:
 
 ```
-curl 'https://2.bvg.transport.rest/locations?query=alexanderplatz' | jq
+curl 'https://v5.bvg.transport.rest/locations?query=alexanderplatz' | jq
 ```
 
 ## Configuration
