@@ -82,7 +82,7 @@ class BvgFetcher {
         !this.config.ignoredLines.includes(row.line.name)
       ) {
         let current = {
-          when: row.when || row.scheduledWhen,
+          when: row.when || row.plannedWhen,
           delay: row.delay || 0,
           cancelled: row.cancelled || false,
           name: row.line.name,

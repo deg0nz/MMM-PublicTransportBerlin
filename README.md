@@ -26,7 +26,7 @@ The module looks like this:
 ## Preconditions
 
 * MagicMirror<sup>2</sup> instance
-* Node.js version > 8
+* Node.js version >= 10
 * npm
 
 ## Installation
@@ -54,7 +54,7 @@ You will need a `stationId` for your module. You can get it as described in the 
 This is a cURL example for getting all possible stations with the keyword "alexanderplatz":
 
 ```
-curl 'https://2.bvg.transport.rest/locations?query=alexanderplatz'
+curl 'https://v5.bvg.transport.rest/locations?query=alexanderplatz'
 ```
 
 The answer should contain one or more possible stations with valid station IDs. More queries are possible, 
