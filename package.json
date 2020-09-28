@@ -1,6 +1,6 @@
 {
   "name": "MMM-PublicTransportBerlin",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "description": "BVG-Hafas driven public transport module for MagicMirror 2.",
   "repository": {
     "type": "git",
@@ -17,7 +17,7 @@
   ],
   "author": {
     "name": "deg0nz",
-    "email": "b@kayuk.de",
+    "email": "magicmirror@kayuk.de",
     "url": "https://kayuk.de"
   },
   "contributors": "https://github.com/deg0nz/MMM-PublicTransportBerlin/graphs/contributors",
