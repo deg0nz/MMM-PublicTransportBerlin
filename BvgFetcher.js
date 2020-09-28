@@ -28,6 +28,15 @@ class BvgFetcher {
     return station.name;
   }
 
+  async getDirectionDescriptor() {
+    if (typeof this.config.directionStationId === "undefined") {
+      return "all directions"
+    } else {
+      const station = await bvgClient.stop(this.config.directionStationId);
+      return station.name;
+    }
+  }
+
   async fetchDepartures() {
     // when value for a request is calculated to be 5 minutes before travelTimeToStation time
     // so we can also show the non-reachable departures in the module
