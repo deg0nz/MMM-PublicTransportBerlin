@@ -9,11 +9,12 @@ module.exports = NodeHelper.create({
   },
 
   createFetcher: async function (config) {
+    const fetcherId = config.name;
     let fetcher;
 
-    if (typeof this.departuresFetchers[config.stationId] === "undefined") {
+    if (typeof this.departuresFetchers[fetcherId] === "undefined") {
       fetcher = new BvgFetcher(config);
-      this.departuresFetchers[config.stationId] = fetcher;
+      this.departuresFetchers[fetcherId] = fetcher;
       this.sendInit(fetcher);
 
       try {
@@ -26,7 +27,7 @@ module.exports = NodeHelper.create({
       }
 
     } else {
-      fetcher = this.departuresFetchers[config.stationId];
+      fetcher = this.departuresFetchers[fetcherId];
       this.sendInit(fetcher);
 
       try {
@@ -39,7 +40,7 @@ module.exports = NodeHelper.create({
       }
     }
 
-    await this.getDepartures(fetcher.getStationId());
+    await this.getDepartures(fetcherId);
   },
 
   sendInit: async function (fetcher) {
@@ -49,6 +50,7 @@ module.exports = NodeHelper.create({
       this.sendSocketNotification("FETCHER_INIT", {
         stationId: fetcher.getStationId(),
         stationName: stationName,
+        fetcherId: fetcher.getId()
       });
     } catch (error) {
       console.error("Error initializing fetcher: ");
@@ -56,17 +58,17 @@ module.exports = NodeHelper.create({
     }
   },
 
-  getDepartures: async function (stationId) {
+  getDepartures: async function (fetcherId) {
     try {
-      let departuresData = await this.departuresFetchers[stationId].fetchDepartures();
+      let departuresData = await this.departuresFetchers[fetcherId].fetchDepartures();
 
       this.pimpDeparturesArray(departuresData.departuresArray);
       this.sendSocketNotification("DEPARTURES", departuresData);
     } catch (error) {
       console.log("Error while fetching departures (for Station ID " + stationId + "): " + error);
       // Add stationId to error for identification in the main instance
-      error.stationId = stationId;
-      error.message = e;
+      error.fetcherId = fetcherId;
+      error.message = error;
       this.sendSocketNotification("FETCH_ERROR", error);
     }
   },

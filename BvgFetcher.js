@@ -12,6 +12,11 @@ const bvgClient = createClient(
 class BvgFetcher {
   constructor(config) {
     this.config = config;
+    this.id = config.name;
+  }
+
+  getId() {
+    return this.id;
   }
 
   getStationId() {
@@ -20,7 +25,6 @@ class BvgFetcher {
 
   async getStationName() {
     let station = await bvgClient.stop(this.config.stationId);
-
     return station.name;
   }
 
@@ -60,7 +64,7 @@ class BvgFetcher {
 
   processData(data) {
     let departuresData = {
-      stationId: this.config.stationId,
+      fetcherId: this.id,
       departuresArray: [],
     };
 

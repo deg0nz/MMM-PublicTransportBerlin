@@ -73,10 +73,10 @@ Module.register("MMM-PublicTransportBerlin", {
       if(this.loaded &&
           this.stationName === "")
       {
-          this.sendSocketNotification("STATION_NAME_MISSING_AFTER_INIT", this.config.stationId);
+          this.sendSocketNotification("STATION_NAME_MISSING_AFTER_INIT", this.config.name);
       }
 
-      this.sendSocketNotification("GET_DEPARTURES", this.config.stationId);
+      this.sendSocketNotification("GET_DEPARTURES", this.config.name);
     }, this.config.interval)
   },
 
@@ -467,14 +467,14 @@ Module.register("MMM-PublicTransportBerlin", {
 
   socketNotificationReceived: function (notification, payload) {
     if (notification === "FETCHER_INIT") {
-      if (payload.stationId === this.config.stationId) {
+      if (payload.fetcherId === this.config.name) {
         this.stationName = payload.stationName;
         this.loaded = true;
       }
     }
 
     if (notification === "DEPARTURES") {
-      if (payload.stationId === this.config.stationId) {
+      if (payload.fetcherId === this.config.name) {
         this.loaded = true;
         // Empty error object
         this.error = {};
@@ -485,7 +485,7 @@ Module.register("MMM-PublicTransportBerlin", {
     }
 
     if (notification === "FETCH_ERROR") {
-      if (payload.stationId === this.config.stationId) {
+      if (payload.fetcherId === this.config.name) {
         this.loaded = true;
         this.error = payload;
         this.updateDom(this.config.animationSpeed);
