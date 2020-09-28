@@ -44,6 +44,10 @@ module.exports = NodeHelper.create({
   sendInit: async function (fetcher) {
     try {
       let stationName = await fetcher.getStationName();
+      let directionDescriptor = await fetcher.getDirectionDescriptor();
+      if (directionDescriptor !== "all directions" && fetcher.config.showDirection) {
+        stationName += `<br />(toward ${directionDescriptor})`
+      }
 
       this.sendSocketNotification("FETCHER_INIT", {
         stationId: fetcher.getStationId(),

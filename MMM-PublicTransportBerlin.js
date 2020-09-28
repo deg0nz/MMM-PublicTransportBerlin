@@ -24,6 +24,7 @@ Module.register("MMM-PublicTransportBerlin", {
     fadeReachableDepartures: true,      // Should reachable departures be faded away from the reachable departures line?
     fadePointForReachableDepartures: 0.25, // The point to start fading the reachable departures
     excludeDelayFromTimeLabel: false,    // Should the delay time be excluded from the time label?
+    showDirection: true,                // Adds direction of the module instance to the header if the instance is directed
     animationSpeed: 3000                // Speed of the update animation. (Milliseconds)
   },
 
