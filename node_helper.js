@@ -19,9 +19,8 @@ module.exports = NodeHelper.create({
 
       try {
         let stationName = await fetcher.getStationName();
-        console.log(
-          "Transportation fetcher for station " + stationName + " created. (Station ID: " + fetcher.getStationId() + ")"
-        );
+        let directionDescriptor = await fetcher.getDirectionDescriptor();
+        console.log(`Created transportation fetcher for station ${stationName} (toward ${directionDescriptor}). (Station ID: ${fetcher.getStationId()}, Direction ID: ${config.directionStationId})`);
       } catch (error) {
         console.error(error);
       }
@@ -32,9 +31,8 @@ module.exports = NodeHelper.create({
 
       try {
         let stationName = await fetcher.getStationName();
-        console.log(
-          "Using existing transportation fetcher for station " + stationName + " (Station ID: " + fetcher.getStationId() + ")"
-        );
+        let directionDescriptor = await fetcher.getDirectionDescriptor();
+        console.log(`Using existing transportation fetcher for station ${stationName} (toward ${directionDescriptor}) created. (Station ID: ${fetcher.getStationId()}, Direction ID: ${config.directionStationId})`);
       } catch (error) {
         console.error(error)
       }
@@ -65,7 +63,7 @@ module.exports = NodeHelper.create({
       this.pimpDeparturesArray(departuresData.departuresArray);
       this.sendSocketNotification("DEPARTURES", departuresData);
     } catch (error) {
-      console.log("Error while fetching departures (for Station ID " + stationId + "): " + error);
+      console.log("Error while fetching departures (for module Instance " + fetcherId + "): " + error);
       // Add stationId to error for identification in the main instance
       error.fetcherId = fetcherId;
       error.message = error;
