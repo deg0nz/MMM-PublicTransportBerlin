@@ -16,7 +16,7 @@ Module.register("MMM-PublicTransportBerlin", {
     departureMinutes: 30,               // For how many minutes should departures be shown?
     showColoredLineSymbols: true,       // Want colored line symbols?
     useColorForRealtimeInfo: true,      // Want colored real time information (delay, early)?
-  	useBrightScheme: false,					// Want the
+    useBrightScheme: false,             // Brighten the display table
     showTableHeaders: true,             // Show table headers?
     showTableHeadersAsSymbols: true,    // Table Headers as symbols or written?
     maxUnreachableDepartures: 3,        // How many unreachable departures should be shown?
