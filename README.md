@@ -2,19 +2,19 @@
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/deg0nz/MMM-PublicTransportBerlin.svg)](https://greenkeeper.io/)
 
-MMM-PublicTransportBerlin is a module for the [MagicMirror](https://github.com/MichMich/MagicMirror) project by 
+MMM-PublicTransportBerlin is a module for the [MagicMirror](https://github.com/MichMich/MagicMirror) project by
 [Michael Teeuw](https://github.com/MichMich).
 
 It shows live public transport information for Berlin and Brandenburg based on <strike>[VBB-Hafas](http://www.hafas.de/company/referenzen/vbb)</strike> [BVG-Hafas](https://github.com/derhuerst/bvg-rest) data.
 <strike>Since it uses VBB data, the whole transport network is covered.</strike> Public transport in Brandenburg should work as well.
 MMM-PublicTransportBerlin uses the <strike>[vbb-hafas](https://github.com/derhuerst/vbb-hafas) REST API</strike> [hafas-client](https://github.com/public-transport/hafas-client) with a BVG-specific profile by [derhuerst](https://github.com/derhuerst).
 
-You can enter a delay time for "How long does it take to get to my station?". 
+You can enter a delay time for "How long does it take to get to my station?".
 Then the module calculates the next reachable departures and draws a line between reachable and unreachable departures.
 
 ## Status
 
-The current development status of this module is: **maintained**   
+The current development status of this module is: **maintained**
 This means: I'm open for feature requests, pull requests, bug reports, ...
 
 ## Screenshot
@@ -57,7 +57,7 @@ This is a cURL example for getting all possible stations with the keyword "alexa
 curl 'https://v5.bvg.transport.rest/locations?query=alexanderplatz'
 ```
 
-The answer should contain one or more possible stations with valid station IDs. More queries are possible, 
+The answer should contain one or more possible stations with valid station IDs. More queries are possible,
 like searching via coordinates or autocompletion of stations. Please check the [BVG-rest API documentation](https://github.com/derhuerst/bvg-rest/blob/master/docs/index.md)
 for more options. Please note, that you need to query `1.bvg.transport.rest`.
 
@@ -96,6 +96,7 @@ The module quite configurable. These are the possible options:
 |`excludeDelayFromTimeLabel`|The API provides time labels which include the delay time of the departure. This flag removes the delay time to show times like they are shown in the BVG-App.<br><br>**Type:** `boolean`<br>**Default vaule:** `false`|
 |`animationSpeed`|Speed of the update animation. The value is given in milliseconds.<br><br>**Type:** `integer`<br>**Default value:** `3000 // 3 seconds`|
 |`showDirection`|Shows the direction in the module instance's header if the module instance is directed.<br><br>**Type:** `boolean`<br>**Default value:** `true`|
+|`useBrightScheme`|Brightens the display table.<br><br>**Type:** `boolean`<br>**Default value:** `true`|
 
 Here is an example of an entry in `config.js`:
 
@@ -123,7 +124,8 @@ Here is an example of an entry in `config.js`:
         fadeUnreachableDepartures: true,
         fadeReachableDepartures: true,
         fadePointForReachableDepartures: 0.25,
-        excludeDelayFromTimeLabel: true
+        excludeDelayFromTimeLabel: true,
+        useBrightScheme: true
     }
 },
 ```
