@@ -16,6 +16,7 @@ Module.register("MMM-PublicTransportBerlin", {
     departureMinutes: 30,               // For how many minutes should departures be shown?
     showColoredLineSymbols: true,       // Want colored line symbols?
     useColorForRealtimeInfo: true,      // Want colored real time information (delay, early)?
+    useBrightScheme: false,             // Brighten the display table
     showTableHeaders: true,             // Show table headers?
     showTableHeadersAsSymbols: true,    // Table Headers as symbols or written?
     maxUnreachableDepartures: 3,        // How many unreachable departures should be shown?
@@ -123,7 +124,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
     // The table
     let table = document.createElement("table");
-    table.className = "ptbTable small light";
+    table.className = `ptbTable small${this.config.useBrightScheme ? "" : " light"}`;
 
     // Table header (thead tag is mandatory)
     let tHead = document.createElement("thead");
@@ -316,7 +317,7 @@ Module.register("MMM-PublicTransportBerlin", {
     let row = document.createElement("tr");
 
     let timeCell = document.createElement("td");
-    timeCell.className = "centeredTd timeCell";
+    timeCell.className = `centeredTd timeCell ${this.config.useBrightScheme ? " light" : ""}`;
     timeCell.innerHTML = currentWhen.format("HH:mm");
     row.appendChild(timeCell);
 
@@ -347,12 +348,12 @@ Module.register("MMM-PublicTransportBerlin", {
     row.appendChild(lineCell);
 
     let directionCell = document.createElement("td");
-    directionCell.className = "directionCell";
+    directionCell.className = `directionCell ${this.config.useBrightScheme ? " bright" : ""}`;
 
     if (this.config.marqueeLongDirections &&
           currentDeparture.direction.length >= 26)
     {
-      directionCell.className = "directionCell marquee";
+      directionCell.className = `directionCell marquee${this.config.useBrightScheme ? " bright" : ""}`;
       let directionSpan = document.createElement("span");
       directionSpan.innerHTML = currentDeparture.direction;
       directionCell.appendChild(directionSpan);
