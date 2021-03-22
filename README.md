@@ -50,7 +50,7 @@ npm install
 
 ## How to get the `stationId`
 
-You will need a `stationId` for your module. You can get it as described in the [BVG-rest API documentation](https://github.com/derhuerst/bvg-rest/blob/master/docs/index.md).
+You will need a `stationId` for your module. You can get it as described in the [BVG-rest API documentation](https://github.com/derhuerst/bvg-rest/blob/master/docs/).
 This is a cURL example for getting all possible stations with the keyword "alexanderplatz":
 
 ```
@@ -58,7 +58,7 @@ curl 'https://v5.bvg.transport.rest/locations?query=alexanderplatz'
 ```
 
 The answer should contain one or more possible stations with valid station IDs. More queries are possible,
-like searching via coordinates or autocompletion of stations. Please check the [BVG-rest API documentation](https://github.com/derhuerst/bvg-rest/blob/master/docs/index.md)
+like searching via coordinates or autocompletion of stations. Please check the [BVG-rest API documentation](https://github.com/derhuerst/bvg-rest/blob/master/docs/)
 for more options. Please note, that you need to query `1.bvg.transport.rest`.
 
 You can prettify the JSON output with [`jq`](https://stedolan.github.io/jq/) if you have it installed:
