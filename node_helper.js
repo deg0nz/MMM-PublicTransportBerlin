@@ -149,7 +149,7 @@ module.exports = NodeHelper.create({
     }
     else {
       // If no color has been found for the line, default to grey
-      properties.bgColor = "#343434";
+      properties.bgColor = "#535353";
       properties.fgColor = "#fff";
     }
 
