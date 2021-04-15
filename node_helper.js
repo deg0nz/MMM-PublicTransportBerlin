@@ -138,12 +138,19 @@ module.exports = NodeHelper.create({
     }
 
     // Change default values if we changed them
-    if ("bg" in colors) {
-      properties.bgColor = colors.bg;
+    if (colors != undefined) {
+      if ("bg" in colors) {
+        properties.bgColor = colors.bg;
+      }
+  
+      if ("fg" in colors) {
+        properties.fgColor = colors.fg;
+      }
     }
-
-    if ("fg" in colors) {
-      properties.fgColor = colors.fg;
+    else {
+      // If no color has been found for the line, default to grey
+      properties.bgColor = "#343434";
+      properties.fgColor = "#fff";
     }
 
     return properties;
