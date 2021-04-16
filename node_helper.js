@@ -137,8 +137,9 @@ module.exports = NodeHelper.create({
         break;
     }
 
-    // Change default values if we changed them
-    if (colors != undefined) {
+    // In case new lines get added but are not listed in the vbb-line-colors module
+    if (typeof colors !== "undefined") {
+      // Change default values if we changed them
       if ("bg" in colors) {
         properties.bgColor = colors.bg;
       }
