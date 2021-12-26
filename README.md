@@ -99,13 +99,13 @@ The module quite configurable. These are the possible options:
 
 Here is an example of an entry in `config.js`:
 
-``` JavaScript
+```JavaScript
 {
     module: "MMM-PublicTransportBerlin",
     position: "top_right",
     config: {
         name: "Alexanderplatz",
-        stationId: "90000010000",
+        stationId: "900000100003",
         hidden: false,
         ignoredLines: ["U5", "U8", "S75", "Bus 100"],
         excludedTransportationTypes: "bus,suburban,subway",
