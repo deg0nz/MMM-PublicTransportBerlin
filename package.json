@@ -1,6 +1,6 @@
 {
   "name": "MMM-PublicTransportBerlin",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "BVG-Hafas driven public transport module for MagicMirror 2.",
   "repository": {
     "type": "git",
@@ -30,8 +30,8 @@
     "node": ">=10"
   },
   "dependencies": {
-    "hafas-client": "^5.8.0",
-    "moment": "^2.27.0",
+    "hafas-client": "^5.22.0",
+    "moment": "^2.29.1",
     "vbb-line-colors": "^1.0.4",
     "vbb-short-station-name": "^1.0.1"
   }
