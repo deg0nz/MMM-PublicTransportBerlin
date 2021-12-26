@@ -7,7 +7,6 @@ Module.register("MMM-PublicTransportBerlin", {
     hidden: false,                      // Hide this module?
     stationId: "900000160003",          // The ID of the station
     //directionStationId: 0,              // The stationId of the next station in which direction departures should be shown
-    ignoredStations: [],                // Which stations should be ignored? (comma-separated list of station IDs)
     ignoredLines: [],                   // Which lines should be ignored? (comma-separated list of line names)
     excludedTransportationTypes: "",    // Which transportation types should not be shown on the mirror? (comma-separated list of types) possible values: bus,tram,suburban,subway,ferry
     marqueeLongDirections: true,        // Use Marquee effect for long station names?

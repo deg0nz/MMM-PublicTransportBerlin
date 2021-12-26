@@ -79,7 +79,6 @@ class BvgFetcher {
 
     data.forEach((row) => {
       // check for:
-      // ignored stations
       // excluded transportation types
       // ignored lines
 
@@ -90,7 +89,6 @@ class BvgFetcher {
       }
 
       if (
-        !this.config.ignoredStations.includes(row.station.id) &&
         !this.config.excludedTransportationTypes.includes(row.line.product) &&
         !this.config.ignoredLines.includes(row.line.name)
       ) {
