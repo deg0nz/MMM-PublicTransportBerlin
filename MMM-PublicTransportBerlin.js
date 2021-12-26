@@ -78,14 +78,12 @@ Module.register("MMM-PublicTransportBerlin", {
 
     setInterval(() => {
       // If the module started without getting the stationName for some reason, we try to get the stationName again
-      if(this.loaded &&
-          this.stationName === "")
-      {
-          this.sendSocketNotification("STATION_NAME_MISSING_AFTER_INIT", this.config.name);
+      if (this.loaded && this.stationName === "") {
+        this.sendSocketNotification("STATION_NAME_MISSING_AFTER_INIT", this.config.name);
       }
 
       this.sendSocketNotification("GET_DEPARTURES", this.config.name);
-    }, this.config.interval)
+    }, this.config.interval);
   },
 
   getDom: async function () {
@@ -93,9 +91,7 @@ Module.register("MMM-PublicTransportBerlin", {
     wrapper.className = "ptbWrapper";
 
     // Handle loading sequence at init time
-    if (this.departuresArray.length === 0 &&
-          !this.loaded)
-    {
+    if (this.departuresArray.length === 0 && !this.loaded) {
       wrapper.innerHTML = (this.loaded) ? this.translate("EMPTY") : this.translate("LOADING");
       wrapper.className = "small light dimmed";
       return wrapper;
@@ -149,14 +145,16 @@ Module.register("MMM-PublicTransportBerlin", {
 
       this.departuresArray.forEach((currentDeparture, i) => {
 
-        if (i >= reachableDeparturePos - this.config.maxUnreachableDepartures &&
-              i < reachableDeparturePos + this.config.maxReachableDepartures)
-        {
+        if (
+          i >= reachableDeparturePos - this.config.maxUnreachableDepartures &&
+          i < reachableDeparturePos + this.config.maxReachableDepartures
+        ) {
           // Insert rule to separate reachable from unreachable departures
-          if(reachableDeparturePos !== 0 &&
-              reachableDeparturePos === i &&
-                this.config.maxUnreachableDepartures !== 0)
-          {
+          if (
+            reachableDeparturePos !== 0 &&
+            reachableDeparturePos === i &&
+            this.config.maxUnreachableDepartures !== 0
+          ) {
             let ruleRow = this.getRuleRow();
             tBody.appendChild(ruleRow);
           }
@@ -168,7 +166,6 @@ Module.register("MMM-PublicTransportBerlin", {
           tBody.appendChild(row);
         }
       });
-
     } catch (e) {
       let row = this.getNoDeparturesRow(e.message);
       tBody.appendChild(row);
@@ -185,24 +182,24 @@ Module.register("MMM-PublicTransportBerlin", {
     let opacity = 1;
 
     // Handle unreachable departures
-    if (this.config.fadeUnreachableDepartures &&
-          this.config.travelTimeToStation > 0)
-    {
+    if (
+      this.config.fadeUnreachableDepartures &&
+      this.config.travelTimeToStation > 0
+    ) {
       let steps = this.config.maxUnreachableDepartures;
 
-      if (i >= reachableDeparturePos - steps &&
-            i < reachableDeparturePos)
-      {
+      if (i >= reachableDeparturePos - steps && i < reachableDeparturePos) {
         let currentStep = reachableDeparturePos - i;
-        opacity = 1 - ((1 / steps * currentStep) - 0.2);
+        opacity = 1 - ((1 / steps) * currentStep - 0.2);
       }
     }
 
     // Handle reachable departures
-    if (this.config.fadeReachableDepartures &&
-          this.config.fadePointForReachableDepartures < 1 &&
-            i >= reachableDeparturePos)
-    {
+    if (
+      this.config.fadeReachableDepartures &&
+      this.config.fadePointForReachableDepartures < 1 &&
+      i >= reachableDeparturePos
+    ) {
       // Handle negative fading point
       if (this.config.fadePointForReachableDepartures < 0) {
         this.config.fadePointForReachableDepartures = 0;
@@ -211,8 +208,8 @@ Module.register("MMM-PublicTransportBerlin", {
       let startingPoint = this.config.maxReachableDepartures * this.config.fadePointForReachableDepartures;
       let steps = this.config.maxReachableDepartures - startingPoint;
       if (i >= startingPoint) {
-        let currentStep = (i - reachableDeparturePos) - startingPoint;
-        opacity = 1 - (1 / steps * currentStep);
+        let currentStep = i - reachableDeparturePos - startingPoint;
+        opacity = 1 - (1 / steps) * currentStep;
       }
     }
 
@@ -320,12 +317,12 @@ Module.register("MMM-PublicTransportBerlin", {
     if (delay > 0) {
       delayCell.innerHTML = "+" + delay + " ";
       if (this.config.useColorForRealtimeInfo) {
-          delayCell.style.color = "red";
+        delayCell.style.color = "red";
       }
     } else if (delay < 0) {
       delayCell.innerHTML = delay + " ";
       if (this.config.useColorForRealtimeInfo) {
-          delayCell.style.color = "green";
+        delayCell.style.color = "green";
       }
     } else if (delay === 0) {
       delayCell.innerHTML = "";
@@ -343,9 +340,10 @@ Module.register("MMM-PublicTransportBerlin", {
     let directionCell = document.createElement("td");
     directionCell.className = `directionCell ${this.config.useBrightScheme ? " bright" : ""}`;
 
-    if (this.config.marqueeLongDirections &&
-          currentDeparture.direction.length >= 26)
-    {
+    if (
+      this.config.marqueeLongDirections &&
+      currentDeparture.direction.length >= 26
+    ) {
       directionCell.className = `directionCell marquee${this.config.useBrightScheme ? " bright" : ""}`;
       let directionSpan = document.createElement("span");
       directionSpan.innerHTML = currentDeparture.direction;
@@ -358,7 +356,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
     // Add cancelled class to this row if the trip was cancelled
     if (currentDeparture.cancelled) {
-        row.classList.add("cancelled");
+      row.classList.add("cancelled");
     }
 
     return row;
@@ -379,27 +377,25 @@ Module.register("MMM-PublicTransportBerlin", {
     let nowWithDelay = now.add(this.config.travelTimeToStation, "minutes");
 
     return await new Promise((resolve, reject) => {
-
-      if(this.config.travelTimeToStation === 0)
-      {
-        resolve (0);
+      if (this.config.travelTimeToStation === 0) {
+        resolve(0);
       }
 
       this.departuresArray.forEach((current, i, depArray) => {
-
         let currentWhen = moment(current.when);
 
         if (depArray.length > 1 && i < depArray.length - 1) {
-
           let nextWhen = moment(depArray[i + 1].when);
-          if ((currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay)) ||
-              (i === 0 && nextWhen.isSameOrAfter(nowWithDelay)))
-          {
-              resolve(i);
+          if (
+            (currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay)) ||
+            (i === 0 && nextWhen.isSameOrAfter(nowWithDelay))
+          ) {
+            resolve(i);
           }
-        } else if (i === depArray.length - 1 &&
-                    currentWhen.isBefore(nowWithDelay))
-        {
+        } else if (
+          i === depArray.length - 1 &&
+          currentWhen.isBefore(nowWithDelay)
+        ) {
           throw new Error(this.translate("NO_REACHABLE_DEPARTURES"));
         } else {
           throw new Error(this.translate("NO_REACHABLE_DEPARTURES"));
@@ -412,12 +408,12 @@ Module.register("MMM-PublicTransportBerlin", {
     let dirString = string;
 
     if (dirString.indexOf(",") > -1) {
-      dirString = dirString.split(",")[0]
+      dirString = dirString.split(",")[0];
     }
 
     let viaIndex = dirString.search(/( via )/g);
     if (viaIndex > -1) {
-      dirString = dirString.split(/( via )/g)[0]
+      dirString = dirString.split(/( via )/g)[0];
     }
 
     return dirString
@@ -427,10 +423,8 @@ Module.register("MMM-PublicTransportBerlin", {
     let symbol = document.createElement("div");
 
     if (product.type === "express") {
-      if (product.name === "LOCOMORE")
-        symbol.innerHTML = "LOC";
-      else
-        symbol.innerHTML = "ICE";
+      if (product.name === "LOCOMORE") symbol.innerHTML = "LOC";
+      else symbol.innerHTML = "ICE";
     } else {
       symbol.innerHTML = product.name;
     }
@@ -450,27 +444,22 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   convertDelayToMinutes: function (delay) {
-      return Math.floor((((delay % 31536000) % 86400) % 3600) / 60);
+    return Math.floor((((delay % 31536000) % 86400) % 3600) / 60);
   },
 
-  getTranslations: function() {
+  getTranslations: function () {
     return {
       en: "translations/en.json",
       de: "translations/de.json"
-    }
+    };
   },
 
   getStyles: function () {
-    return [
-      "style.css",
-      "font-awesome.css"
-    ];
+    return ["style.css", "font-awesome.css"];
   },
 
   getScripts: function () {
-    return [
-      "moment.js"
-    ];
+    return ["moment.js"];
   },
 
   socketNotificationReceived: function (notification, payload) {
