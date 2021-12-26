@@ -126,7 +126,7 @@ class BvgFetcher {
 
     let time = row.when.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
-    console.log(
+    Log.log(
       time + " " + delayMinutes + " " + row.line.product + " " + row.direction + " | stationId: " + row.station.id
     );
   }

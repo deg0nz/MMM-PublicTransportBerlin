@@ -2,6 +2,7 @@
 const NodeHelper = require("node_helper");
 const BvgFetcher = require("./BvgFetcher");
 const lineColors = require("vbb-line-colors");
+const Log = require("logger");
 
 module.exports = NodeHelper.create({
   start: function () {
@@ -20,9 +21,9 @@ module.exports = NodeHelper.create({
       try {
         let stationName = await fetcher.getStationName();
         let directionDescriptor = await fetcher.getDirectionDescriptor();
-        console.log(`Created transportation fetcher for station ${stationName} (toward ${directionDescriptor}). (Station ID: ${fetcher.getStationId()}, Direction ID: ${config.directionStationId})`);
+        Log.log(`Created transportation fetcher for station ${stationName} (toward ${directionDescriptor}). (Station ID: ${fetcher.getStationId()}, Direction ID: ${config.directionStationId})`);
       } catch (error) {
-        console.error(error);
+        Log.error(error);
       }
 
     } else {
@@ -32,9 +33,9 @@ module.exports = NodeHelper.create({
       try {
         let stationName = await fetcher.getStationName();
         let directionDescriptor = await fetcher.getDirectionDescriptor();
-        console.log(`Using existing transportation fetcher for station ${stationName} (toward ${directionDescriptor}) created. (Station ID: ${fetcher.getStationId()}, Direction ID: ${config.directionStationId})`);
+        Log.log(`Using existing transportation fetcher for station ${stationName} (toward ${directionDescriptor}) created. (Station ID: ${fetcher.getStationId()}, Direction ID: ${config.directionStationId})`);
       } catch (error) {
-        console.error(error)
+        Log.error(error);
       }
     }
 
@@ -55,8 +56,7 @@ module.exports = NodeHelper.create({
         fetcherId: fetcher.getId()
       });
     } catch (error) {
-      console.error("Error initializing fetcher: ");
-      console.error(error);
+      Log.error("Error initializing fetcher: " + error);
     }
   },
 
@@ -67,7 +67,7 @@ module.exports = NodeHelper.create({
       this.pimpDeparturesArray(departuresData.departuresArray);
       this.sendSocketNotification("DEPARTURES", departuresData);
     } catch (error) {
-      console.log("Error while fetching departures (for module Instance " + fetcherId + "): " + error);
+      Log.log("Error while fetching departures (for module Instance " + fetcherId + "): " + error);
       // Add stationId to error for identification in the main instance
       error.fetcherId = fetcherId;
       error.message = error;

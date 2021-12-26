@@ -38,23 +38,17 @@ Module.register("MMM-PublicTransportBerlin", {
 
     // If the stationId is not a string, we'll print a warning
     if (typeof this.config.stationId === "number") {
-      const warning = "MMM-PublicTransportBerlin deprecation warning: The stationId must be a String! Please check your configuration!";
-      Log.warn(warning);
-      console.log(warning);
+      Log.warn("MMM-PublicTransportBerlin deprecation warning: The stationId must be a String! Please check your configuration!");
     }
 
     // Provide backwards compatibility for refactoring of config.delay to config.travelTimeToStation
     if (this.config.delay) {
-      const warning = "MMM-PublicTransportBerlin deprecation warning: The delay option has been renamed to travelTimeToStation. Please change your configuration!";
-      Log.warn(warning);
-      console.log(warning);
-
+      Log.warn("MMM-PublicTransportBerlin deprecation warning: The delay option has been renamed to travelTimeToStation. Please change your configuration!");
       this.config.travelTimeToStation = this.config.delay;
     }
 
     if (this.config.name === "MMM-PublicTransportBerlin" || this.config.name === "") {
-      const warning = "MMM-PublicTransportBerlin deprecation warning: The 'name' property must contain a value and must be unique if you use multiple modules. Please change your configuration.";
-      console.warn(warning);
+      Log.warn("MMM-PublicTransportBerlin deprecation warning: The 'name' property must contain a value and must be unique if you use multiple modules. Please change your configuration.");
 
       let generated_name = `MMM-PublicTransportBerlin_${this.config.stationId}`;
       if (this.config.directionStationId) {
@@ -62,7 +56,7 @@ Module.register("MMM-PublicTransportBerlin", {
       }
 
       this.config.name = generated_name;
-      console.warn(`Using automatically generated module name ${this.config.name}`);
+      Log.warn(`Using automatically generated module name ${this.config.name}`);
     }
 
     this.sendSocketNotification("CREATE_FETCHER", this.config);
