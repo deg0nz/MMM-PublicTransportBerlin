@@ -1,154 +1,158 @@
 .ptbWrapper {
-    position: relative;
+  position: relative;
 }
 
 .ptbTable {
-    display: table;
-    border-collapse: collapse;
-    border-spacing: 1px;
+  display: table;
+  border-collapse: collapse;
+  border-spacing: 1px;
 }
 
 .ruleCell {
-    line-height: 0;
-    border-spacing: 10px;
-    border-bottom: 1px dotted #666;
+  line-height: 0;
+  border-spacing: 10px;
+  border-bottom: 1px dotted #666;
 }
 
 .lineCell {
-    width: 2.5em;
-    height: 1.25em;
-    padding-left: 0;
-    padding-right: 0;
-    margin-left: 0;
-    margin-right: 0;
+  width: 2.5em;
+  height: 1.25em;
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .timeCell {
-    width: 1em;
+  width: 1em;
 }
 
 .delayTimeCell {
-    font-size: 16px;
-    padding-left: 3px;
-    padding-right: 5px;
-    width: 1.1em;
-    text-align: left;
-    white-space: nowrap;
+  font-size: 16px;
+  padding-left: 3px;
+  padding-right: 5px;
+  width: 1.1em;
+  text-align: left;
+  white-space: nowrap;
 }
 
 .directionCell {
-    max-width: 22ch;
+  max-width: 22ch;
 }
 
 .errorCell {
-    max-width: 28ch;
-    word-wrap: break-word;
+  max-width: 28ch;
+  word-wrap: break-word;
 }
 
 .cancelled {
-    text-decoration: line-through;
+  text-decoration: line-through;
 }
 
 .marquee {
-    margin: 0 auto;
-    white-space: nowrap;
-    overflow: hidden;
-    box-sizing: border-box;
+  margin: 0 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .marquee span {
-    display: inline-block;
-    white-space:nowrap;
-    padding-left: 100%;
-    text-indent: 0;
-    animation: marquee 15s linear infinite;
+  display: inline-block;
+  white-space: nowrap;
+  padding-left: 100%;
+  text-indent: 0;
+  animation: marquee 15s linear infinite;
 }
 
 .marqueeStop {
-    animation-play-state: paused
+  animation-play-state: paused;
 }
 
 @keyframes marquee {
-    0%   { transform: translate(0, 0); }
-    100% { transform: translate(-100%, 0); }
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-100%, 0);
+  }
 }
 
 .centeredTd {
-    display: table-cell;
-    text-align: center;
-    vertical-align: middle;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .noPadding {
-    padding: 0;
+  padding: 0;
 }
 
 .ellipsis {
-    position: absolute;
-    background-color: #F414A0;
-    width: 300px;
-    height: 100px;
-    border: 2px;
-    border-radius: 150px;
+  position: absolute;
+  background-color: #f414a0;
+  width: 300px;
+  height: 100px;
+  border: 2px;
+  border-radius: 150px;
 }
 
 .sbahnsign {
-    color: #FFFFFF;
-    text-align: center;
-    width: 2.5em;
-    height: 1.25em;
-    position: relative;
-    border-radius: 1.25em;
+  color: #fff;
+  text-align: center;
+  width: 2.5em;
+  height: 1.25em;
+  position: relative;
+  border-radius: 1.25em;
 }
 
 .ubahnsign {
-    color: #FFFFFF;
-    text-align: center;
-    width: 2.5em;
-    height: 1.25em;
-    position: relative;
+  color: #fff;
+  text-align: center;
+  width: 2.5em;
+  height: 1.25em;
+  position: relative;
 }
 
 .tramsign {
-    color: #FFFFFF;
-    text-align: center;
-    width: 2.5em;
-    height: 1.25em;
-    background: #BE1414;
-    position: relative;
+  color: #fff;
+  text-align: center;
+  width: 2.5em;
+  height: 1.25em;
+  background: #be1414;
+  position: relative;
 }
 
 .bussign {
-    color: #FFFFFF;
-    text-align: center;
-    width: 2.5em;
-    height: 1.25em;
-    position: relative;
+  color: #fff;
+  text-align: center;
+  width: 2.5em;
+  height: 1.25em;
+  position: relative;
 }
 
 .dbsign {
-    color: #FFFFFF;
-    text-align: center;
-    width: 2.5em;
-    height: 1.25em;
-    background: #BE1414;
-    position: relative;
+  color: #fff;
+  text-align: center;
+  width: 2.5em;
+  height: 1.25em;
+  background: #be1414;
+  position: relative;
 }
 
 .locsign {
-    color: #4B2B1F;
-    text-align: center;
-    width: 2.5em;
-    height: 1.25em;
-    position: relative;
+  color: #4b2b1f;
+  text-align: center;
+  width: 2.5em;
+  height: 1.25em;
+  position: relative;
 }
 
 .expresssign {
-    color: #B4B4B4;
-    text-align: center;
-    font-style: italic;
-    font-weight: bold;
-    width: 2.5em;
-    height: 1.25em;
-    position: relative;
+  color: #b4b4b4;
+  text-align: center;
+  font-style: italic;
+  font-weight: bold;
+  width: 2.5em;
+  height: 1.25em;
+  position: relative;
 }

@@ -1,13 +1,10 @@
 # MMM-PublicTransportBerlin
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/deg0nz/MMM-PublicTransportBerlin.svg)](https://greenkeeper.io/)
+MMM-PublicTransportBerlin is a module for the [MagicMirror](https://github.com/MichMich/MagicMirror) project by [Michael Teeuw](https://github.com/MichMich).
 
-MMM-PublicTransportBerlin is a module for the [MagicMirror](https://github.com/MichMich/MagicMirror) project by
-[Michael Teeuw](https://github.com/MichMich).
+It shows live public transport information for Berlin and Brandenburg based on [BVG-Hafas](https://github.com/derhuerst/bvg-rest) data. Public transport in Brandenburg should work as well.
 
-It shows live public transport information for Berlin and Brandenburg based on <strike>[VBB-Hafas](http://www.hafas.de/company/referenzen/vbb)</strike> [BVG-Hafas](https://github.com/derhuerst/bvg-rest) data.
-<strike>Since it uses VBB data, the whole transport network is covered.</strike> Public transport in Brandenburg should work as well.
-MMM-PublicTransportBerlin uses the <strike>[vbb-hafas](https://github.com/derhuerst/vbb-hafas) REST API</strike> [hafas-client](https://github.com/public-transport/hafas-client) with a BVG-specific profile by [derhuerst](https://github.com/derhuerst).
+MMM-PublicTransportBerlin uses the [hafas-client](https://github.com/public-transport/hafas-client) with a BVG-specific profile by [derhuerst](https://github.com/derhuerst).
 
 You can enter a delay time for "How long does it take to get to my station?".
 Then the module calculates the next reachable departures and draws a line between reachable and unreachable departures.
@@ -25,15 +22,15 @@ The module looks like this:
 
 ## Preconditions
 
-* MagicMirror<sup>2</sup> instance
-* Node.js version >= 10
+* MagicMirror² instance
+* Node.js version >= 12
 * npm
 
 ## Installation
 
 Just clone the module into your MagicMirror modules folder and execute `npm install` in the module's directory:
 
-```
+```console
 git clone https://github.com/deg0nz/MMM-PublicTransportBerlin.git
 cd MMM-PublicTransportBerlin
 npm install
@@ -43,7 +40,7 @@ npm install
 
 Just enter your MMM-PublicTransportBerlin folder in the MagicMirror's modules folder and execute the following commands in the module's directory:
 
-```
+```console
 git pull
 npm install
 ```
@@ -53,7 +50,7 @@ npm install
 You will need a `stationId` for your module. You can get it as described in the [BVG-rest API documentation](https://github.com/derhuerst/bvg-rest/blob/master/docs/).
 This is a cURL example for getting all possible stations with the keyword "alexanderplatz":
 
-```
+```console
 curl 'https://v5.bvg.transport.rest/locations?query=alexanderplatz'
 ```
 
@@ -63,7 +60,7 @@ for more options. Please note, that you need to query `1.bvg.transport.rest`.
 
 You can prettify the JSON output with [`jq`](https://stedolan.github.io/jq/) if you have it installed:
 
-```
+```console
 curl 'https://v5.bvg.transport.rest/locations?query=alexanderplatz' | jq
 ```
 
@@ -75,7 +72,6 @@ The module quite configurable. These are the possible options:
 |---|---|
 |`name`|The name of the module instance (if you want multiple modules). This value must be *unique*.<br><br>**Type:** `string` This value is **Required**.<br>|
 |`stationId`|The ID of the station. How to get the ID for your station is described below.<br><br>**Type:** `string` This value is **Required**.|
-|`ignoredStations`|To allow appearance of multiple transportation methods, `vbb-hafas` returns departures of multiple stations in the area of the main station (including bus and tram stations for example). You can exclude those stations by adding them to this array. Usually, this can be empty.<br><br>**Type:** `integer array` (comma separated `integers` in the array).<br>**Default value:** `<empty>`|
 |`directionStationId`|If you want the module to show departures only in a specific direction, you can enter the ID of the next station on your line to specify the direction. <br><br> *Note: After some tests, the data delivery of this feature seems not to be as reliable as the normal version. Also, please make sure you actually have the right `stationId` for the direction station. Please check your MagicMirror log for errors before reporting them. <br> Additionally, more request results take more time for the request. So please make sure to keep your `maxUnreachableDepartures` and `maxReachabledepartures` low when using this feature.* <br><br> **Type:** `string` <br>**Default value:** `<empty>`|
 |`ignoredLines`|You can exclude different lines of a station by adding them to this array. Usually, this can be empty.<br><br>**Type:** `string array` (comma separated `strings` in the array).<br>**Default value:** `<empty>` <br>**Possible values:** All valid line names like `'U5'` (for subway) , `'M10'` or `'21'` (for tram), `'S75'` (for suburban) , `'Bus 200'`(for bus), etc.|
 |`excludedTransportationTypes`|Transportation types to be excluded from appearing on a module instance can be listed here.<br><br>**Type:** `string`, comma-separated list<br>**Default vaule:** `<empty>` <br>**Possible values:** `bus`, `tram`, `suburban`, `subway`, `regional`, `ferry`|
@@ -100,15 +96,14 @@ The module quite configurable. These are the possible options:
 
 Here is an example of an entry in `config.js`:
 
-``` JavaScript
+```JavaScript
 {
     module: "MMM-PublicTransportBerlin",
     position: "top_right",
     config: {
         name: "Alexanderplatz",
-        stationId: "90000010000",
+        stationId: "900000100003",
         hidden: false,
-        ignoredStations: [900000100003,2342,1337],
         ignoredLines: ["U5", "U8", "S75", "Bus 100"],
         excludedTransportationTypes: "bus,suburban,subway",
         travelTimeToStation: 10,
