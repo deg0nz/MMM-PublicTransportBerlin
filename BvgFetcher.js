@@ -4,9 +4,7 @@ const bvgProfile = require("hafas-client/p/bvg");
 const pjson = require("./package.json");
 const bvgClient = createClient(
   bvgProfile,
-  "MagicMirror2 module MMM-PublicTransportBerlin v" +
-    pjson.version +
-    " (https://github.com/deg0nz/MMM-PublicTransportBerlin)"
+  "MMM-PublicTransportBerlin v" + pjson.version
 );
 
 class BvgFetcher {
