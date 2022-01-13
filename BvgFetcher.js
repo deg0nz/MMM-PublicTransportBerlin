@@ -4,9 +4,7 @@ const bvgProfile = require("hafas-client/p/bvg");
 const pjson = require("./package.json");
 const bvgClient = createClient(
   bvgProfile,
-  "MagicMirror2 module MMM-PublicTransportBerlin v" +
-    pjson.version +
-    " (https://github.com/deg0nz/MMM-PublicTransportBerlin)"
+  "MMM-PublicTransportBerlin v" + pjson.version
 );
 
 class BvgFetcher {
@@ -30,7 +28,7 @@ class BvgFetcher {
 
   async getDirectionDescriptor() {
     if (typeof this.config.directionStationId === "undefined") {
-      return "all directions"
+      return "all directions";
     } else {
       const station = await bvgClient.stop(this.config.directionStationId);
       return station.name;
@@ -55,13 +53,13 @@ class BvgFetcher {
     if (!this.config.directionStationId || this.config.directionStationId === "") {
       opt = {
         when: when,
-        duration: this.config.departureMinutes,
+        duration: this.config.departureMinutes
       };
     } else {
       opt = {
         direction: this.config.directionStationId,
         when: when,
-        duration: this.config.departureMinutes,
+        duration: this.config.departureMinutes
       };
     }
 
@@ -74,7 +72,7 @@ class BvgFetcher {
   processData(data) {
     let departuresData = {
       fetcherId: this.id,
-      departuresArray: [],
+      departuresArray: []
     };
 
     data.forEach((row) => {
@@ -99,7 +97,7 @@ class BvgFetcher {
           name: row.line.name,
           nr: row.line.nr,
           type: row.line.product,
-          direction: row.direction,
+          direction: row.direction
         };
 
         departuresData.departuresArray.push(current);

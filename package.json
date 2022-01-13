@@ -1,7 +1,7 @@
 {
   "name": "MMM-PublicTransportBerlin",
-  "version": "1.6.3",
-  "description": "BVG-Hafas driven public transport module for MagicMirror 2.",
+  "version": "1.6.4",
+  "description": "Public transport module for MagicMirror² driven by BVG-Hafas data.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/deg0nz/MMM-PublicTransportBerlin"
@@ -20,7 +20,7 @@
     "email": "magicmirror@kayuk.de",
     "url": "https://kayuk.de"
   },
-  "contributors": "https://github.com/deg0nz/MMM-PublicTransportBerlin/graphs/contributors",
+  "contributors": ["https://github.com/deg0nz/MMM-PublicTransportBerlin/graphs/contributors"],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/deg0nz/MMM-PublicTransportBerlin/issues"
@@ -30,7 +30,7 @@
     "node": ">=10"
   },
   "dependencies": {
-    "hafas-client": "^5.22.0",
+    "hafas-client": "^5.22.2",
     "moment": "^2.29.1",
     "vbb-line-colors": "^1.0.4",
     "vbb-short-station-name": "^1.0.1"
