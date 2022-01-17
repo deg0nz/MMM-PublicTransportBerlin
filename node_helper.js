@@ -2,6 +2,7 @@
 const NodeHelper = require("node_helper");
 const BvgFetcher = require("./BvgFetcher");
 const lineColors = require("vbb-line-colors");
+const Log = require("logger");
 
 module.exports = NodeHelper.create({
   start: function () {
@@ -9,64 +10,67 @@ module.exports = NodeHelper.create({
   },
 
   createFetcher: async function (config) {
+    const fetcherId = config.name;
     let fetcher;
 
-    if (typeof this.departuresFetchers[config.stationId] === "undefined") {
+    if (typeof this.departuresFetchers[fetcherId] === "undefined") {
       fetcher = new BvgFetcher(config);
-      this.departuresFetchers[config.stationId] = fetcher;
+      this.departuresFetchers[fetcherId] = fetcher;
       this.sendInit(fetcher);
 
       try {
         let stationName = await fetcher.getStationName();
-        console.log(
-          "Transportation fetcher for station " + stationName + " created. (Station ID: " + fetcher.getStationId() + ")"
-        );
+        let directionDescriptor = await fetcher.getDirectionDescriptor();
+        Log.log(`Created transportation fetcher for station ${stationName} (toward ${directionDescriptor}). (Station ID: ${fetcher.getStationId()}, Direction ID: ${config.directionStationId})`);
       } catch (error) {
-        console.error(error); 
+        Log.error(error);
       }
 
     } else {
-      fetcher = this.departuresFetchers[config.stationId];
+      fetcher = this.departuresFetchers[fetcherId];
       this.sendInit(fetcher);
 
       try {
         let stationName = await fetcher.getStationName();
-        console.log(
-          "Using existing transportation fetcher for station " + res + " (Station ID: " + fetcher.getStationId() + ")"
-        );
+        let directionDescriptor = await fetcher.getDirectionDescriptor();
+        Log.log(`Using existing transportation fetcher for station ${stationName} (toward ${directionDescriptor}) created. (Station ID: ${fetcher.getStationId()}, Direction ID: ${config.directionStationId})`);
       } catch (error) {
-        console.error(error)
+        Log.error(error);
       }
     }
 
-    await this.getDepartures(fetcher.getStationId());
+    await this.getDepartures(fetcherId);
   },
 
   sendInit: async function (fetcher) {
     try {
-      let stationName = fetcher.getStationName();
+      let stationName = await fetcher.getStationName();
+      let directionDescriptor = await fetcher.getDirectionDescriptor();
+      if (directionDescriptor !== "all directions" && fetcher.config.showDirection) {
+        stationName += `<br />(toward ${directionDescriptor})`
+      }
 
       this.sendSocketNotification("FETCHER_INIT", {
         stationId: fetcher.getStationId(),
         stationName: stationName,
+        fetcherId: fetcher.getId()
       });
     } catch (error) {
-      console.error("Error initializing fetcher: ");
-      console.error(error);
+      Log.error("Error initializing fetcher: " + error);
     }
   },
 
-  getDepartures: async function (stationId) {
+  getDepartures: async function (fetcherId) {
     try {
-      let departuresData = await this.departuresFetchers[stationId].fetchDepartures();
+      let departuresData = await this.departuresFetchers[fetcherId].fetchDepartures();
 
       this.pimpDeparturesArray(departuresData.departuresArray);
       this.sendSocketNotification("DEPARTURES", departuresData);
     } catch (error) {
-      console.log("Error while fetching departures (for Station ID " + stationId + "): " + error);
+      Log.log("Error while fetching departures (for module Instance " + fetcherId + "): " + error);
       // Add stationId to error for identification in the main instance
-      error.stationId = stationId;
-      error.message = e;
+      error.fetcherId = fetcherId;
+      error.message = error;
       this.sendSocketNotification("FETCH_ERROR", error);
     }
   },
@@ -133,13 +137,21 @@ module.exports = NodeHelper.create({
         break;
     }
 
-    // Change default values if we changed them
-    if ("bg" in colors) {
-      properties.bgColor = colors.bg;
+    // In case new lines get added but are not listed in the vbb-line-colors module
+    if (typeof colors !== "undefined") {
+      // Change default values if we changed them
+      if ("bg" in colors) {
+        properties.bgColor = colors.bg;
+      }
+  
+      if ("fg" in colors) {
+        properties.fgColor = colors.fg;
+      }
     }
-
-    if ("fg" in colors) {
-      properties.fgColor = colors.fg;
+    else {
+      // If no color has been found for the line, default to grey
+      properties.bgColor = "#535353";
+      properties.fgColor = "#fff";
     }
 
     return properties;

@@ -4,14 +4,17 @@ const bvgProfile = require("hafas-client/p/bvg");
 const pjson = require("./package.json");
 const bvgClient = createClient(
   bvgProfile,
-  "MagicMirror2 module MMM-PublicTransportBerlin v" +
-    pjson.version +
-    " (https://github.com/deg0nz/MMM-PublicTransportBerlin)"
+  "MMM-PublicTransportBerlin v" + pjson.version
 );
 
 class BvgFetcher {
   constructor(config) {
     this.config = config;
+    this.id = config.name;
+  }
+
+  getId() {
+    return this.id;
   }
 
   getStationId() {
@@ -20,8 +23,16 @@ class BvgFetcher {
 
   async getStationName() {
     let station = await bvgClient.stop(this.config.stationId);
-
     return station.name;
+  }
+
+  async getDirectionDescriptor() {
+    if (typeof this.config.directionStationId === "undefined") {
+      return "all directions";
+    } else {
+      const station = await bvgClient.stop(this.config.directionStationId);
+      return station.name;
+    }
   }
 
   async fetchDepartures() {
@@ -42,13 +53,13 @@ class BvgFetcher {
     if (!this.config.directionStationId || this.config.directionStationId === "") {
       opt = {
         when: when,
-        duration: this.config.departureMinutes,
+        duration: this.config.departureMinutes
       };
     } else {
       opt = {
         direction: this.config.directionStationId,
         when: when,
-        duration: this.config.departureMinutes,
+        duration: this.config.departureMinutes
       };
     }
 
@@ -60,13 +71,12 @@ class BvgFetcher {
 
   processData(data) {
     let departuresData = {
-      stationId: this.config.stationId,
-      departuresArray: [],
+      fetcherId: this.id,
+      departuresArray: []
     };
 
     data.forEach((row) => {
       // check for:
-      // ignored stations
       // excluded transportation types
       // ignored lines
 
@@ -77,18 +87,17 @@ class BvgFetcher {
       }
 
       if (
-        !this.config.ignoredStations.includes(row.station.id) &&
         !this.config.excludedTransportationTypes.includes(row.line.product) &&
         !this.config.ignoredLines.includes(row.line.name)
       ) {
         let current = {
-          when: row.when || row.scheduledWhen,
+          when: row.when || row.plannedWhen,
           delay: row.delay || 0,
           cancelled: row.cancelled || false,
           name: row.line.name,
           nr: row.line.nr,
           type: row.line.product,
-          direction: row.direction,
+          direction: row.direction
         };
 
         departuresData.departuresArray.push(current);
@@ -115,7 +124,7 @@ class BvgFetcher {
 
     let time = row.when.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
-    console.log(
+    Log.log(
       time + " " + delayMinutes + " " + row.line.product + " " + row.direction + " | stationId: " + row.station.id
     );
   }
