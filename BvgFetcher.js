@@ -1,5 +1,6 @@
 "use strict";
 const createClient = require("hafas-client");
+const shortenStationName = require('vbb-short-station-name')
 const bvgProfile = require("hafas-client/p/bvg");
 const pjson = require("./package.json");
 const bvgClient = createClient(
@@ -97,7 +98,7 @@ class BvgFetcher {
           name: row.line.name,
           nr: row.line.nr,
           type: row.line.product,
-          direction: row.direction
+          direction: this.config.shortenStationNames ? shortenStationName(row.direction) : row.direction
         };
 
         departuresData.departuresArray.push(current);
