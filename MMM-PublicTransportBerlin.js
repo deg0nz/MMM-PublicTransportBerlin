@@ -26,7 +26,8 @@ Module.register("MMM-PublicTransportBerlin", {
     excludeDelayFromTimeLabel: false,   // Should the delay time be excluded from the time label?
     showDirection: true,                // Adds direction of the module instance to the header if the instance is directed
     animationSpeed: 3000,               // Speed of the update animation. (Milliseconds)
-    timezone: "Europe/Berlin"           // Timezone
+    timezone: "Europe/Berlin",          // Timezone
+    shortenStationNames: true           // Shorten station names? See https://github.com/derhuerst/vbb-short-station-name
   },
 
   start: function () {
