@@ -23,9 +23,10 @@ Module.register("MMM-PublicTransportBerlin", {
     fadeUnreachableDepartures: true,    // Should unreachable departures be faded away from the reachable departures line?
     fadeReachableDepartures: true,      // Should reachable departures be faded away from the reachable departures line?
     fadePointForReachableDepartures: 0.25, // The point to start fading the reachable departures
-    excludeDelayFromTimeLabel: false,    // Should the delay time be excluded from the time label?
+    excludeDelayFromTimeLabel: false,   // Should the delay time be excluded from the time label?
     showDirection: true,                // Adds direction of the module instance to the header if the instance is directed
-    animationSpeed: 3000                // Speed of the update animation. (Milliseconds)
+    animationSpeed: 3000,               // Speed of the update animation. (Milliseconds)
+    timezone: "Europe/Berlin"           // Timezone
   },
 
   start: function () {
@@ -82,6 +83,7 @@ Module.register("MMM-PublicTransportBerlin", {
         this.sendSocketNotification("STATION_NAME_MISSING_AFTER_INIT", this.config.name);
       }
 
+	    Log.log(`Fetching Departures for ${this.config.name}`);
       this.sendSocketNotification("GET_DEPARTURES", this.config.name);
     }, this.config.interval);
   },
@@ -297,7 +299,7 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   getRow: function (currentDeparture) {
-    let currentWhen = moment(currentDeparture.when);
+    let currentWhen = moment(currentDeparture.when).tz(this.config.timezone);
     let delay = this.convertDelayToMinutes(currentDeparture.delay);
 
     if (this.config.excludeDelayFromTimeLabel) {
@@ -459,7 +461,7 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   getScripts: function () {
-    return ["moment.js"];
+    return ["moment.js", "moment-timezone.js"];
   },
 
   socketNotificationReceived: function (notification, payload) {
