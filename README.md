@@ -12,6 +12,7 @@ Then the module calculates the next reachable departures and draws a line betwee
 ## Status
 
 The current development status of this module is: **maintained**
+
 This means: I'm open for feature requests, pull requests, bug reports, ...
 
 ## Screenshot
