@@ -84,12 +84,12 @@ Module.register("MMM-PublicTransportBerlin", {
         "MMM-PublicTransportBerlin deprecation warning: The 'name' property must contain a value and must be unique if you use multiple modules. Please change your configuration."
       );
 
-      let generated_name = `MMM-PublicTransportBerlin_${this.config.stationId}`;
+      let generatedName = `MMM-PublicTransportBerlin_${this.config.stationId}`;
       if (this.config.directionStationId) {
-        generated_name += `_to_${this.config.directionStationId}`;
+        generatedName += `_to_${this.config.directionStationId}`;
       }
 
-      this.config.name = generated_name;
+      this.config.name = generatedName;
       Log.warn(`Using automatically generated module name ${this.config.name}`);
     }
 
