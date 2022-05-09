@@ -1,5 +1,5 @@
 {
-  "name": "MMM-PublicTransportBerlin",
+  "name": "mmm-publictransportberlin",
   "version": "1.7.0",
   "description": "Public transport module for MagicMirror² driven by BVG-Hafas data.",
   "repository": {
