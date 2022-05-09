@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/deg0nz/MMM-PublicTransportBerlin",
   "engines": {
-    "node": ">=10"
+    "node": ">=14"
   },
   "dependencies": {
     "hafas-client": "^5.24",
