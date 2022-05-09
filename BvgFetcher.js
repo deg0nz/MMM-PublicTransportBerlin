@@ -1,3 +1,5 @@
+/* global Log */
+
 const createClient = require("hafas-client");
 const shortenStationName = require("vbb-short-station-name");
 const bvgProfile = require("hafas-client/p/bvg");

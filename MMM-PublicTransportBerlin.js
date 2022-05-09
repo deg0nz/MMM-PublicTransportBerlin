@@ -1,3 +1,5 @@
+/* global Module moment Log */
+
 Module.register("MMM-PublicTransportBerlin", {
   // default values
   defaults: {
