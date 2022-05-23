@@ -1,6 +1,6 @@
 {
-  "name": "MMM-PublicTransportBerlin",
-  "version": "1.7.0",
+  "name": "mmm-publictransportberlin",
+  "version": "1.7.1",
   "description": "Public transport module for MagicMirror² driven by BVG-Hafas data.",
   "repository": {
     "type": "git",
@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/deg0nz/MMM-PublicTransportBerlin",
   "engines": {
-    "node": ">=10"
+    "node": ">=14"
   },
   "dependencies": {
     "hafas-client": "^5.24",

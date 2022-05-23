@@ -1,4 +1,4 @@
-"use strict";
+/* global Module moment Log */
 
 Module.register("MMM-PublicTransportBerlin", {
   // default values
@@ -30,8 +30,8 @@ Module.register("MMM-PublicTransportBerlin", {
     shortenStationNames: true           // Shorten station names? See https://github.com/derhuerst/vbb-short-station-name
   },
 
-  start: function () {
-    Log.info("Starting module: " + this.name);
+  start() {
+    Log.info(`Starting module: ${this.name}`);
 
     this.departuresArray = [];
     this.stationName = "";
@@ -40,36 +40,45 @@ Module.register("MMM-PublicTransportBerlin", {
 
     // If the stationId is not a string, we'll print a warning
     if (typeof this.config.stationId === "number") {
-      Log.warn("MMM-PublicTransportBerlin deprecation warning: The stationId must be a String! Please check your configuration!");
+      Log.warn(
+        "MMM-PublicTransportBerlin deprecation warning: The stationId must be a String! Please check your configuration!"
+      );
     }
 
     // Provide backwards compatibility for refactoring of config.delay to config.travelTimeToStation
     if (this.config.delay) {
-      Log.warn("MMM-PublicTransportBerlin deprecation warning: The delay option has been renamed to travelTimeToStation. Please change your configuration!");
+      Log.warn(
+        "MMM-PublicTransportBerlin deprecation warning: The delay option has been renamed to travelTimeToStation. Please change your configuration!"
+      );
       this.config.travelTimeToStation = this.config.delay;
     }
 
-    if (this.config.name === "MMM-PublicTransportBerlin" || this.config.name === "") {
-      Log.warn("MMM-PublicTransportBerlin deprecation warning: The 'name' property must contain a value and must be unique if you use multiple modules. Please change your configuration.");
+    if (
+      this.config.name === "MMM-PublicTransportBerlin" ||
+      this.config.name === ""
+    ) {
+      Log.warn(
+        "MMM-PublicTransportBerlin deprecation warning: The 'name' property must contain a value and must be unique if you use multiple modules. Please change your configuration."
+      );
 
-      let generated_name = `MMM-PublicTransportBerlin_${this.config.stationId}`;
+      let generatedName = `MMM-PublicTransportBerlin_${this.config.stationId}`;
       if (this.config.directionStationId) {
-        generated_name += `_to_${this.config.directionStationId}`;
+        generatedName += `_to_${this.config.directionStationId}`;
       }
 
-      this.config.name = generated_name;
+      this.config.name = generatedName;
       Log.warn(`Using automatically generated module name ${this.config.name}`);
     }
 
     this.sendSocketNotification("CREATE_FETCHER", this.config);
 
     // Handle negative travelTimeToStation
-    if(this.config.travelTimeToStation < 0) {
+    if (this.config.travelTimeToStation < 0) {
       this.config.travelTimeToStation = 0;
     }
 
     // Handle missing ignored lines
-    if(typeof this.config.ignoredLines === "undefined") {
+    if (typeof this.config.ignoredLines === "undefined") {
       this.config.ignoredLines = [];
     }
 
@@ -81,33 +90,40 @@ Module.register("MMM-PublicTransportBerlin", {
     setInterval(() => {
       // If the module started without getting the stationName for some reason, we try to get the stationName again
       if (this.loaded && this.stationName === "") {
-        this.sendSocketNotification("STATION_NAME_MISSING_AFTER_INIT", this.config.name);
+        this.sendSocketNotification(
+          "STATION_NAME_MISSING_AFTER_INIT",
+          this.config.name
+        );
       }
 
-	    Log.log(`Fetching Departures for ${this.config.name}`);
+      Log.log(`Fetching Departures for ${this.config.name}`);
       this.sendSocketNotification("GET_DEPARTURES", this.config.name);
     }, this.config.interval);
   },
 
-  getDom: async function () {
-    let wrapper = document.createElement("div");
+  async getDom() {
+    const wrapper = document.createElement("div");
     wrapper.className = "ptbWrapper";
 
     // Handle loading sequence at init time
     if (this.departuresArray.length === 0 && !this.loaded) {
-      wrapper.innerHTML = (this.loaded) ? this.translate("EMPTY") : this.translate("LOADING");
+      wrapper.innerHTML = this.loaded
+        ? this.translate("EMPTY")
+        : this.translate("LOADING");
       wrapper.className = "small light dimmed";
       return wrapper;
     }
 
-    let heading = document.createElement("header");
+    const heading = document.createElement("header");
     heading.innerHTML = this.stationName;
     wrapper.appendChild(heading);
 
     // Handle departure fetcher error and show it on the screen
     if (Object.keys(this.error).length > 0) {
-      let errorContent = document.createElement("div");
-      errorContent.innerHTML = this.translate("FETCHER_ERROR") + ": " + JSON.stringify(this.error.message) + "<br>";
+      const errorContent = document.createElement("div");
+      errorContent.innerHTML = `${this.translate(
+        "FETCHER_ERROR"
+      )}: ${JSON.stringify(this.error.message)}<br>`;
       errorContent.innerHTML += this.translate("NO_VBBDATA_ERROR_HINT");
       errorContent.className = "small light dimmed errorCell";
       wrapper.appendChild(errorContent);
@@ -115,25 +131,29 @@ Module.register("MMM-PublicTransportBerlin", {
     }
 
     // The table
-    let table = document.createElement("table");
-    table.className = `ptbTable small${this.config.useBrightScheme ? "" : " light"}`;
+    const table = document.createElement("table");
+    table.className = `ptbTable small${
+      this.config.useBrightScheme ? "" : " light"
+    }`;
 
     // Table header (thead tag is mandatory)
-    let tHead = document.createElement("thead");
+    const tHead = document.createElement("thead");
 
     if (this.config.showTableHeaders) {
-      let headerRow = this.getTableHeaderRow();
+      const headerRow = this.getTableHeaderRow();
       tHead.appendChild(headerRow);
     }
 
     table.appendChild(tHead);
 
     // Create table body from data
-    let tBody = document.createElement("tbody");
+    const tBody = document.createElement("tbody");
 
     // Handle empty departures array
     if (this.departuresArray.length === 0) {
-      let row = this.getNoDeparturesRow(this.translate("NO_DEPARTURES_AVAILABLE"));
+      const row = this.getNoDeparturesRow(
+        this.translate("NO_DEPARTURES_AVAILABLE")
+      );
 
       tBody.appendChild(row);
       table.appendChild(tBody);
@@ -144,10 +164,10 @@ Module.register("MMM-PublicTransportBerlin", {
 
     // Create all the content rows
     try {
-      let reachableDeparturePos = await this.getFirstReachableDeparturePosition();
+      const reachableDeparturePos =
+        await this.getFirstReachableDeparturePosition();
 
       this.departuresArray.forEach((currentDeparture, i) => {
-
         if (
           i >= reachableDeparturePos - this.config.maxUnreachableDepartures &&
           i < reachableDeparturePos + this.config.maxReachableDepartures
@@ -158,19 +178,19 @@ Module.register("MMM-PublicTransportBerlin", {
             reachableDeparturePos === i &&
             this.config.maxUnreachableDepartures !== 0
           ) {
-            let ruleRow = this.getRuleRow();
+            const ruleRow = this.getRuleRow();
             tBody.appendChild(ruleRow);
           }
 
           // create standard row
-          let row = this.getRow(currentDeparture);
+          const row = this.getRow(currentDeparture);
           row.style.opacity = this.getRowOpacity(i, reachableDeparturePos);
 
           tBody.appendChild(row);
         }
       });
     } catch (e) {
-      let row = this.getNoDeparturesRow(e.message);
+      const row = this.getNoDeparturesRow(e.message);
       tBody.appendChild(row);
     }
 
@@ -180,7 +200,7 @@ Module.register("MMM-PublicTransportBerlin", {
     return wrapper;
   },
 
-  getRowOpacity: function (i, reachableDeparturePos) {
+  getRowOpacity(i, reachableDeparturePos) {
     // Per default, opacity is at 100%
     let opacity = 1;
 
@@ -189,10 +209,10 @@ Module.register("MMM-PublicTransportBerlin", {
       this.config.fadeUnreachableDepartures &&
       this.config.travelTimeToStation > 0
     ) {
-      let steps = this.config.maxUnreachableDepartures;
+      const steps = this.config.maxUnreachableDepartures;
 
       if (i >= reachableDeparturePos - steps && i < reachableDeparturePos) {
-        let currentStep = reachableDeparturePos - i;
+        const currentStep = reachableDeparturePos - i;
         opacity = 1 - ((1 / steps) * currentStep - 0.2);
       }
     }
@@ -208,10 +228,12 @@ Module.register("MMM-PublicTransportBerlin", {
         this.config.fadePointForReachableDepartures = 0;
       }
 
-      let startingPoint = this.config.maxReachableDepartures * this.config.fadePointForReachableDepartures;
-      let steps = this.config.maxReachableDepartures - startingPoint;
+      const startingPoint =
+        this.config.maxReachableDepartures *
+        this.config.fadePointForReachableDepartures;
+      const steps = this.config.maxReachableDepartures - startingPoint;
       if (i >= startingPoint) {
-        let currentStep = i - reachableDeparturePos - startingPoint;
+        const currentStep = i - reachableDeparturePos - startingPoint;
         opacity = 1 - (1 / steps) * currentStep;
       }
     }
@@ -219,13 +241,13 @@ Module.register("MMM-PublicTransportBerlin", {
     return opacity;
   },
 
-  getRuleRow: function() {
-    let ruleRow = document.createElement("tr");
+  getRuleRow() {
+    const ruleRow = document.createElement("tr");
 
-    let ruleTimeCell = document.createElement("td");
+    const ruleTimeCell = document.createElement("td");
     ruleRow.appendChild(ruleTimeCell);
 
-    let ruleCell = document.createElement("td");
+    const ruleCell = document.createElement("td");
     ruleCell.colSpan = 3;
     ruleCell.className = "ruleCell";
     ruleRow.appendChild(ruleCell);
@@ -233,15 +255,15 @@ Module.register("MMM-PublicTransportBerlin", {
     return ruleRow;
   },
 
-  getTableHeaderRow: function () {
-    let headerRow = document.createElement("tr");
+  getTableHeaderRow() {
+    const headerRow = document.createElement("tr");
 
     // Cell for departure time
-    let headerTime = document.createElement("td");
+    const headerTime = document.createElement("td");
     headerTime.className = "centeredTd";
 
     if (this.config.showTableHeadersAsSymbols) {
-      let timeIcon = document.createElement("span");
+      const timeIcon = document.createElement("span");
       timeIcon.className = "fa fa-clock-o";
       headerTime.appendChild(timeIcon);
     } else {
@@ -251,16 +273,16 @@ Module.register("MMM-PublicTransportBerlin", {
     headerRow.appendChild(headerTime);
 
     // Cell for travelTimeToStation time
-    let delayTime = document.createElement("td");
+    const delayTime = document.createElement("td");
     delayTime.innerHTML = "&nbsp;";
     headerRow.appendChild(delayTime);
 
     // Cell for line symbol
-    let headerLine = document.createElement("td");
+    const headerLine = document.createElement("td");
     headerLine.className = "centeredTd";
 
     if (this.config.showTableHeadersAsSymbols) {
-      let lineIcon = document.createElement("span");
+      const lineIcon = document.createElement("span");
       lineIcon.className = "fa fa-tag";
       headerLine.appendChild(lineIcon);
     } else {
@@ -270,11 +292,11 @@ Module.register("MMM-PublicTransportBerlin", {
     headerRow.appendChild(headerLine);
 
     // Cell for direction
-    let headerDirection = document.createElement("td");
+    const headerDirection = document.createElement("td");
     headerDirection.className = "centeredTd";
 
     if (this.config.showTableHeadersAsSymbols) {
-      let directionIcon = document.createElement("span");
+      const directionIcon = document.createElement("span");
       directionIcon.className = "fa fa-exchange";
       headerDirection.appendChild(directionIcon);
     } else {
@@ -287,9 +309,9 @@ Module.register("MMM-PublicTransportBerlin", {
     return headerRow;
   },
 
-  getNoDeparturesRow: function (message) {
-    let row = document.createElement("tr");
-    let cell = document.createElement("td");
+  getNoDeparturesRow(message) {
+    const row = document.createElement("tr");
+    const cell = document.createElement("td");
 
     cell.colSpan = 4;
     cell.innerHTML = message;
@@ -299,31 +321,33 @@ Module.register("MMM-PublicTransportBerlin", {
     return row;
   },
 
-  getRow: function (currentDeparture) {
+  getRow(currentDeparture) {
     let currentWhen = moment(currentDeparture.when).tz(this.config.timezone);
-    let delay = this.convertDelayToMinutes(currentDeparture.delay);
+    const delay = this.convertDelayToMinutes(currentDeparture.delay);
 
     if (this.config.excludeDelayFromTimeLabel) {
       currentWhen = this.getDepartureTimeWithoutDelay(currentWhen, delay);
     }
 
-    let row = document.createElement("tr");
+    const row = document.createElement("tr");
 
-    let timeCell = document.createElement("td");
-    timeCell.className = `centeredTd timeCell ${this.config.useBrightScheme ? " light" : ""}`;
+    const timeCell = document.createElement("td");
+    timeCell.className = `centeredTd timeCell ${
+      this.config.useBrightScheme ? " light" : ""
+    }`;
     timeCell.innerHTML = currentWhen.format("HH:mm");
     row.appendChild(timeCell);
 
-    let delayCell = document.createElement("td");
+    const delayCell = document.createElement("td");
     delayCell.className = "delayTimeCell";
 
     if (delay > 0) {
-      delayCell.innerHTML = "+" + delay + " ";
+      delayCell.innerHTML = `+${delay} `;
       if (this.config.useColorForRealtimeInfo) {
         delayCell.style.color = "red";
       }
     } else if (delay < 0) {
-      delayCell.innerHTML = delay + " ";
+      delayCell.innerHTML = `${delay} `;
       if (this.config.useColorForRealtimeInfo) {
         delayCell.style.color = "green";
       }
@@ -333,26 +357,32 @@ Module.register("MMM-PublicTransportBerlin", {
 
     row.appendChild(delayCell);
 
-    let lineCell = document.createElement("td");
-    let lineSymbol = this.getLineSymbol(currentDeparture);
+    const lineCell = document.createElement("td");
+    const lineSymbol = this.getLineSymbol(currentDeparture);
     lineCell.className = "centeredTd noPadding lineCell";
 
     lineCell.appendChild(lineSymbol);
     row.appendChild(lineCell);
 
-    let directionCell = document.createElement("td");
-    directionCell.className = `directionCell ${this.config.useBrightScheme ? " bright" : ""}`;
+    const directionCell = document.createElement("td");
+    directionCell.className = `directionCell ${
+      this.config.useBrightScheme ? " bright" : ""
+    }`;
 
     if (
       this.config.marqueeLongDirections &&
       currentDeparture.direction.length >= 26
     ) {
-      directionCell.className = `directionCell marquee${this.config.useBrightScheme ? " bright" : ""}`;
-      let directionSpan = document.createElement("span");
+      directionCell.className = `directionCell marquee${
+        this.config.useBrightScheme ? " bright" : ""
+      }`;
+      const directionSpan = document.createElement("span");
       directionSpan.innerHTML = currentDeparture.direction;
       directionCell.appendChild(directionSpan);
     } else {
-      directionCell.innerHTML = this.trimDirectionString(currentDeparture.direction);
+      directionCell.innerHTML = this.trimDirectionString(
+        currentDeparture.direction
+      );
     }
 
     row.appendChild(directionCell);
@@ -365,7 +395,7 @@ Module.register("MMM-PublicTransportBerlin", {
     return row;
   },
 
-  getDepartureTimeWithoutDelay: function (departureTime, delay) {
+  getDepartureTimeWithoutDelay(departureTime, delay) {
     if (delay > 0) {
       departureTime.subtract(delay, "minutes");
     } else if (delay < 0) {
@@ -375,9 +405,9 @@ Module.register("MMM-PublicTransportBerlin", {
     return departureTime;
   },
 
-  getFirstReachableDeparturePosition: async function () {
-    let now = moment();
-    let nowWithDelay = now.add(this.config.travelTimeToStation, "minutes");
+  async getFirstReachableDeparturePosition() {
+    const now = moment();
+    const nowWithDelay = now.add(this.config.travelTimeToStation, "minutes");
 
     return await new Promise((resolve, reject) => {
       if (this.config.travelTimeToStation === 0) {
@@ -385,12 +415,13 @@ Module.register("MMM-PublicTransportBerlin", {
       }
 
       this.departuresArray.forEach((current, i, depArray) => {
-        let currentWhen = moment(current.when);
+        const currentWhen = moment(current.when);
 
         if (depArray.length > 1 && i < depArray.length - 1) {
-          let nextWhen = moment(depArray[i + 1].when);
+          const nextWhen = moment(depArray[i + 1].when);
           if (
-            (currentWhen.isBefore(nowWithDelay) && nextWhen.isSameOrAfter(nowWithDelay)) ||
+            (currentWhen.isBefore(nowWithDelay) &&
+              nextWhen.isSameOrAfter(nowWithDelay)) ||
             (i === 0 && nextWhen.isSameOrAfter(nowWithDelay))
           ) {
             resolve(i);
@@ -407,23 +438,23 @@ Module.register("MMM-PublicTransportBerlin", {
     });
   },
 
-  trimDirectionString: function (string) {
+  trimDirectionString(string) {
     let dirString = string;
 
     if (dirString.indexOf(",") > -1) {
       dirString = dirString.split(",")[0];
     }
 
-    let viaIndex = dirString.search(/( via )/g);
+    const viaIndex = dirString.search(/( via )/g);
     if (viaIndex > -1) {
       dirString = dirString.split(/( via )/g)[0];
     }
 
-    return dirString
+    return dirString;
   },
 
-  getLineSymbol: function (product) {
-    let symbol = document.createElement("div");
+  getLineSymbol(product) {
+    const symbol = document.createElement("div");
 
     if (product.type === "express") {
       if (product.name === "LOCOMORE") symbol.innerHTML = "LOC";
@@ -446,26 +477,26 @@ Module.register("MMM-PublicTransportBerlin", {
     return symbol;
   },
 
-  convertDelayToMinutes: function (delay) {
+  convertDelayToMinutes(delay) {
     return Math.floor((((delay % 31536000) % 86400) % 3600) / 60);
   },
 
-  getTranslations: function () {
+  getTranslations() {
     return {
       en: "translations/en.json",
       de: "translations/de.json"
     };
   },
 
-  getStyles: function () {
+  getStyles() {
     return ["style.css", "font-awesome.css"];
   },
 
-  getScripts: function () {
+  getScripts() {
     return ["moment.js", "moment-timezone.js"];
   },
 
-  socketNotificationReceived: function (notification, payload) {
+  socketNotificationReceived(notification, payload) {
     if (notification === "FETCHER_INIT") {
       if (payload.fetcherId === this.config.name) {
         this.stationName = payload.stationName;

@@ -1,11 +1,13 @@
-"use strict";
+/* global Log */
+
 const createClient = require("hafas-client");
-const shortenStationName = require('vbb-short-station-name')
+const shortenStationName = require("vbb-short-station-name");
 const bvgProfile = require("hafas-client/p/bvg");
 const pjson = require("./package.json");
+
 const bvgClient = createClient(
   bvgProfile,
-  "MMM-PublicTransportBerlin v" + pjson.version
+  `MMM-PublicTransportBerlin v${pjson.version}`
 );
 
 class BvgFetcher {
@@ -23,17 +25,16 @@ class BvgFetcher {
   }
 
   async getStationName() {
-    let station = await bvgClient.stop(this.config.stationId);
+    const station = await bvgClient.stop(this.config.stationId);
     return station.name;
   }
 
   async getDirectionDescriptor() {
     if (typeof this.config.directionStationId === "undefined") {
       return "all directions";
-    } else {
-      const station = await bvgClient.stop(this.config.directionStationId);
-      return station.name;
     }
+    const station = await bvgClient.stop(this.config.directionStationId);
+    return station.name;
   }
 
   async fetchDepartures() {
@@ -43,7 +44,9 @@ class BvgFetcher {
 
     if (this.config.travelTimeToStation > 0) {
       when = new Date();
-      when.setTime(Date.now() + this.config.travelTimeToStation * 60000 - 5 * 60000);
+      when.setTime(
+        Date.now() + this.config.travelTimeToStation * 60000 - 5 * 60000
+      );
     } else {
       when = Date.now();
     }
@@ -51,27 +54,30 @@ class BvgFetcher {
     let opt;
 
     // Handle single direction case
-    if (!this.config.directionStationId || this.config.directionStationId === "") {
+    if (
+      !this.config.directionStationId ||
+      this.config.directionStationId === ""
+    ) {
       opt = {
-        when: when,
+        when,
         duration: this.config.departureMinutes
       };
     } else {
       opt = {
         direction: this.config.directionStationId,
-        when: when,
+        when,
         duration: this.config.departureMinutes
       };
     }
 
-    let departures = await bvgClient.departures(this.config.stationId, opt);
-    let processedDepartures = this.processData(departures);
+    const departures = await bvgClient.departures(this.config.stationId, opt);
+    const processedDepartures = this.processData(departures);
 
     return processedDepartures;
   }
 
   processData(data) {
-    let departuresData = {
+    const departuresData = {
       fetcherId: this.id,
       departuresArray: []
     };
@@ -91,14 +97,16 @@ class BvgFetcher {
         !this.config.excludedTransportationTypes.includes(row.line.product) &&
         !this.config.ignoredLines.includes(row.line.name)
       ) {
-        let current = {
+        const current = {
           when: row.when || row.plannedWhen,
           delay: row.delay || 0,
           cancelled: row.cancelled || false,
           name: row.line.name,
           nr: row.line.nr,
           type: row.line.product,
-          direction: this.config.shortenStationNames ? shortenStationName(row.direction) : row.direction
+          direction: this.config.shortenStationNames
+            ? shortenStationName(row.direction)
+            : row.direction
         };
 
         departuresData.departuresArray.push(current);
@@ -121,12 +129,17 @@ class BvgFetcher {
 
   // helper function to print departure for debugging
   printDeparture(row) {
-    let delayMinutes = Math.floor((((row.delay % 31536000) % 86400) % 3600) / 60);
+    const delayMinutes = Math.floor(
+      (((row.delay % 31536000) % 86400) % 3600) / 60
+    );
 
-    let time = row.when.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    const time = row.when.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
 
     Log.log(
-      time + " " + delayMinutes + " " + row.line.product + " " + row.direction + " | stationId: " + row.station.id
+      `${time} ${delayMinutes} ${row.line.product} ${row.direction} | stationId: ${row.station.id}`
     );
   }
 }

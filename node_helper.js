@@ -1,15 +1,14 @@
-"use strict";
 const NodeHelper = require("node_helper");
-const BvgFetcher = require("./BvgFetcher");
 const lineColors = require("vbb-line-colors");
 const Log = require("logger");
+const BvgFetcher = require("./BvgFetcher");
 
 module.exports = NodeHelper.create({
-  start: function () {
+  start() {
     this.departuresFetchers = [];
   },
 
-  createFetcher: async function (config) {
+  async createFetcher(config) {
     const fetcherId = config.name;
     let fetcher;
 
@@ -19,21 +18,28 @@ module.exports = NodeHelper.create({
       this.sendInit(fetcher);
 
       try {
-        let stationName = await fetcher.getStationName();
-        let directionDescriptor = await fetcher.getDirectionDescriptor();
-        Log.log(`Created transportation fetcher for station ${stationName} (toward ${directionDescriptor}). (Station ID: ${fetcher.getStationId()}, Direction ID: ${config.directionStationId})`);
+        const stationName = await fetcher.getStationName();
+        const directionDescriptor = await fetcher.getDirectionDescriptor();
+        Log.log(
+          `Created transportation fetcher for station ${stationName} (toward ${directionDescriptor}). (Station ID: ${fetcher.getStationId()}, Direction ID: ${
+            config.directionStationId
+          })`
+        );
       } catch (error) {
         Log.error(error);
       }
-
     } else {
       fetcher = this.departuresFetchers[fetcherId];
       this.sendInit(fetcher);
 
       try {
-        let stationName = await fetcher.getStationName();
-        let directionDescriptor = await fetcher.getDirectionDescriptor();
-        Log.log(`Using existing transportation fetcher for station ${stationName} (toward ${directionDescriptor}) created. (Station ID: ${fetcher.getStationId()}, Direction ID: ${config.directionStationId})`);
+        const stationName = await fetcher.getStationName();
+        const directionDescriptor = await fetcher.getDirectionDescriptor();
+        Log.log(
+          `Using existing transportation fetcher for station ${stationName} (toward ${directionDescriptor}) created. (Station ID: ${fetcher.getStationId()}, Direction ID: ${
+            config.directionStationId
+          })`
+        );
       } catch (error) {
         Log.error(error);
       }
@@ -42,32 +48,39 @@ module.exports = NodeHelper.create({
     await this.getDepartures(fetcherId);
   },
 
-  sendInit: async function (fetcher) {
+  async sendInit(fetcher) {
     try {
       let stationName = await fetcher.getStationName();
-      let directionDescriptor = await fetcher.getDirectionDescriptor();
-      if (directionDescriptor !== "all directions" && fetcher.config.showDirection) {
-        stationName += `<br />(toward ${directionDescriptor})`
+      const directionDescriptor = await fetcher.getDirectionDescriptor();
+      if (
+        directionDescriptor !== "all directions" &&
+        fetcher.config.showDirection
+      ) {
+        stationName += `<br />(toward ${directionDescriptor})`;
       }
 
       this.sendSocketNotification("FETCHER_INIT", {
         stationId: fetcher.getStationId(),
-        stationName: stationName,
+        stationName,
         fetcherId: fetcher.getId()
       });
     } catch (error) {
-      Log.error("Error initializing fetcher: " + error);
+      Log.error(`Error initializing fetcher: ${error}`);
     }
   },
 
-  getDepartures: async function (fetcherId) {
+  async getDepartures(fetcherId) {
     try {
-      let departuresData = await this.departuresFetchers[fetcherId].fetchDepartures();
+      const departuresData = await this.departuresFetchers[
+        fetcherId
+      ].fetchDepartures();
 
       this.pimpDeparturesArray(departuresData.departuresArray);
       this.sendSocketNotification("DEPARTURES", departuresData);
     } catch (error) {
-      Log.log("Error while fetching departures (for module Instance " + fetcherId + "): " + error);
+      Log.log(
+        `Error while fetching departures (for module Instance ${fetcherId}): ${error}`
+      );
       // Add stationId to error for identification in the main instance
       error.fetcherId = fetcherId;
       error.message = error;
@@ -75,15 +88,15 @@ module.exports = NodeHelper.create({
     }
   },
 
-  pimpDeparturesArray: function (departuresArray) {
+  pimpDeparturesArray(departuresArray) {
     let currentProperties = {};
 
     departuresArray.forEach((current) => {
       currentProperties = this.getLineProperties(current);
 
-      //if (!this.config.marqueeLongDirections) {
+      // if (!this.config.marqueeLongDirections) {
       //    current.direction = this.trimDirectionString(current.direction);
-      //}
+      // }
       current.bgColor = currentProperties.bgColor;
       current.fgColor = currentProperties.fgColor;
       current.cssClass = currentProperties.cssClass;
@@ -92,16 +105,16 @@ module.exports = NodeHelper.create({
     return departuresArray;
   },
 
-  getLineProperties: function (product) {
-    let properties = {
+  getLineProperties(product) {
+    const properties = {
       bgColor: "#333",
       fgColor: "#FFF",
-      cssClass: "",
+      cssClass: ""
     };
 
-    let type = product.type;
-    let lineType = product.line;
-    let name = product.name;
+    const type = product.type;
+    const lineType = product.line;
+    const name = product.name;
     let colors = {};
 
     switch (type) {
@@ -143,12 +156,11 @@ module.exports = NodeHelper.create({
       if ("bg" in colors) {
         properties.bgColor = colors.bg;
       }
-  
+
       if ("fg" in colors) {
         properties.fgColor = colors.fg;
       }
-    }
-    else {
+    } else {
       // If no color has been found for the line, default to grey
       properties.bgColor = "#535353";
       properties.fgColor = "#fff";
@@ -157,7 +169,7 @@ module.exports = NodeHelper.create({
     return properties;
   },
 
-  socketNotificationReceived: function (notification, payload) {
+  socketNotificationReceived(notification, payload) {
     if (notification === "GET_DEPARTURES") {
       this.getDepartures(payload);
     }
@@ -169,5 +181,5 @@ module.exports = NodeHelper.create({
     if (notification === "STATION_NAME_MISSING_AFTER_INIT") {
       this.sendInit(this.departuresFetchers[payload]);
     }
-  },
+  }
 });

@@ -24,7 +24,7 @@ The module looks like this:
 ## Preconditions
 
 * MagicMirror² instance
-* Node.js version >= 12
+* Node.js version >= 14
 * npm
 
 ## Installation
