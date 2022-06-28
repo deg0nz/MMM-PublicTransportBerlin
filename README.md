@@ -12,6 +12,7 @@ Then the module calculates the next reachable departures and draws a line betwee
 ## Status
 
 The current development status of this module is: **maintained**
+
 This means: I'm open for feature requests, pull requests, bug reports, ...
 
 ## Screenshot
@@ -23,7 +24,7 @@ The module looks like this:
 ## Preconditions
 
 * MagicMirror² instance
-* Node.js version >= 12
+* Node.js version >= 14
 * npm
 
 ## Installation
@@ -41,8 +42,7 @@ npm install
 Just enter your MMM-PublicTransportBerlin folder in the MagicMirror's modules folder and execute the following commands in the module's directory:
 
 ```console
-git pull
-npm install
+git pull && npm install
 ```
 
 ## How to get the `stationId`
@@ -66,7 +66,7 @@ curl 'https://v5.bvg.transport.rest/locations?query=alexanderplatz' | jq
 
 ## Configuration
 
-The module quite configurable. These are the possible options:
+The module is quite configurable. These are the possible options:
 
 |Option|Description|
 |---|---|
@@ -76,21 +76,21 @@ The module quite configurable. These are the possible options:
 |`ignoredLines`|You can exclude different lines of a station by adding them to this array. Usually, this can be empty.<br><br>**Type:** `string array` (comma separated `strings` in the array).<br>**Default value:** `<empty>` <br>**Possible values:** All valid line names like `'U5'` (for subway) , `'M10'` or `'21'` (for tram), `'S75'` (for suburban) , `'Bus 200'`(for bus), etc.|
 |`excludedTransportationTypes`|Transportation types to be excluded from appearing on a module instance can be listed here.<br><br>**Type:** `string`, comma-separated list<br>**Default vaule:** `<empty>` <br>**Possible values:** `bus`, `tram`, `suburban`, `subway`, `regional`, `ferry`|
 |`marqueeLongDirections`|Makes a marquee/ticker text out of all direction descriptions with more than 25 characters. If this value is false, the descriptions are trimmed to the station names. You can see a video of it [here](https://ds.kayuk.de/kAfzU/) (rendered by a regular computer).<br><br> *Note: The rendering on the mirror is not perfect, but it is OK in my opinion. If the movement is not fluent enough for you, you should turn it off.*<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
-|`interval`|How often the module should be updated. The value is given in milliseconds.<br><br>**Type:** `integer`<br>**Default value:** `120000 // 2 minutes`|
+|`interval`|How often the module should be updated. The value is given in milliseconds.<br><br>**Type:** `integer` (milliseconds)<br>**Default value:** `120000` (2 minutes)|
 |`hidden`|Visibility of the module.<br><br>**Type:** `boolean`<br>**Default vaule:** `false`|
-|`travelTimeToStation`|How long does it take you to get from the mirror to the station? The value is given in minutes. (this is the former `delay` option)<br><br>**Type:** `integer`<br>**Default vaule:** `10 // 10 minutes`|
-|`departureMinutes`|For how many minutes in the future should departures be fetched? If `travelTimeToStation` is set > 0, then this time will be added to `now() + travelTimeToStation`. (This could be obsolete in future versions but is needed for now.)<br><br>**Type:** `integer`<br>**Default vaule:** `10`|
+|`travelTimeToStation`|How long does it take you to get from the mirror to the station? The value is given in minutes. (this is the former `delay` option)<br><br>**Type:** `integer` (minutes)<br>**Default vaule:** `10` (10 minutes)|
+|`departureMinutes`|For how many minutes in the future should departures be fetched? If `travelTimeToStation` is set > 0, then this time will be added to `now() + travelTimeToStation`. (This could be obsolete in future versions but is needed for now.)<br><br>**Type:** `integer` (minutes)<br>**Default vaule:** `10` (10 minutes)|
 |`showColoredLineSymbols`|If you want the line colored and shaped or text only.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
 |`useColorForRealtimeInfo`|Set colors for realtime information<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
 |`showTableHeaders`|Show or hides the table headers.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
 |`showTableHeadersAsSymbols`|Show the table headers as text or symbols.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
-|`maxUnreachableDepartures`|How many unreachable departures should be shown. Only necessary, of you set `travelTimeToSteation` > 0<br><br>**Type:** `integer`<br>**Default vaule:** `3`|
+|`maxUnreachableDepartures`|How many unreachable departures should be shown. Only necessary, of you set `travelTimeToStation` > 0<br><br>**Type:** `integer`<br>**Default vaule:** `3`|
 |`maxReachableDepartures`|How many reachable departures should be shown. If your `travelTimeToSteation = 0`, this is the value for the number of departures you want to see.<br><br>**Type:** `integer`<br>**Default vaule:** `7`|
 |`fadeUnreachableDepartures`|Activates/deactivates fading for unreachable departures.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
 |`fadeReachableDepartures`|Activates/deactivates fading for reachable departures.<br><br>**Type:** `boolean`<br>**Default vaule:** `true`|
-|`fadePointForReachableDepartures`|Fading point for reachable departures. Thìs value is also valid for `travelTimeToSteation= 0` <br><br>**Type:** `float`<br>**Default vaule:** `0.5` <br>**Possible values:** `0.0 - 1.0`|
+|`fadePointForReachableDepartures`|Fading point for reachable departures. This value is also valid for `travelTimeToSteation == 0` <br><br>**Type:** `float`<br>**Default vaule:** `0.5` <br>**Possible values:** `0.0 - 1.0`|
 |`excludeDelayFromTimeLabel`|The API provides time labels which include the delay time of the departure. This flag removes the delay time to show times like they are shown in the BVG-App.<br><br>**Type:** `boolean`<br>**Default vaule:** `false`|
-|`animationSpeed`|Speed of the update animation. The value is given in milliseconds.<br><br>**Type:** `integer`<br>**Default value:** `3000 // 3 seconds`|
+|`animationSpeed`|Speed of the update animation. The value is given in milliseconds.<br><br>**Type:** `integer` (milliseconds)<br>**Default value:** `3000` (3 seconds)|
 |`showDirection`|Shows the direction in the module instance's header if the module instance is directed.<br><br>**Type:** `boolean`<br>**Default value:** `true`|
 |`useBrightScheme`|Brightens the display table.<br><br>**Type:** `boolean`<br>**Default value:** `false`|
 |`timezone`|Configure timezone.<br><br>**Type:** `string`<br>**Default value:** `Europe/Berlin`|
