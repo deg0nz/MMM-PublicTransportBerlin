@@ -1,7 +1,7 @@
 const createClient = require("hafas-client");
 const shortenStationName = require("vbb-short-station-name");
 const bvgProfile = require("hafas-client/p/bvg");
-const Log = require("../../js/logger");
+const Log = require("logger");
 const pjson = require("./package.json");
 
 const bvgClient = createClient(
