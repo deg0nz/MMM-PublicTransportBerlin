@@ -90,7 +90,7 @@ class BvgFetcher {
       // TODO: Make real stop/station handling here
       // Quick fix to work around missing station objects
       if (!row.station) {
-        row.station = row.stop;
+        row.station = row.stop; // eslint-disable-line no-param-reassign
       }
 
       if (
@@ -117,7 +117,7 @@ class BvgFetcher {
     return departuresData;
   }
 
-  compareTimes(a, b) {
+  static compareTimes(a, b) {
     if (a.when < b.when) {
       return -1;
     }

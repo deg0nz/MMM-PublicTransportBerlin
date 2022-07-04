@@ -2,11 +2,12 @@
 
 Module.register("MMM-PublicTransportBerlin", {
   // default values
+  // prettier-ignore
   defaults: {
     name: "MMM-PublicTransportBerlin",  // The name of this module
     hidden: false,                      // Hide this module?
     stationId: "900000160003",          // The ID of the station
-    //directionStationId: 0,              // The stationId of the next station in which direction departures should be shown
+    // directionStationId: 0,				// The stationId of the next station in which direction departures should be shown
     ignoredLines: [],                   // Which lines should be ignored? (comma-separated list of line names)
     excludedTransportationTypes: "",    // Which transportation types should not be shown on the mirror? (comma-separated list of types) possible values: bus,tram,suburban,subway,ferry
     marqueeLongDirections: true,        // Use Marquee effect for long station names?
@@ -409,7 +410,7 @@ Module.register("MMM-PublicTransportBerlin", {
     const now = moment();
     const nowWithDelay = now.add(this.config.travelTimeToStation, "minutes");
 
-    return await new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (this.config.travelTimeToStation === 0) {
         resolve(0);
       }

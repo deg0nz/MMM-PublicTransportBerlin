@@ -17,6 +17,7 @@
     "prefer-destructuring": "off",
     "prettier/prettier": "error",
     "import/no-dynamic-require": "off",
-    "import/no-unresolved": "off"
+    "import/no-unresolved": "off",
+	"no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["current"] }]
   }
 }
