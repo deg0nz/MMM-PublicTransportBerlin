@@ -1,8 +1,7 @@
-/* global Log */
-
 const createClient = require("hafas-client");
 const shortenStationName = require("vbb-short-station-name");
 const bvgProfile = require("hafas-client/p/bvg");
+const Log = require("../../js/logger");
 const pjson = require("./package.json");
 
 const bvgClient = createClient(
@@ -93,6 +92,9 @@ class BvgFetcher {
         row.station = row.stop; // eslint-disable-line no-param-reassign
       }
 
+      // Set hidden debug option to print debug info about departures
+      if (this.config.debug) this.printDeparture(row);
+
       if (
         !this.config.excludedTransportationTypes.includes(row.line.product) &&
         !this.config.ignoredLines.includes(row.line.name)
@@ -128,12 +130,12 @@ class BvgFetcher {
   }
 
   // helper function to print departure for debugging
-  printDeparture(row) {
+  static printDeparture(row) {
     const delayMinutes = Math.floor(
       (((row.delay % 31536000) % 86400) % 3600) / 60
     );
 
-    const time = row.when.toLocaleTimeString([], {
+    const time = new Date(row.when).toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit"
     });
