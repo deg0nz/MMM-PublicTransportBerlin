@@ -92,8 +92,8 @@ class BvgFetcher {
         row.station = row.stop; // eslint-disable-line no-param-reassign
       }
 
-      // Set hidden debug option to print debug info about departures
-      if (this.config.debug) this.printDeparture(row);
+      // If log level is set to debug print infos about departures
+      if (config.logLevel.includes("DEBUG")) this.printDeparture(row); // eslint-disable-line no-undef
 
       if (
         !this.config.excludedTransportationTypes.includes(row.line.product) &&
