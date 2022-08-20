@@ -2,32 +2,33 @@
 
 Module.register("MMM-PublicTransportBerlin", {
   // default values
+  // prettier-ignore
   defaults: {
-    name: "MMM-PublicTransportBerlin",  // The name of this module
-    hidden: false,                      // Hide this module?
-    stationId: "900000160003",          // The ID of the station
-    //directionStationId: 0,              // The stationId of the next station in which direction departures should be shown
-    ignoredLines: [],                   // Which lines should be ignored? (comma-separated list of line names)
-    excludedTransportationTypes: "",    // Which transportation types should not be shown on the mirror? (comma-separated list of types) possible values: bus,tram,suburban,subway,ferry
-    marqueeLongDirections: true,        // Use Marquee effect for long station names?
-    travelTimeToStation: 10,            // How long do you need to walk/bike to the next Station?
-    interval: 120000,                   // How often should the table be updated in ms?
-    departureMinutes: 30,               // For how many minutes should departures be shown?
-    showColoredLineSymbols: true,       // Want colored line symbols?
-    useColorForRealtimeInfo: true,      // Want colored real time information (delay, early)?
-    useBrightScheme: false,             // Brighten the display table
-    showTableHeaders: true,             // Show table headers?
-    showTableHeadersAsSymbols: true,    // Table Headers as symbols or written?
-    maxUnreachableDepartures: 3,        // How many unreachable departures should be shown?
-    maxReachableDepartures: 7,          // How many reachable departures should be shown?
-    fadeUnreachableDepartures: true,    // Should unreachable departures be faded away from the reachable departures line?
-    fadeReachableDepartures: true,      // Should reachable departures be faded away from the reachable departures line?
-    fadePointForReachableDepartures: 0.25, // The point to start fading the reachable departures
-    excludeDelayFromTimeLabel: false,   // Should the delay time be excluded from the time label?
-    showDirection: true,                // Adds direction of the module instance to the header if the instance is directed
-    animationSpeed: 3000,               // Speed of the update animation. (Milliseconds)
-    timezone: "Europe/Berlin",          // Timezone
-    shortenStationNames: true           // Shorten station names? See https://github.com/derhuerst/vbb-short-station-name
+    name: "MMM-PublicTransportBerlin", 		// The name of this module
+    hidden: false, 							// Hide this module?
+    stationId: "900000160003", 				// The ID of the station
+    // directionStationId: 0,				// The stationId of the next station in which direction departures should be shown
+    ignoredLines: [], 						// Which lines should be ignored? (comma-separated list of line names)
+    excludedTransportationTypes: "", 		// Which transportation types should not be shown on the mirror? (comma-separated list of types) possible values: bus,tram,suburban,subway,ferry
+    marqueeLongDirections: true, 			// Use Marquee effect for long station names?
+    travelTimeToStation: 10, 				// How long do you need to walk/bike to the next Station?
+    interval: 120000, 						// How often should the table be updated in ms?
+    departureMinutes: 30, 					// For how many minutes should departures be shown?
+    showColoredLineSymbols: true, 			// Want colored line symbols?
+    useColorForRealtimeInfo: true, 			// Want colored real time information (delay, early)?
+    useBrightScheme: false, 				// Brighten the display table
+    showTableHeaders: true, 				// Show table headers?
+    showTableHeadersAsSymbols: true, 		// Table Headers as symbols or written?
+    maxUnreachableDepartures: 3, 			// How many unreachable departures should be shown?
+    maxReachableDepartures: 7, 				// How many reachable departures should be shown?
+    fadeUnreachableDepartures: true, 		// Should unreachable departures be faded away from the reachable departures line?
+    fadeReachableDepartures: true, 			// Should reachable departures be faded away from the reachable departures line?
+    fadePointForReachableDepartures: 0.25, 	// The point to start fading the reachable departures
+    excludeDelayFromTimeLabel: false, 		// Should the delay time be excluded from the time label?
+    showDirection: true,					// Adds direction of the module instance to the header if the instance is directed
+    animationSpeed: 3000, 					// Speed of the update animation. (Milliseconds)
+    timezone: "Europe/Berlin", 				// Timezone
+    shortenStationNames: true 				// Shorten station names? See https://github.com/derhuerst/vbb-short-station-name
   },
 
   start() {
@@ -409,7 +410,7 @@ Module.register("MMM-PublicTransportBerlin", {
     const now = moment();
     const nowWithDelay = now.add(this.config.travelTimeToStation, "minutes");
 
-    return await new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (this.config.travelTimeToStation === 0) {
         resolve(0);
       }
