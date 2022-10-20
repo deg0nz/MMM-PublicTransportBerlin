@@ -32,7 +32,7 @@
     "node": ">=14"
   },
   "dependencies": {
-    "hafas-client": "^5.25",
+    "hafas-client": "^5.26",
     "moment": "^2.29",
     "vbb-line-colors": "^1.0.4",
     "vbb-short-station-name": "^1.0.1"
