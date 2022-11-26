@@ -51,8 +51,8 @@
     "stylelint-prettier": "^2.0.0"
   },
   "scripts": {
-    "lint": "eslint . && stylelint **/*.css && npx prettier --check .",
-    "lint:fix": "eslint --fix . && stylelint --fix **/*.css && npx prettier --write .",
+    "lint": "eslint . && stylelint **/*.css && prettier --check .",
+    "lint:fix": "eslint --fix . && stylelint --fix **/*.css && prettier --write .",
     "test": "npm run lint"
   }
 }
