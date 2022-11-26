@@ -23,9 +23,9 @@ The module looks like this:
 
 ## Preconditions
 
-* MagicMirror² instance
-* Node.js version >= 14
-* npm
+- MagicMirror² instance
+- Node.js version >= 14
+- npm
 
 ## Installation
 
@@ -68,8 +68,9 @@ curl 'https://v5.bvg.transport.rest/locations?query=alexanderplatz' | jq
 
 The module is quite configurable. These are the possible options:
 
-|Option|Description|
-|---|---|
+<!-- prettier-ignore-start -->
+| Option | Description |
+|--------|-------------|
 |`name`|The name of the module instance (if you want multiple modules). This value must be *unique*.<br><br>**Type:** `string` This value is **Required**.<br>|
 |`stationId`|The ID of the station. How to get the ID for your station is described below.<br><br>**Type:** `string` This value is **Required**.|
 |`directionStationId`|If you want the module to show departures only in a specific direction, you can enter the ID of the next station on your line to specify the direction. <br><br> *Note: After some tests, the data delivery of this feature seems not to be as reliable as the normal version. Also, please make sure you actually have the right `stationId` for the direction station. Please check your MagicMirror log for errors before reporting them. <br> Additionally, more request results take more time for the request. So please make sure to keep your `maxUnreachableDepartures` and `maxReachabledepartures` low when using this feature.* <br><br> **Type:** `string` <br>**Default value:** `<empty>`|
@@ -95,6 +96,7 @@ The module is quite configurable. These are the possible options:
 |`useBrightScheme`|Brightens the display table.<br><br>**Type:** `boolean`<br>**Default value:** `false`|
 |`timezone`|Configure timezone.<br><br>**Type:** `string`<br>**Default value:** `Europe/Berlin`|
 |`shortenStationNames`|Whether to use [`vbb-short-station-name`](https://github.com/derhuerst/vbb-short-station-name) to shorten Station names.<br><br>**Type:** `boolean`<br>**Default value:** `true`|
+<!-- prettier-ignore-end -->
 
 Here is an example of an entry in `config.js`:
 
@@ -133,10 +135,10 @@ Multiple instances of this module are possible. Just add another entry of the MM
 
 ## Special Thanks
 
-* [Michael Teeuw](https://github.com/MichMich) for inspiring me and many others to build a MagicMirror.
-* [Jannis Redmann](https://github.com/derhuerst) for creating the [hafas-client](https://github.com/public-transport/hafas-client).
-You made my life a lot easier with this! Please consider supporting him on [Patreon](https://patreon.com/derhuerst)!
-* The community of [magicmirror.builders](https://magicmirror.builders) for help in the development process and all contributors for finding and fixing errors in this module.
+- [Michael Teeuw](https://github.com/MichMich) for inspiring me and many others to build a MagicMirror.
+- [Jannis Redmann](https://github.com/derhuerst) for creating the [hafas-client](https://github.com/public-transport/hafas-client).
+  You made my life a lot easier with this! Please consider supporting him on [Patreon](https://patreon.com/derhuerst)!
+- The community of [magicmirror.builders](https://magicmirror.builders) for help in the development process and all contributors for finding and fixing errors in this module.
 
 ## Issues
 
