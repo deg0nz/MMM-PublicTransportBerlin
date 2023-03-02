@@ -57,7 +57,7 @@ Here's how to find out the `stationId`:
 4. The result could contain one or more possible stations with valid IDs.
 5. Use the appropriate ID as `stationId` in the configuration of the module.
 
-*Note:* If you have used our instructions to get the `stationId` befor March 2023, you certainly use long IDs (12 digits) in your config. We will be upgrading our main dependency (`hafas-client`) to version 6 in a few months. From this point on, the old (long) IDs will no longer work. We recommend that you switch to the short IDs now. Both short and long IDs currently work.
+_Note:_ If you have used our instructions to get the `stationId` befor March 2023, you certainly use long IDs (12 digits) in your config. We will be upgrading our main dependency (`hafas-client`) to version 6 in a few months. From this point on, the old (long) IDs will no longer work. We recommend that you switch to the short IDs now. Both short and long IDs currently work.
 
 ## Configuration
 
