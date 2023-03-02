@@ -32,7 +32,9 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   start() {
-    Log.info(`Starting module: ${this.name}`);
+    Log.info(
+      `Starting module: ${this.name} with identifier: ${this.identifier}`
+    );
 
     this.departuresArray = [];
     this.stationName = "";
