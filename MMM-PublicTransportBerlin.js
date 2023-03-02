@@ -6,7 +6,7 @@ Module.register("MMM-PublicTransportBerlin", {
   defaults: {
     name: "MMM-PublicTransportBerlin",  // The name of this module
     hidden: false,                      // Hide this module?
-    stationId: "900000160003",          // The ID of the station
+    stationId: "900160003",             // The ID of the station
     // directionStationId: 0,           // The stationId of the next station in which direction departures should be shown
     ignoredLines: [],                   // Which lines should be ignored? (comma-separated list of line names)
     excludedTransportationTypes: "",    // Which transportation types should not be shown on the mirror? (comma-separated list of types) possible values: bus,tram,suburban,subway,ferry
