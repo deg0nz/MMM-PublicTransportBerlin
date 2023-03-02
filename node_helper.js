@@ -62,7 +62,7 @@ module.exports = NodeHelper.create({
       this.sendSocketNotification("FETCHER_INIT", {
         stationId: fetcher.getStationId(),
         stationName,
-        fetcherId: fetcher.getId()
+        fetcherId: fetcher.getIdentifier()
       });
     } catch (error) {
       Log.error(`Error initializing fetcher: ${error}`);

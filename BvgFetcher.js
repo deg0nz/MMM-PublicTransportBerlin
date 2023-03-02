@@ -15,7 +15,7 @@ class BvgFetcher {
     this.id = config.name;
   }
 
-  getId() {
+  getIdentifier() {
     return this.id;
   }
 
