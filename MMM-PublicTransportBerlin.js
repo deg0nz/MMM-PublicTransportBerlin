@@ -40,12 +40,23 @@ Module.register("MMM-PublicTransportBerlin", {
     this.stationName = "";
     this.loaded = false;
     this.error = {};
+    this.issueOccurred = false;
 
     // If the stationId is not a string, we'll print a warning
     if (typeof this.config.stationId === "number") {
       Log.warn(
         "MMM-PublicTransportBerlin deprecation warning: The stationId must be a String! Please check your configuration!"
       );
+      this.issueOccurred = true;
+    }
+
+    // If the stationId is an old id, we'll print a warning
+    // (This test is for the migration to hafas-client v6. After a reasonable time (perhaps a year) after the migration, this test could be removed.)
+    if (this.config.stationId.length === 12) {
+      Log.warn(
+        "MMM-PublicTransportBerlin deprecation warning: You are using an old stationId, this will soon stop working. Please change your configuration!"
+      );
+      this.issueOccurred = true;
     }
 
     // Provide backwards compatibility for refactoring of config.delay to config.travelTimeToStation
@@ -54,6 +65,7 @@ Module.register("MMM-PublicTransportBerlin", {
         "MMM-PublicTransportBerlin deprecation warning: The delay option has been renamed to travelTimeToStation. Please change your configuration!"
       );
       this.config.travelTimeToStation = this.config.delay;
+      this.issueOccurred = true;
     }
 
     if (
@@ -63,6 +75,7 @@ Module.register("MMM-PublicTransportBerlin", {
       Log.warn(
         "MMM-PublicTransportBerlin deprecation warning: The 'name' property must contain a value and must be unique if you use multiple modules. Please change your configuration."
       );
+      this.issueOccurred = true;
 
       let generatedName = `MMM-PublicTransportBerlin_${this.config.stationId}`;
       if (this.config.directionStationId) {
@@ -199,6 +212,14 @@ Module.register("MMM-PublicTransportBerlin", {
 
     table.appendChild(tBody);
     wrapper.appendChild(table);
+
+    if (this.issueOccurred) {
+      const issueDiv = document.createElement("div");
+      issueDiv.className = "ptbIssueDiv";
+      issueDiv.innerText =
+        "⚠️ Config issue. Please check Browser console warnings!";
+      wrapper.appendChild(issueDiv);
+    }
 
     return wrapper;
   },
