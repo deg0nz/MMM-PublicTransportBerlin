@@ -47,22 +47,17 @@ git pull && npm install
 
 ## How to get the `stationId`
 
-You will need a `stationId` for your module. You can get it as described in the [BVG-rest API documentation](https://github.com/derhuerst/bvg-rest/blob/master/docs/).
-This is a cURL example for getting all possible stations with the keyword "alexanderplatz":
+You need the `stationId` for the station whose departures should be displayed.
 
-```console
-curl 'https://v5.bvg.transport.rest/locations?query=alexanderplatz'
-```
+Here's how to find out the `stationId`:
 
-The answer should contain one or more possible stations with valid station IDs. More queries are possible,
-like searching via coordinates or autocompletion of stations. Please check the [BVG-rest API documentation](https://github.com/derhuerst/bvg-rest/blob/master/docs/)
-for more options. Please note, that you need to query `1.bvg.transport.rest`.
+1. You have to be in the modules folder (`MagicMirror/modules/MMM-PublicTransportBerlin`).
+2. Then start the script by typing `node ./convenience/query_stations.mjs`.
+3. Enter a station name.
+4. The result could contain one or more possible stations with valid IDs.
+5. Use the appropriate ID as `stationId` in the configuration of the module.
 
-You can prettify the JSON output with [`jq`](https://stedolan.github.io/jq/) if you have it installed:
-
-```console
-curl 'https://v5.bvg.transport.rest/locations?query=alexanderplatz' | jq
-```
+_Note:_ If you have used our instructions to get the `stationId` befor March 2023, you certainly use long IDs (12 digits) in your config. We will be upgrading our main dependency (`hafas-client`) to version 6 in a few months. From this point on, the old (long) IDs will no longer work. We recommend that you switch to the short IDs now. Both short and long IDs currently work.
 
 ## Configuration
 
@@ -106,7 +101,7 @@ Here is an example of an entry in `config.js`:
     position: "top_right",
     config: {
         name: "Alexanderplatz",
-        stationId: "900000100003",
+        stationId: "900100003",
         hidden: false,
         ignoredLines: ["U5", "U8", "S75", "Bus 100"],
         excludedTransportationTypes: "bus,suburban,subway",
