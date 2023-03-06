@@ -120,32 +120,32 @@ module.exports = NodeHelper.create({
     switch (type) {
       case "suburban":
         colors = lineColors.suburban[name];
-        properties.cssClass = "sbahnsign";
+        properties.cssClass = "ptb-sbahnsign";
         break;
       case "subway":
         colors = lineColors.subway[name];
-        properties.cssClass = "ubahnsign";
+        properties.cssClass = "ptb-ubahnsign";
         break;
       case "bus":
         colors.bg = "#B60079";
         colors.fg = "#FFF";
-        properties.cssClass = "bussign";
+        properties.cssClass = "ptb-bussign";
         break;
       case "tram":
         colors = lineColors.tram[name];
-        properties.cssClass = "tramsign";
+        properties.cssClass = "ptb-tramsign";
         break;
       case "regional":
         colors = lineColors.regional[name];
-        properties.cssClass = "dbsign";
+        properties.cssClass = "ptb-dbsign";
         break;
       case "express":
         if (lineType === "LOCOMORE") {
           colors.bg = "#E5690B";
           colors.fg = "#3E1717";
-          properties.cssClass = "locsign";
+          properties.cssClass = "ptb-locsign";
         } else {
-          properties.cssClass = "expresssign";
+          properties.cssClass = "ptb-expresssign";
         }
         break;
     }

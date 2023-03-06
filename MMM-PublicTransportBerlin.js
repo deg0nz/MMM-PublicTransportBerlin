@@ -119,7 +119,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
   async getDom() {
     const wrapper = document.createElement("div");
-    wrapper.className = "ptbWrapper";
+    wrapper.className = "ptb-wrapper";
 
     // Handle loading sequence at init time
     if (this.departuresArray.length === 0 && !this.loaded) {
@@ -141,14 +141,14 @@ Module.register("MMM-PublicTransportBerlin", {
         "FETCHER_ERROR"
       )}: ${JSON.stringify(this.error.message)}<br>`;
       errorContent.innerHTML += this.translate("NO_VBBDATA_ERROR_HINT");
-      errorContent.className = "small light dimmed errorCell";
+      errorContent.className = "small light dimmed ptb-error-cell";
       wrapper.appendChild(errorContent);
       return wrapper;
     }
 
     // The table
     const table = document.createElement("table");
-    table.className = `ptbTable small${
+    table.className = `ptb-table small${
       this.config.useBrightScheme ? "" : " light"
     }`;
 
@@ -215,7 +215,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
     if (this.issueOccurred) {
       const issueDiv = document.createElement("div");
-      issueDiv.className = "ptbIssueDiv";
+      issueDiv.className = "ptb-issue-div";
       issueDiv.innerText = this.translate("CONFIG_ISSUE");
       wrapper.appendChild(issueDiv);
     }
@@ -272,7 +272,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
     const ruleCell = document.createElement("td");
     ruleCell.colSpan = 3;
-    ruleCell.className = "ruleCell";
+    ruleCell.className = "ptb-rule-cell";
     ruleRow.appendChild(ruleCell);
 
     return ruleRow;
@@ -283,7 +283,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
     // Cell for departure time
     const headerTime = document.createElement("td");
-    headerTime.className = "centeredTd";
+    headerTime.className = "ptb-centered-td";
 
     if (this.config.showTableHeadersAsSymbols) {
       const timeIcon = document.createElement("span");
@@ -302,7 +302,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
     // Cell for line symbol
     const headerLine = document.createElement("td");
-    headerLine.className = "centeredTd";
+    headerLine.className = "ptb-centered-td";
 
     if (this.config.showTableHeadersAsSymbols) {
       const lineIcon = document.createElement("span");
@@ -316,7 +316,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
     // Cell for direction
     const headerDirection = document.createElement("td");
-    headerDirection.className = "centeredTd";
+    headerDirection.className = "ptb-centered-td";
 
     if (this.config.showTableHeadersAsSymbols) {
       const directionIcon = document.createElement("span");
@@ -355,14 +355,14 @@ Module.register("MMM-PublicTransportBerlin", {
     const row = document.createElement("tr");
 
     const timeCell = document.createElement("td");
-    timeCell.className = `centeredTd timeCell ${
+    timeCell.className = `ptb-centered-td ptb-time-cell ${
       this.config.useBrightScheme ? " light" : ""
     }`;
     timeCell.innerHTML = currentWhen.format("HH:mm");
     row.appendChild(timeCell);
 
     const delayCell = document.createElement("td");
-    delayCell.className = "delayTimeCell";
+    delayCell.className = "ptb-delay-time-cell";
 
     if (delay > 0) {
       delayCell.innerHTML = `+${delay} `;
@@ -382,7 +382,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
     const lineCell = document.createElement("td");
     const lineSymbol = this.getLineSymbol(currentDeparture);
-    lineCell.className = "centeredTd noPadding lineCell";
+    lineCell.className = "ptb-centered-td ptb-no-padding ptb-line-cell";
 
     lineCell.appendChild(lineSymbol);
     row.appendChild(lineCell);
@@ -396,7 +396,7 @@ Module.register("MMM-PublicTransportBerlin", {
       this.config.marqueeLongDirections &&
       currentDeparture.direction.length >= 26
     ) {
-      directionCell.className = `directionCell marquee${
+      directionCell.className = `ptb-direction-cell ptb-marquee${
         this.config.useBrightScheme ? " bright" : ""
       }`;
       const directionSpan = document.createElement("span");
@@ -410,9 +410,9 @@ Module.register("MMM-PublicTransportBerlin", {
 
     row.appendChild(directionCell);
 
-    // Add cancelled class to this row if the trip was cancelled
+    // Add ptb-cancelled class to this row if the trip was cancelled
     if (currentDeparture.cancelled) {
-      row.classList.add("cancelled");
+      row.classList.add("ptb-cancelled");
     }
 
     return row;
