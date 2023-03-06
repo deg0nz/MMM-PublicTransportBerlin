@@ -150,3 +150,7 @@
   font-size: var(--font-size-xsmall);
   font-style: italic;
 }
+
+.ptb-issue-div::before {
+  content: "⚠️ ";
+}
