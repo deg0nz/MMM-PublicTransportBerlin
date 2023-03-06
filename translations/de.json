@@ -5,7 +5,7 @@
   "WHEN": "Abfahrt",
   "LINE": "Linie",
   "NO_VBBDATA_ERROR_HINT": "Das könnte heißen, dass VBB-Daten gerade nicht verfügbar sind.",
-  "FETCHER_ERROR": "Fehler bei Daten abrufen",
+  "FETCHER_ERROR": "Fehler beim Abrufen der Daten.",
   "NO_DEPARTURES_AVAILABLE": "Momentan sind keine Abfahrten von dieser Station vorhanden.",
   "NO_REACHABLE_DEPARTURES": "Keine erreichbaren Abfahrten vorhanden."
 }
