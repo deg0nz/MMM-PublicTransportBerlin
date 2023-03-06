@@ -216,8 +216,7 @@ Module.register("MMM-PublicTransportBerlin", {
     if (this.issueOccurred) {
       const issueDiv = document.createElement("div");
       issueDiv.className = "ptbIssueDiv";
-      issueDiv.innerText =
-        "⚠️ Config issue. Please check Browser console warnings!";
+      issueDiv.innerText = this.translate("CONFIG_ISSUE");
       wrapper.appendChild(issueDiv);
     }
 
