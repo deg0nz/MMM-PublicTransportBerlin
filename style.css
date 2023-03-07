@@ -1,20 +1,20 @@
-.ptbWrapper {
+.ptb-wrapper {
   position: relative;
 }
 
-.ptbTable {
+.ptb-table {
   display: table;
   border-collapse: collapse;
   border-spacing: 1px;
 }
 
-.ruleCell {
+.ptb-rule-cell {
   line-height: 0;
   border-spacing: 10px;
   border-bottom: 1px dotted #666;
 }
 
-.lineCell {
+.ptb-line-cell {
   width: 2.5em;
   height: 1.25em;
   padding-left: 0;
@@ -23,11 +23,11 @@
   margin-right: 0;
 }
 
-.timeCell {
+.ptb-time-cell {
   width: 1em;
 }
 
-.delayTimeCell {
+.ptb-delay-time-cell {
   font-size: 16px;
   padding-left: 3px;
   padding-right: 5px;
@@ -36,39 +36,35 @@
   white-space: nowrap;
 }
 
-.directionCell {
+.ptb-direction-cell {
   max-width: 22ch;
 }
 
-.errorCell {
+.ptb-error-cell {
   max-width: 28ch;
   word-wrap: break-word;
 }
 
-.cancelled {
+.ptb-cancelled {
   text-decoration: line-through;
 }
 
-.marquee {
+.ptb-marquee {
   margin: 0 auto;
   white-space: nowrap;
   overflow: hidden;
   box-sizing: border-box;
 }
 
-.marquee span {
+.ptb-marquee span {
   display: inline-block;
   white-space: nowrap;
   padding-left: 100%;
   text-indent: 0;
-  animation: marquee 15s linear infinite;
+  animation: ptb-marquee 15s linear infinite;
 }
 
-.marqueeStop {
-  animation-play-state: paused;
-}
-
-@keyframes marquee {
+@keyframes ptb-marquee {
   0% {
     transform: translate(0, 0);
   }
@@ -78,26 +74,17 @@
   }
 }
 
-.centeredTd {
+.ptb-centered-td {
   display: table-cell;
   text-align: center;
   vertical-align: middle;
 }
 
-.noPadding {
+.ptb-no-padding {
   padding: 0;
 }
 
-.ellipsis {
-  position: absolute;
-  background-color: #f414a0;
-  width: 300px;
-  height: 100px;
-  border: 2px;
-  border-radius: 150px;
-}
-
-.sbahnsign {
+.ptb-sbahnsign {
   color: #fff;
   text-align: center;
   width: 2.5em;
@@ -106,7 +93,7 @@
   border-radius: 1.25em;
 }
 
-.ubahnsign {
+.ptb-ubahnsign {
   color: #fff;
   text-align: center;
   width: 2.5em;
@@ -114,24 +101,7 @@
   position: relative;
 }
 
-.tramsign {
-  color: #fff;
-  text-align: center;
-  width: 2.5em;
-  height: 1.25em;
-  background: #be1414;
-  position: relative;
-}
-
-.bussign {
-  color: #fff;
-  text-align: center;
-  width: 2.5em;
-  height: 1.25em;
-  position: relative;
-}
-
-.dbsign {
+.ptb-tramsign {
   color: #fff;
   text-align: center;
   width: 2.5em;
@@ -140,7 +110,24 @@
   position: relative;
 }
 
-.locsign {
+.ptb-bussign {
+  color: #fff;
+  text-align: center;
+  width: 2.5em;
+  height: 1.25em;
+  position: relative;
+}
+
+.ptb-dbsign {
+  color: #fff;
+  text-align: center;
+  width: 2.5em;
+  height: 1.25em;
+  background: #be1414;
+  position: relative;
+}
+
+.ptb-locsign {
   color: #4b2b1f;
   text-align: center;
   width: 2.5em;
@@ -148,7 +135,7 @@
   position: relative;
 }
 
-.expresssign {
+.ptb-expresssign {
   color: #b4b4b4;
   text-align: center;
   font-style: italic;
@@ -158,8 +145,12 @@
   position: relative;
 }
 
-.ptbIssueDiv {
+.ptb-issue-div {
   color: var(--color-text-dimmed);
   font-size: var(--font-size-xsmall);
   font-style: italic;
+}
+
+.ptb-issue-div::before {
+  content: "⚠️ ";
 }
