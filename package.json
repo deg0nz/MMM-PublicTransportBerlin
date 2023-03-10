@@ -52,6 +52,7 @@
   "scripts": {
     "lint": "eslint . && stylelint **/*.css && prettier --check .",
     "lint:fix": "eslint --fix . && stylelint --fix **/*.css && prettier --write .",
+    "query_station": "node ./convenience/query_stations.js",
     "test": "npm run lint"
   }
 }
