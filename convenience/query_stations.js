@@ -3,7 +3,7 @@ const createClient = require("hafas-client");
 const readline = require("readline");
 
 let profileName = "";
-let profile = "bvg";
+let profile = "";
 const productMap = {
   bus: "Bus",
   ferry: "Fähre",
@@ -57,7 +57,7 @@ function printStationInfo(station) {
   if (station.id && station.name) {
     console.info(
       ` > Stop: ${station.name}\n   ID: ${
-        station.id
+        station.location.id
       }\n   Transport product(s): ${refineProducts(station.products)} \n`
     );
   }
@@ -67,8 +67,8 @@ if (process.argv.length === 3) {
   profileName = process.argv[2];
   console.info(`Using hafas-client profile: ${profileName}`);
 } else {
-  console.info("Using default hafas-client profile: 'db'");
-  profileName = "db";
+  console.info("Using default hafas-client profile: 'bvg'");
+  profileName = "bvg";
 }
 
 try {
