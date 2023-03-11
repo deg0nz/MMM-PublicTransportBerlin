@@ -57,7 +57,7 @@ function printStationInfo(station) {
   if (station.id && station.name) {
     console.info(
       ` > Stop: ${station.name}\n   ID: ${
-        station.id
+        station.location.id
       }\n   Transport product(s): ${refineProducts(station.products)} \n`
     );
   }
