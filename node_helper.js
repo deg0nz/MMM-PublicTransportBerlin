@@ -9,11 +9,12 @@ module.exports = NodeHelper.create({
   },
 
   async createFetcher(config) {
-    const fetcherId = config.name;
+    const fetcherId = config.identifier;
     let fetcher;
 
     if (typeof this.departuresFetchers[fetcherId] === "undefined") {
       fetcher = new BvgFetcher(config);
+      await fetcher.init();
       this.departuresFetchers[fetcherId] = fetcher;
       this.sendInit(fetcher);
 
@@ -176,10 +177,6 @@ module.exports = NodeHelper.create({
 
     if (notification === "CREATE_FETCHER") {
       this.createFetcher(payload);
-    }
-
-    if (notification === "STATION_NAME_MISSING_AFTER_INIT") {
-      this.sendInit(this.departuresFetchers[payload]);
     }
   }
 });

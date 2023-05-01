@@ -37,10 +37,10 @@ Module.register("MMM-PublicTransportBerlin", {
     );
 
     this.departuresArray = [];
-    this.stationName = "";
     this.loaded = false;
     this.error = {};
     this.configIssueDetected = false;
+    this.config.identifier = this.identifier;
 
     // If the stationId is not a string, we'll print a warning
     if (typeof this.config.stationId === "number") {
@@ -54,7 +54,7 @@ Module.register("MMM-PublicTransportBerlin", {
     // (This test is for the migration to hafas-client v6. After a reasonable time (perhaps a year) after the migration, this test could be removed.)
     if (this.config.stationId.length === 12) {
       Log.warn(
-        "MMM-PublicTransportBerlin deprecation warning: You are using an old stationId, this will soon stop working. Please change your configuration!"
+        "MMM-PublicTransportBerlin deprecation warning: You are using an old stationId. Please change your configuration!"
       );
       this.configIssueDetected = true;
     }
@@ -68,156 +68,134 @@ Module.register("MMM-PublicTransportBerlin", {
       this.configIssueDetected = true;
     }
 
-    if (
-      this.config.name === "MMM-PublicTransportBerlin" ||
-      this.config.name === ""
-    ) {
-      Log.warn(
-        "MMM-PublicTransportBerlin deprecation warning: The 'name' property must contain a value and must be unique if you use multiple modules. Please change your configuration."
-      );
-      this.configIssueDetected = true;
+    if (!this.configIssueDetected) {
+      this.sendSocketNotification("CREATE_FETCHER", this.config);
 
-      let generatedName = `MMM-PublicTransportBerlin_${this.config.stationId}`;
-      if (this.config.directionStationId) {
-        generatedName += `_to_${this.config.directionStationId}`;
+      // Handle negative travelTimeToStation
+      if (this.config.travelTimeToStation < 0) {
+        this.config.travelTimeToStation = 0;
       }
 
-      this.config.name = generatedName;
-      Log.warn(`Using automatically generated module name ${this.config.name}`);
-    }
-
-    this.sendSocketNotification("CREATE_FETCHER", this.config);
-
-    // Handle negative travelTimeToStation
-    if (this.config.travelTimeToStation < 0) {
-      this.config.travelTimeToStation = 0;
-    }
-
-    // Handle missing ignored lines
-    if (typeof this.config.ignoredLines === "undefined") {
-      this.config.ignoredLines = [];
-    }
-
-    // set minimum interval to 30 seconds
-    if (this.config.interval < 30000) {
-      this.config.interval = 30000;
-    }
-
-    setInterval(() => {
-      // If the module started without getting the stationName for some reason, we try to get the stationName again
-      if (this.loaded && this.stationName === "") {
-        this.sendSocketNotification(
-          "STATION_NAME_MISSING_AFTER_INIT",
-          this.config.name
-        );
+      // Handle missing ignored lines
+      if (typeof this.config.ignoredLines === "undefined") {
+        this.config.ignoredLines = [];
       }
 
-      Log.log(`Fetching Departures for ${this.config.name}`);
-      this.sendSocketNotification("FETCH_DEPARTURES", this.config.name);
-    }, this.config.interval);
+      // set minimum interval to 30 seconds
+      if (this.config.interval < 30000) {
+        this.config.interval = 30000;
+      }
+
+      setInterval(() => {
+        Log.log(`Fetching Departures for ${this.config.name}`);
+        this.sendSocketNotification("FETCH_DEPARTURES", this.identifier);
+      }, this.config.interval);
+    }
   },
 
   async getDom() {
     const wrapper = document.createElement("div");
     wrapper.className = "ptb-wrapper";
 
-    // Handle loading sequence at init time
-    if (this.departuresArray.length === 0 && !this.loaded) {
+    if (this.configIssueDetected) {
+      // Show issue message if there is a configuartion issue
+      const issueDiv = document.createElement("div");
+      issueDiv.className = "ptb-issue-div";
+      issueDiv.innerHTML = `MMM-PublicTransportBerlin: ${this.translate(
+        "CONFIG_ISSUE"
+      )}`;
+      wrapper.appendChild(issueDiv);
+    } else if (this.departuresArray.length === 0 && !this.loaded) {
+      // Handle loading sequence at init time
       wrapper.innerHTML = this.loaded
         ? this.translate("EMPTY")
         : this.translate("LOADING");
       wrapper.className = "small light dimmed";
-      return wrapper;
-    }
+    } else {
+      const heading = document.createElement("header");
+      heading.innerHTML = this.stationName;
+      wrapper.appendChild(heading);
 
-    const heading = document.createElement("header");
-    heading.innerHTML = this.stationName;
-    wrapper.appendChild(heading);
+      // Handle departure fetcher error and show it on the screen
+      if (Object.keys(this.error).length > 0) {
+        const errorContent = document.createElement("div");
+        errorContent.innerHTML = `${this.translate(
+          "FETCHER_ERROR"
+        )}: ${JSON.stringify(this.error.hafasMessage)}<br>`;
+        errorContent.innerHTML += this.translate("NO_VBBDATA_ERROR_HINT");
+        errorContent.className = "small light dimmed ptb-error-cell";
+        wrapper.appendChild(errorContent);
+      } else {
+        // The table
+        const table = document.createElement("table");
+        table.className = `ptb-table small${
+          this.config.useBrightScheme ? "" : " light"
+        }`;
 
-    // Handle departure fetcher error and show it on the screen
-    if (Object.keys(this.error).length > 0) {
-      const errorContent = document.createElement("div");
-      errorContent.innerHTML = `${this.translate(
-        "FETCHER_ERROR"
-      )}: ${JSON.stringify(this.error.message)}<br>`;
-      errorContent.innerHTML += this.translate("NO_VBBDATA_ERROR_HINT");
-      errorContent.className = "small light dimmed ptb-error-cell";
-      wrapper.appendChild(errorContent);
-      return wrapper;
-    }
+        // Table header (thead tag is mandatory)
+        const tHead = document.createElement("thead");
 
-    // The table
-    const table = document.createElement("table");
-    table.className = `ptb-table small${
-      this.config.useBrightScheme ? "" : " light"
-    }`;
+        if (this.config.showTableHeaders) {
+          const headerRow = this.getTableHeaderRow();
+          tHead.appendChild(headerRow);
+        }
 
-    // Table header (thead tag is mandatory)
-    const tHead = document.createElement("thead");
+        table.appendChild(tHead);
 
-    if (this.config.showTableHeaders) {
-      const headerRow = this.getTableHeaderRow();
-      tHead.appendChild(headerRow);
-    }
+        // Create table body from data
+        const tBody = document.createElement("tbody");
 
-    table.appendChild(tHead);
-
-    // Create table body from data
-    const tBody = document.createElement("tbody");
-
-    // Handle empty departures array
-    if (this.departuresArray.length === 0) {
-      const row = this.getNoDeparturesRow(
-        this.translate("NO_DEPARTURES_AVAILABLE")
-      );
-
-      tBody.appendChild(row);
-      table.appendChild(tBody);
-      wrapper.appendChild(table);
-
-      return wrapper;
-    }
-
-    // Create all the content rows
-    try {
-      const reachableDeparturePos =
-        await this.getFirstReachableDeparturePosition();
-
-      this.departuresArray.forEach((currentDeparture, i) => {
-        if (
-          i >= reachableDeparturePos - this.config.maxUnreachableDepartures &&
-          i < reachableDeparturePos + this.config.maxReachableDepartures
-        ) {
-          // Insert rule to separate reachable from unreachable departures
-          if (
-            reachableDeparturePos !== 0 &&
-            reachableDeparturePos === i &&
-            this.config.maxUnreachableDepartures !== 0
-          ) {
-            const ruleRow = this.getRuleRow();
-            tBody.appendChild(ruleRow);
-          }
-
-          // create standard row
-          const row = this.getRow(currentDeparture);
-          row.style.opacity = this.getRowOpacity(i, reachableDeparturePos);
+        // Handle empty departures array
+        if (this.departuresArray.length === 0) {
+          const row = this.getNoDeparturesRow(
+            this.translate("NO_DEPARTURES_AVAILABLE")
+          );
 
           tBody.appendChild(row);
+          table.appendChild(tBody);
+          wrapper.appendChild(table);
+        } else {
+          // Create all the content rows
+          try {
+            const reachableDeparturePos =
+              await this.getFirstReachableDeparturePosition();
+
+            this.departuresArray.forEach((currentDeparture, i) => {
+              if (
+                i >=
+                  reachableDeparturePos -
+                    this.config.maxUnreachableDepartures &&
+                i < reachableDeparturePos + this.config.maxReachableDepartures
+              ) {
+                // Insert rule to separate reachable from unreachable departures
+                if (
+                  reachableDeparturePos !== 0 &&
+                  reachableDeparturePos === i &&
+                  this.config.maxUnreachableDepartures !== 0
+                ) {
+                  const ruleRow = this.getRuleRow();
+                  tBody.appendChild(ruleRow);
+                }
+
+                // create standard row
+                const row = this.getRow(currentDeparture);
+                row.style.opacity = this.getRowOpacity(
+                  i,
+                  reachableDeparturePos
+                );
+
+                tBody.appendChild(row);
+              }
+            });
+          } catch (e) {
+            const row = this.getNoDeparturesRow(e.message);
+            tBody.appendChild(row);
+          }
+
+          table.appendChild(tBody);
+          wrapper.appendChild(table);
         }
-      });
-    } catch (e) {
-      const row = this.getNoDeparturesRow(e.message);
-      tBody.appendChild(row);
-    }
-
-    table.appendChild(tBody);
-    wrapper.appendChild(table);
-
-    if (this.configIssueDetected) {
-      const issueDiv = document.createElement("div");
-      issueDiv.className = "ptb-issue-div";
-      issueDiv.innerText = this.translate("CONFIG_ISSUE");
-      wrapper.appendChild(issueDiv);
+      }
     }
     return wrapper;
   },
@@ -519,7 +497,7 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   socketNotificationReceived(notification, payload) {
-    if (payload.fetcherId === this.config.name) {
+    if (payload.fetcherId === this.identifier) {
       switch (notification) {
         case "FETCHER_INITIALIZED":
           this.stationName = payload.stationName;
