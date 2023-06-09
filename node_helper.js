@@ -59,7 +59,7 @@ module.exports = NodeHelper.create({
         stationName += `<br />(toward ${directionDescriptor})`;
       }
 
-      this.sendSocketNotification("FETCHER_INIT", {
+      this.sendSocketNotification("FETCHER_INITIALIZED", {
         stationId: fetcher.getStationId(),
         stationName,
         fetcherId: fetcher.getIdentifier()
@@ -76,10 +76,10 @@ module.exports = NodeHelper.create({
       ].fetchDepartures();
 
       this.pimpDeparturesArray(departuresData.departuresArray);
-      this.sendSocketNotification("DEPARTURES", departuresData);
+      this.sendSocketNotification("DEPARTURES_FETCHED", departuresData);
     } catch (error) {
       Log.log(
-        `Error while fetching departures (for module Instance ${fetcherId}): ${error}`
+        `Error while fetching departures (for module instance ${fetcherId}): ${error}`
       );
       // Add stationId to error for identification in the main instance
       error.fetcherId = fetcherId;
@@ -170,7 +170,7 @@ module.exports = NodeHelper.create({
   },
 
   socketNotificationReceived(notification, payload) {
-    if (notification === "GET_DEPARTURES") {
+    if (notification === "FETCH_DEPARTURES") {
       this.getDepartures(payload);
     }
 

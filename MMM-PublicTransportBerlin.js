@@ -113,7 +113,7 @@ Module.register("MMM-PublicTransportBerlin", {
       }
 
       Log.log(`Fetching Departures for ${this.config.name}`);
-      this.sendSocketNotification("GET_DEPARTURES", this.config.name);
+      this.sendSocketNotification("FETCH_DEPARTURES", this.config.name);
     }, this.config.interval);
   },
 
@@ -520,14 +520,14 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   socketNotificationReceived(notification, payload) {
-    if (notification === "FETCHER_INIT") {
+    if (notification === "FETCHER_INITIALIZED") {
       if (payload.fetcherId === this.config.name) {
         this.stationName = payload.stationName;
         this.loaded = true;
       }
     }
 
-    if (notification === "DEPARTURES") {
+    if (notification === "DEPARTURES_FETCHED") {
       if (payload.fetcherId === this.config.name) {
         this.loaded = true;
         // Empty error object
