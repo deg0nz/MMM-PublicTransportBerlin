@@ -40,14 +40,14 @@ Module.register("MMM-PublicTransportBerlin", {
     this.stationName = "";
     this.loaded = false;
     this.error = {};
-    this.issueOccurred = false;
+    this.configIssueDetected = false;
 
     // If the stationId is not a string, we'll print a warning
     if (typeof this.config.stationId === "number") {
       Log.warn(
         "MMM-PublicTransportBerlin deprecation warning: The stationId must be a String! Please check your configuration!"
       );
-      this.issueOccurred = true;
+      this.configIssueDetected = true;
     }
 
     // If the stationId is an old id, we'll print a warning
@@ -56,7 +56,7 @@ Module.register("MMM-PublicTransportBerlin", {
       Log.warn(
         "MMM-PublicTransportBerlin deprecation warning: You are using an old stationId, this will soon stop working. Please change your configuration!"
       );
-      this.issueOccurred = true;
+      this.configIssueDetected = true;
     }
 
     // Provide backwards compatibility for refactoring of config.delay to config.travelTimeToStation
@@ -65,7 +65,7 @@ Module.register("MMM-PublicTransportBerlin", {
         "MMM-PublicTransportBerlin deprecation warning: The delay option has been renamed to travelTimeToStation. Please change your configuration!"
       );
       this.config.travelTimeToStation = this.config.delay;
-      this.issueOccurred = true;
+      this.configIssueDetected = true;
     }
 
     if (
@@ -75,7 +75,7 @@ Module.register("MMM-PublicTransportBerlin", {
       Log.warn(
         "MMM-PublicTransportBerlin deprecation warning: The 'name' property must contain a value and must be unique if you use multiple modules. Please change your configuration."
       );
-      this.issueOccurred = true;
+      this.configIssueDetected = true;
 
       let generatedName = `MMM-PublicTransportBerlin_${this.config.stationId}`;
       if (this.config.directionStationId) {
@@ -213,13 +213,12 @@ Module.register("MMM-PublicTransportBerlin", {
     table.appendChild(tBody);
     wrapper.appendChild(table);
 
-    if (this.issueOccurred) {
+    if (this.configIssueDetected) {
       const issueDiv = document.createElement("div");
       issueDiv.className = "ptb-issue-div";
       issueDiv.innerText = this.translate("CONFIG_ISSUE");
       wrapper.appendChild(issueDiv);
     }
-
     return wrapper;
   },
 
