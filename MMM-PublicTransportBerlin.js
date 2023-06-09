@@ -520,29 +520,26 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   socketNotificationReceived(notification, payload) {
-    if (notification === "FETCHER_INITIALIZED") {
-      if (payload.fetcherId === this.config.name) {
-        this.stationName = payload.stationName;
-        this.loaded = true;
-      }
-    }
+    if (payload.fetcherId === this.config.name) {
+      switch (notification) {
+        case "FETCHER_INITIALIZED":
+          this.stationName = payload.stationName;
+          this.loaded = true;
+          break;
 
-    if (notification === "DEPARTURES_FETCHED") {
-      if (payload.fetcherId === this.config.name) {
-        this.loaded = true;
-        // Empty error object
-        this.error = {};
-        // Proceed with normal operation
-        this.departuresArray = payload.departuresArray;
-        this.updateDom(this.config.animationSpeed);
-      }
-    }
+        case "DEPARTURES_FETCHED":
+          this.loaded = true;
+          // Empty error object
+          this.error = {};
+          // Proceed with normal operation
+          this.departuresArray = payload.departuresArray;
+          this.updateDom(this.config.animationSpeed);
+          break;
 
-    if (notification === "FETCH_ERROR") {
-      if (payload.fetcherId === this.config.name) {
-        this.loaded = true;
-        this.error = payload;
-        this.updateDom(this.config.animationSpeed);
+        case "FETCH_ERROR":
+          this.loaded = true;
+          this.error = payload;
+          this.updateDom(this.config.animationSpeed);
       }
     }
   }
