@@ -1,15 +1,15 @@
 const createClient = require("hafas-client");
 const shortenStationName = require("vbb-short-station-name");
-const bvgProfile = require("hafas-client/p/bvg");
+const profile = require("hafas-client/p/bvg");
 const Log = require("logger");
 const pjson = require("./package.json");
 
-const bvgClient = createClient(
-  bvgProfile,
+const hafasClient = createClient(
+  profile,
   `MMM-PublicTransportBerlin v${pjson.version}`
 );
 
-class BvgFetcher {
+module.exports = class BvgFetcher {
   constructor(config) {
     this.config = config;
     this.id = config.name;
@@ -24,7 +24,7 @@ class BvgFetcher {
   }
 
   async getStationName() {
-    const station = await bvgClient.stop(this.config.stationId);
+    const station = await hafasClient.stop(this.config.stationId);
     return station.name;
   }
 
@@ -32,7 +32,7 @@ class BvgFetcher {
     if (typeof this.config.directionStationId === "undefined") {
       return "all directions";
     }
-    const station = await bvgClient.stop(this.config.directionStationId);
+    const station = await hafasClient.stop(this.config.directionStationId);
     return station.name;
   }
 
@@ -69,7 +69,7 @@ class BvgFetcher {
       };
     }
 
-    const departures = await bvgClient.departures(this.config.stationId, opt);
+    const departures = await hafasClient.departures(this.config.stationId, opt);
     const processedDepartures = this.processData(departures);
 
     return processedDepartures;
@@ -144,6 +144,4 @@ class BvgFetcher {
       `${time} ${delayMinutes} ${row.line.product} ${row.direction} | stationId: ${row.station.id}`
     );
   }
-}
-
-module.exports = BvgFetcher;
+};
