@@ -1,22 +1,23 @@
-const createClient = require("hafas-client");
 const shortenStationName = require("vbb-short-station-name");
-const profile = require("hafas-client/p/bvg");
 const Log = require("logger");
 const pjson = require("./package.json");
-
-const hafasClient = createClient(
-  profile,
-  `MMM-PublicTransportBerlin v${pjson.version}`
-);
 
 module.exports = class BvgFetcher {
   constructor(config) {
     this.config = config;
-    this.id = config.name;
+  }
+
+  async init() {
+    const { createClient } = await import("hafas-client");
+    const { profile } = await import(`hafas-client/p/bvg/index.js`);
+    this.hafasClient = createClient(
+      profile,
+      `MMM-PublicTransportBerlin v${pjson.version}`
+    );
   }
 
   getIdentifier() {
-    return this.id;
+    return this.config.identifier;
   }
 
   getStationId() {
@@ -24,7 +25,7 @@ module.exports = class BvgFetcher {
   }
 
   async getStationName() {
-    const station = await hafasClient.stop(this.config.stationId);
+    const station = await this.hafasClient.stop(this.config.stationId);
     return station.name;
   }
 
@@ -32,7 +33,7 @@ module.exports = class BvgFetcher {
     if (typeof this.config.directionStationId === "undefined") {
       return "all directions";
     }
-    const station = await hafasClient.stop(this.config.directionStationId);
+    const station = await this.hafasClient.stop(this.config.directionStationId);
     return station.name;
   }
 
@@ -69,7 +70,10 @@ module.exports = class BvgFetcher {
       };
     }
 
-    const departures = await hafasClient.departures(this.config.stationId, opt);
+    const departures = await this.hafasClient.departures(
+      this.config.stationId,
+      opt
+    );
     const processedDepartures = this.processData(departures);
 
     return processedDepartures;
@@ -77,11 +81,11 @@ module.exports = class BvgFetcher {
 
   processData(data) {
     const departuresData = {
-      fetcherId: this.id,
+      fetcherId: this.config.identifier,
       departuresArray: []
     };
 
-    data.forEach((row) => {
+    data.departures.forEach((row) => {
       // check for:
       // excluded transportation types
       // ignored lines
