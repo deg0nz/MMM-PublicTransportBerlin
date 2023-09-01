@@ -72,9 +72,8 @@ module.exports = NodeHelper.create({
 
   async getDepartures(fetcherId) {
     try {
-      const departuresData = await this.departuresFetchers[
-        fetcherId
-      ].fetchDepartures();
+      const departuresData =
+        await this.departuresFetchers[fetcherId].fetchDepartures();
 
       this.pimpDeparturesArray(departuresData.departuresArray);
       this.sendSocketNotification("DEPARTURES_FETCHED", departuresData);
