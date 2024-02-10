@@ -97,7 +97,9 @@ module.exports = class BvgFetcher {
       }
 
       // If log level is set to debug print infos about departures
-      if (config.logLevel.includes("DEBUG")) this.printDeparture(row); // eslint-disable-line no-undef
+      if (config.logLevel.includes("DEBUG")) {
+        BvgFetcher.printDeparture(row);
+      }
 
       if (
         !this.config.excludedTransportationTypes.includes(row.line.product) &&
