@@ -9,6 +9,9 @@
     "plugin:json/recommended",
     "plugin:prettier/recommended"
   ],
+  "globals": {
+    "config": true
+  },
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module"
