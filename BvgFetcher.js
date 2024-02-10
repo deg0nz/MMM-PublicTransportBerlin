@@ -43,7 +43,7 @@ module.exports = class BvgFetcher {
     let when;
 
     if (this.config.travelTimeToStation > 0) {
-      when = new Date();
+      when = new Date(Date.now());
       when.setTime(
         Date.now() + this.config.travelTimeToStation * 60000 - 5 * 60000
       );
