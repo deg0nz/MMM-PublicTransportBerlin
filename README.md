@@ -1,6 +1,6 @@
 # MMM-PublicTransportBerlin
 
-MMM-PublicTransportBerlin is a module for the [MagicMirror](https://github.com/MichMich/MagicMirror) project by [Michael Teeuw](https://github.com/MichMich).
+MMM-PublicTransportBerlin is a module for the [MagicMirror](https://github.com/MagicMirrorOrg/MagicMirror) project by [Michael Teeuw](https://github.com/MichMich).
 
 It shows live public transport information for Berlin and Brandenburg based on [BVG-Hafas](https://github.com/derhuerst/bvg-rest) data. Public transport in Brandenburg should work as well.
 
