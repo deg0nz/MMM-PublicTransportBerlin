@@ -2,18 +2,13 @@
   "name": "mmm-publictransportberlin",
   "version": "2.0.1",
   "description": "Public transport module for MagicMirror² driven by BVG-Hafas data.",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/deg0nz/MMM-PublicTransportBerlin"
-  },
+  "repository": "deg0nz/MMM-PublicTransportBerlin",
   "keywords": [
-    "magic mirror",
-    "magic mirror 2",
-    "smart mirror",
+    "MagicMirror",
+    "module",
     "public transport",
-    "public transport berlin",
-    "public transport brandenburg",
-    "module"
+    "Berlin",
+    "Brandenburg"
   ],
   "author": {
     "name": "deg0nz",
