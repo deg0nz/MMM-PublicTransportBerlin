@@ -26,7 +26,7 @@ module.exports = class BvgFetcher {
 
   async getStationName() {
     const station = await this.hafasClient.stop(this.config.stationId);
-    return station.name;
+    return this.config.shortenStationNames ? shortenStationName(station.name) : station.name;
   }
 
   async getDirectionDescriptor() {
