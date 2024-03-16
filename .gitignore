@@ -92,5 +92,3 @@ jspm_packages
 *.iml
 
 FetcherTest.js
-
-package-lock.json

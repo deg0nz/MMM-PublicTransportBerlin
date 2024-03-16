@@ -29,12 +29,12 @@ The module looks like this:
 
 ## Installation
 
-Just clone the module into your MagicMirror modules folder and execute `npm install` in the module's directory:
+Just clone the module into your MagicMirror modules folder and execute `npm ci` in the module's directory:
 
 ```console
-git clone https://github.com/deg0nz/MMM-PublicTransportBerlin.git
+git clone https://github.com/deg0nz/MMM-PublicTransportBerlin
 cd MMM-PublicTransportBerlin
-npm install
+npm ci
 ```
 
 ## Update
@@ -42,7 +42,8 @@ npm install
 Just enter your MMM-PublicTransportBerlin folder in the MagicMirror's modules folder and execute the following commands in the module's directory:
 
 ```console
-git pull && npm install
+git pull
+npm ci
 ```
 
 ## How to get the `stationId`
