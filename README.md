@@ -1,13 +1,10 @@
 # MMM-PublicTransportBerlin
 
-MMM-PublicTransportBerlin is a module for the [MagicMirror](https://github.com/MagicMirrorOrg/MagicMirror) project by [Michael Teeuw](https://github.com/MichMich).
-
-It shows live public transport information for Berlin and Brandenburg based on [BVG-Hafas](https://github.com/derhuerst/bvg-rest) data. Public transport in Brandenburg should work as well.
+**MMM-PublicTransportBerlin** is a module for [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror). It shows live public transport information for Berlin and Brandenburg based on [BVG HAFAS data](https://github.com/public-transport/hafas-client/blob/6/p/bvg/readme.md).
 
 MMM-PublicTransportBerlin uses the [hafas-client](https://github.com/public-transport/hafas-client) with a BVG-specific profile by [derhuerst](https://github.com/derhuerst).
 
-You can enter a delay time for "How long does it take to get to my station?".
-Then the module calculates the next reachable departures and draws a line between reachable and unreachable departures.
+You can enter a delay time for "How long does it take to get to my station?". Then the module calculates the next reachable departures and draws a line between reachable and unreachable departures.
 
 ## Status
 
@@ -29,7 +26,7 @@ The module looks like this:
 
 Just clone the module into your MagicMirror modules folder and execute `npm ci` in the module's directory:
 
-```console
+```shell
 git clone https://github.com/deg0nz/MMM-PublicTransportBerlin
 cd MMM-PublicTransportBerlin
 npm ci
@@ -39,7 +36,7 @@ npm ci
 
 Just enter your MMM-PublicTransportBerlin folder in the MagicMirror's modules folder and execute the following commands in the module's directory:
 
-```console
+```shell
 git pull
 npm ci
 ```
@@ -125,7 +122,7 @@ Here is an example of an entry in `config.js`:
 
 ## Multiple Modules
 
-Multiple instances of this module are possible. Just add another entry of the MMM-PublicTransportBerlin module to the `config.js` of your mirror.
+Multiple instances of this module are possible. Just add another entry of MMM-PublicTransportBerlin to your `config.js`.
 
 ## Special Thanks
 
