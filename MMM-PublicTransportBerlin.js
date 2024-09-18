@@ -93,7 +93,7 @@ Module.register("MMM-PublicTransportBerlin", {
     }
   },
 
-  async getDom() {
+  getDom() {
     const wrapper = document.createElement("div");
     wrapper.className = "ptb-wrapper";
 
@@ -158,7 +158,7 @@ Module.register("MMM-PublicTransportBerlin", {
           // Create all the content rows
           try {
             const reachableDeparturePos =
-              await this.getFirstReachableDeparturePosition();
+              this.getFirstReachableDeparturePosition();
 
             this.departuresArray.forEach((currentDeparture, i) => {
               if (
@@ -405,37 +405,28 @@ Module.register("MMM-PublicTransportBerlin", {
     return departureTime;
   },
 
-  async getFirstReachableDeparturePosition() {
+  getFirstReachableDeparturePosition() {
     const now = moment();
     const nowWithDelay = now.add(this.config.travelTimeToStation, "minutes");
+    let result = 0;
 
-    return new Promise((resolve) => {
-      if (this.config.travelTimeToStation === 0) {
-        resolve(0);
-      }
+    if (this.config.travelTimeToStation !== 0) {
+      this.departuresArray.forEach((departure, i) => {
+        const currentWhen = moment(this.departuresArray[i].when);
+        const nextWhen = i < this.departuresArray.length - 1 ? moment(this.departuresArray[i + 1].when) : null;
 
-      this.departuresArray.forEach((current, i, depArray) => {
-        const currentWhen = moment(current.when);
 
-        if (depArray.length > 1 && i < depArray.length - 1) {
-          const nextWhen = moment(depArray[i + 1].when);
-          if (
-            currentWhen.isBefore(nowWithDelay) &&
-            nextWhen.isSameOrAfter(nowWithDelay) ||
-            i === 0 && nextWhen.isSameOrAfter(nowWithDelay)
-          ) {
-            resolve(i);
-          }
-        } else if (
-          i === depArray.length - 1 &&
-          currentWhen.isBefore(nowWithDelay)
+        if (
+          currentWhen.isBefore(nowWithDelay) &&
+          (nextWhen && nextWhen.isSameOrAfter(nowWithDelay) || i === 0 && nextWhen && nextWhen.isSameOrAfter(nowWithDelay))
         ) {
-          throw new Error(this.translate("NO_REACHABLE_DEPARTURES"));
-        } else {
+          result = i;
+        } else if (i === this.departuresArray.length - 1 && currentWhen.isBefore(nowWithDelay)) {
           throw new Error(this.translate("NO_REACHABLE_DEPARTURES"));
         }
       });
-    });
+    }
+    return result;
   },
 
   trimDirectionString(string) {
