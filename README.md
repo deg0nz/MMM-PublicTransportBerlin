@@ -32,6 +32,12 @@ cd MMM-PublicTransportBerlin
 npm ci
 ```
 
+Since there is an issue with the current version of `hafas_client`, you also have to run this command to fix that:
+
+```shell
+cp base.json node_modules/hafas-client/p/bvg/base.json
+```
+
 ## Update
 
 Just enter your MMM-PublicTransportBerlin folder in the MagicMirror's modules folder and execute the following commands in the module's directory:
