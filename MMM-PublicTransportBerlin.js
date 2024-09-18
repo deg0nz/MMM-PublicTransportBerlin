@@ -163,8 +163,8 @@ Module.register("MMM-PublicTransportBerlin", {
             this.departuresArray.forEach((currentDeparture, i) => {
               if (
                 i >=
-                  reachableDeparturePos -
-                    this.config.maxUnreachableDepartures &&
+                reachableDeparturePos -
+                this.config.maxUnreachableDepartures &&
                 i < reachableDeparturePos + this.config.maxReachableDepartures
               ) {
                 // Insert rule to separate reachable from unreachable departures
@@ -213,7 +213,7 @@ Module.register("MMM-PublicTransportBerlin", {
 
       if (i >= reachableDeparturePos - steps && i < reachableDeparturePos) {
         const currentStep = reachableDeparturePos - i;
-        opacity = 1 - ((1 / steps) * currentStep - 0.2);
+        opacity = 1 - (1 / steps * currentStep - 0.2);
       }
     }
 
@@ -234,7 +234,7 @@ Module.register("MMM-PublicTransportBerlin", {
       const steps = this.config.maxReachableDepartures - startingPoint;
       if (i >= startingPoint) {
         const currentStep = i - reachableDeparturePos - startingPoint;
-        opacity = 1 - (1 / steps) * currentStep;
+        opacity = 1 - 1 / steps * currentStep;
       }
     }
 
@@ -420,9 +420,9 @@ Module.register("MMM-PublicTransportBerlin", {
         if (depArray.length > 1 && i < depArray.length - 1) {
           const nextWhen = moment(depArray[i + 1].when);
           if (
-            (currentWhen.isBefore(nowWithDelay) &&
-              nextWhen.isSameOrAfter(nowWithDelay)) ||
-            (i === 0 && nextWhen.isSameOrAfter(nowWithDelay))
+            currentWhen.isBefore(nowWithDelay) &&
+            nextWhen.isSameOrAfter(nowWithDelay) ||
+            i === 0 && nextWhen.isSameOrAfter(nowWithDelay)
           ) {
             resolve(i);
           }
@@ -445,9 +445,9 @@ Module.register("MMM-PublicTransportBerlin", {
       dirString = dirString.split(",")[0];
     }
 
-    const viaIndex = dirString.search(/( via )/g);
+    const viaIndex = dirString.search(/( via )/gu);
     if (viaIndex > -1) {
-      dirString = dirString.split(/( via )/g)[0];
+      dirString = dirString.split(/( via )/gu)[0];
     }
 
     return dirString;
@@ -457,8 +457,11 @@ Module.register("MMM-PublicTransportBerlin", {
     const symbol = document.createElement("div");
 
     if (product.type === "express") {
-      if (product.name === "LOCOMORE") symbol.innerHTML = "LOC";
-      else symbol.innerHTML = "ICE";
+      if (product.name === "LOCOMORE") {
+        symbol.innerHTML = "LOC";
+      } else {
+        symbol.innerHTML = "ICE";
+      }
     } else {
       symbol.innerHTML = product.name;
     }
@@ -478,7 +481,7 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   convertDelayToMinutes(delay) {
-    return Math.floor((((delay % 31536000) % 86400) % 3600) / 60);
+    return Math.floor(delay % 31536000 % 86400 % 3600 / 60);
   },
 
   getTranslations() {
