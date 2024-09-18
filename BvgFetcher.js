@@ -8,8 +8,8 @@ module.exports = class BvgFetcher {
   }
 
   async init() {
-    const { createClient } = await import("hafas-client");
-    const { profile } = await import(`hafas-client/p/bvg/index.js`);
+    const {createClient} = await import("hafas-client");
+    const {profile} = await import("hafas-client/p/bvg/index.js");
     this.hafasClient = createClient(
       profile,
       `MMM-PublicTransportBerlin v${pjson.version}`
@@ -95,7 +95,7 @@ module.exports = class BvgFetcher {
       // TODO: Make real stop/station handling here
       // Quick fix to work around missing station objects
       if (!row.station) {
-        row.station = row.stop; // eslint-disable-line no-param-reassign
+        row.station = row.stop;
       }
 
       // If log level is set to debug print infos about departures
@@ -140,7 +140,7 @@ module.exports = class BvgFetcher {
   // helper function to print departure for debugging
   static printDeparture(row) {
     const delayMinutes = Math.floor(
-      (((row.delay % 31536000) % 86400) % 3600) / 60
+      row.delay % 31536000 % 86400 % 3600 / 60
     );
 
     const time = new Date(row.when).toLocaleTimeString([], {

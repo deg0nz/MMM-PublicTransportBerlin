@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-import { createClient } from "hafas-client";
 import * as readline from "node:readline";
+import {createClient} from "hafas-client";
 
 let profileName = "";
 const productMap = {};
@@ -92,8 +92,8 @@ if (process.argv.length === 3) {
   profileName = "bvg";
 }
 
-try {
-  const { profile } = await import(`hafas-client/p/${profileName}/index.js`);
+async function importProfile() {
+  const {profile} = await import(`hafas-client/p/${profileName}/index.js`);
 
   Object.keys(profile.products).forEach((key) => {
     const productMapKey = profile.products[key].id;
@@ -102,6 +102,10 @@ try {
   });
 
   query(profile);
+}
+
+try {
+  importProfile();
 } catch (e) {
   console.error(`${e.message}\n\n Did you choose the right profile name? \n`);
 }
