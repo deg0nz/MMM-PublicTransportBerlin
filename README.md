@@ -24,9 +24,10 @@ The module looks like this:
 
 ## Installation
 
-Just clone the module into your MagicMirror modules folder and execute `npm ci` in the module's directory:
+Just clone the module into your MagicMirror modules directory and install the dependencies:
 
 ```shell
+cd ~/MagicMirror/modules
 git clone https://github.com/deg0nz/MMM-PublicTransportBerlin
 cd MMM-PublicTransportBerlin
 npm ci
@@ -40,9 +41,10 @@ cp base.json node_modules/hafas-client/p/bvg/base.json
 
 ## Update
 
-Just enter your MMM-PublicTransportBerlin folder in the MagicMirror's modules folder and execute the following commands in the module's directory:
+Just enter your MMM-PublicTransportBerlin directory, pull the update and install the dependencies:
 
 ```shell
+cd ~/MagicMirror/modules/MMM-PublicTransportBerlin
 git pull
 npm ci
 ```
@@ -53,7 +55,7 @@ You need the `stationId` for the station whose departures should be displayed.
 
 Here's how to find out the `stationId`:
 
-1. You have to be in the modules folder (`MagicMirror/modules/MMM-PublicTransportBerlin`).
+1. You have to be in the modules directory (`~/MagicMirror/modules/MMM-PublicTransportBerlin`).
 2. Then run the following command: `npm run query_station`.
 3. Enter a station name.
 4. The result could contain one or more possible stations with valid IDs.
@@ -68,7 +70,7 @@ The module is quite configurable. These are the possible options:
 <!-- prettier-ignore-start -->
 | Option | Description |
 |--------|-------------|
-|`stationName`|The name of the station.<br><br>**Type:** `string` This value is **optional**.<br>|
+|`stationName`|The name of the station.<br><br>**Type:** `string` This value is **optional**.|
 |`stationId`|The ID of the station. How to get the ID for your station is described below.<br><br>**Type:** `string` This value is **Required**.|
 |`directionStationId`|If you want the module to show departures only in a specific direction, you can enter the ID of the next station on your line to specify the direction. <br><br> *Note: After some tests, the data delivery of this feature seems not to be as reliable as the normal version. Also, please make sure you actually have the right `stationId` for the direction station. Please check your MagicMirror log for errors before reporting them. <br> Additionally, more request results take more time for the request. So please make sure to keep your `maxUnreachableDepartures` and `maxReachabledepartures` low when using this feature.* <br><br> **Type:** `string` <br>**Default value:** `<empty>`|
 |`ignoredLines`|You can exclude different lines of a station by adding them to this array. Usually, this can be empty.<br><br>**Type:** `string array` (comma separated `strings` in the array).<br>**Default value:** `<empty>` <br>**Possible values:** All valid line names like `'U5'` (for subway) , `'M10'` or `'21'` (for tram), `'S75'` (for suburban) , `'Bus 200'`(for bus), etc.|
