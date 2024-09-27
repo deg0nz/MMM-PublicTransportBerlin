@@ -33,12 +33,6 @@ cd MMM-PublicTransportBerlin
 npm ci
 ```
 
-Since there is an issue with the current version of `hafas_client`, you also have to run this command to fix that:
-
-```shell
-cp base.json node_modules/hafas-client/p/bvg/base.json
-```
-
 ## Update
 
 Just enter your MMM-PublicTransportBerlin directory, pull the update and install the dependencies:
@@ -100,32 +94,32 @@ The module is quite configurable. These are the possible options:
 Here is an example of an entry in `config.js`:
 
 ```JavaScript
-{
-    module: "MMM-PublicTransportBerlin",
-    position: "top_right",
-    config: {
-        stationName: "Alexanderplatz",
-        stationId: "900100003",
-        hidden: false,
-        ignoredLines: ["U5", "U8", "S75", "Bus 100"],
-        excludedTransportationTypes: "bus,suburban,subway",
-        travelTimeToStation: 10,
-        interval: 120000,
-        departureMinutes: 10,
-        marqueeLongDirections: true,
-        showColoredLineSymbols: true,
-        useColorForRealtimeInfo: true,
-        showTableHeaders: true,
-        showTableHeadersAsSymbols: true,
-        maxUnreachableDepartures: 3,
-        maxReachableDepartures: 7,
-        fadeUnreachableDepartures: true,
-        fadeReachableDepartures: true,
-        fadePointForReachableDepartures: 0.25,
-        excludeDelayFromTimeLabel: true,
-        useBrightScheme: true
-    }
-},
+    {
+        module: "MMM-PublicTransportBerlin",
+        position: "top_right",
+        config: {
+            stationName: "Alexanderplatz",
+            stationId: "900100003",
+            hidden: false,
+            ignoredLines: ["U5", "U8", "S75", "Bus 100"],
+            excludedTransportationTypes: "bus,suburban,subway",
+            travelTimeToStation: 10,
+            interval: 120000,
+            departureMinutes: 10,
+            marqueeLongDirections: true,
+            showColoredLineSymbols: true,
+            useColorForRealtimeInfo: true,
+            showTableHeaders: true,
+            showTableHeadersAsSymbols: true,
+            maxUnreachableDepartures: 3,
+            maxReachableDepartures: 7,
+            fadeUnreachableDepartures: true,
+            fadeReachableDepartures: true,
+            fadePointForReachableDepartures: 0.25,
+            excludeDelayFromTimeLabel: true,
+            useBrightScheme: true
+        }
+    },
 ```
 
 ## Multiple Modules
