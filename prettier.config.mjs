@@ -1,8 +1,8 @@
 const config = {
-  trailingComma: "none",
-  tabWidth: 2,
+  arrowParens: "always",
   semi: true,
-  arrowParens: "always"
+  tabWidth: 2,
+  trailingComma: "none"
 };
 
 export default config;
