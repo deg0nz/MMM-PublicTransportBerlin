@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import * as readline from "node:readline";
+// eslint-disable-next-line import-x/namespace
 import {createClient} from "hafas-client";
 
 let profileName = "";
@@ -11,7 +12,7 @@ const productMap = {};
  * @param {array} array An array that could have duplicate values.
  * @returns {array} An array without duplicate values.
  */
-function arrayUnique(array) {
+function arrayUnique (array) {
   return [...new Set(array)];
 }
 
@@ -21,7 +22,7 @@ function arrayUnique(array) {
  * @param {object} products An object with the available transport products as a keys.
  * @returns {string} A list of transport products as a string.
  */
-function refineProducts(products) {
+function refineProducts (products) {
   if (!products) {
     return "none";
   }
@@ -42,7 +43,7 @@ function refineProducts(products) {
  *
  * @param {object} station The station it's about.
  */
-function printStationInfo(station) {
+function printStationInfo (station) {
   if (station.id && station.name) {
     console.info(
       ` > Stop: ${station.name}\n   ID: ${
@@ -52,7 +53,7 @@ function printStationInfo(station) {
   }
 }
 
-function query(profile) {
+function query (profile) {
   if (profile !== "" && profile !== undefined) {
     const client = createClient(profile, "MMM-PublicTransportHafas");
     const rl = readline.createInterface({
@@ -64,10 +65,10 @@ function query(profile) {
       rl.close();
 
       const opt = {
-        results: 10,
-        stations: true,
         adresses: false,
-        poi: false
+        poi: false,
+        results: 10,
+        stations: true
       };
 
       client
@@ -92,7 +93,7 @@ if (process.argv.length === 3) {
   profileName = "bvg";
 }
 
-async function importProfile() {
+async function importProfile () {
   const {profile} = await import(`hafas-client/p/${profileName}/index.js`);
 
   Object.keys(profile.products).forEach((key) => {
@@ -106,6 +107,6 @@ async function importProfile() {
 
 try {
   importProfile();
-} catch (e) {
-  console.error(`${e.message}\n\n Did you choose the right profile name? \n`);
+} catch (error) {
+  console.error(`${error.message}\n\n Did you choose the right profile name? \n`);
 }

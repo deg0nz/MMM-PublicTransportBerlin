@@ -4,11 +4,11 @@ const Log = require("logger");
 const BvgFetcher = require("./BvgFetcher");
 
 module.exports = NodeHelper.create({
-  start() {
+  start () {
     this.departuresFetchers = [];
   },
 
-  async createFetcher(config) {
+  async createFetcher (config) {
     const fetcherId = config.identifier;
     let fetcher;
 
@@ -49,7 +49,7 @@ module.exports = NodeHelper.create({
     await this.getDepartures(fetcherId);
   },
 
-  async sendInit(fetcher) {
+  async sendInit (fetcher) {
     try {
       let stationName = await fetcher.getStationName();
       const directionDescriptor = await fetcher.getDirectionDescriptor();
@@ -70,7 +70,7 @@ module.exports = NodeHelper.create({
     }
   },
 
-  async getDepartures(fetcherId) {
+  async getDepartures (fetcherId) {
     try {
       const departuresData =
         await this.departuresFetchers[fetcherId].fetchDepartures();
@@ -86,7 +86,7 @@ module.exports = NodeHelper.create({
     }
   },
 
-  pimpDeparturesArray(departuresArray) {
+  pimpDeparturesArray (departuresArray) {
     let currentProperties = {};
 
     departuresArray.forEach((current) => {
@@ -103,7 +103,7 @@ module.exports = NodeHelper.create({
     return departuresArray;
   },
 
-  getLineProperties(product) {
+  getLineProperties (product) {
     const properties = {
       bgColor: "#333",
       fgColor: "#FFF",
@@ -167,7 +167,7 @@ module.exports = NodeHelper.create({
     return properties;
   },
 
-  socketNotificationReceived(notification, payload) {
+  socketNotificationReceived (notification, payload) {
     if (notification === "FETCH_DEPARTURES") {
       this.getDepartures(payload);
     }

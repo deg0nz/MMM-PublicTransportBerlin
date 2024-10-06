@@ -1,22 +1,23 @@
-import eslintPluginImport from "eslint-plugin-import";
+import eslintPluginImportX from "eslint-plugin-import-x";
 import eslintPluginJs from "@eslint/js";
 import eslintPluginJsonc from "eslint-plugin-jsonc";
 import eslintPluginStylistic from "@stylistic/eslint-plugin";
 import globals from "globals";
 
-export default [
+const config = [
   eslintPluginJs.configs.all,
-  eslintPluginImport.flatConfigs.recommended,
+  eslintPluginImportX.flatConfigs.recommended,
   ...eslintPluginJsonc.configs["flat/recommended-with-json"],
   {
-    files: ["**/*.js", "**/*.mjs"],
+    files: ["**/*.js"],
     languageOptions: {
       ecmaVersion: "latest",
       globals: {
         ...globals.browser,
         ...globals.node,
         config: "readonly"
-      }
+      },
+      sourceType: "commonjs"
     },
     plugins: {
       ...eslintPluginStylistic.configs["all-flat"].plugins
@@ -31,15 +32,13 @@ export default [
       "@stylistic/multiline-comment-style": "off",
       "@stylistic/multiline-ternary": "off",
       "@stylistic/no-multi-spaces": "off",
-      "@stylistic/quote-props": ["error", "as-needed"],
       "@stylistic/padded-blocks": ["error", "never"],
-      "@stylistic/space-before-function-paren": "off",
+      "@stylistic/quote-props": ["error", "as-needed"],
       "capitalized-comments": "off",
       "consistent-this": "off",
       "default-case": "off",
       "func-style": "off",
       "id-length": "off",
-      "import/namespace": "off",
       "init-declarations": "off",
       "line-comment-position": "off",
       "max-lines": "off",
@@ -56,10 +55,42 @@ export default [
       "prefer-destructuring": "off",
       "prefer-named-capture-group": "off",
       "require-await": "warn",
-      "sort-keys": "off"
+      "sort-keys": "off",
+      strict: "off"
+    }
+  },
+  {
+    files: ["**/*.mjs"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      globals: {
+        ...globals.node
+      },
+      sourceType: "module"
+    },
+    plugins: {
+      ...eslintPluginStylistic.configs["all-flat"].plugins
+    },
+    rules: {
+      ...eslintPluginStylistic.configs["all-flat"].rules,
+      "@stylistic/array-element-newline": "off",
+      "@stylistic/dot-location": ["error", "property"],
+      "@stylistic/function-call-argument-newline": ["error", "consistent"],
+      "@stylistic/function-paren-newline": "off",
+      "@stylistic/indent": ["error", 2],
+      "@stylistic/padded-blocks": ["error", "never"],
+      "@stylistic/quote-props": ["error", "as-needed"],
+      "func-style": "off",
+      "max-lines-per-function": ["error", 100],
+      "no-magic-numbers": "off",
+      "no-undefined": "off",
+      "one-var": "off",
+      "prefer-destructuring": "off"
     }
   },
   {
     ignores: ["package-lock.json"]
   }
 ];
+
+export default config;

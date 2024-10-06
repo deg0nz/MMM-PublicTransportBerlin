@@ -1,6 +1,6 @@
 {
   "name": "mmm-publictransportberlin",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Public transport module for MagicMirror² driven by BVG-Hafas data.",
   "repository": "deg0nz/MMM-PublicTransportBerlin",
   "keywords": [
@@ -33,12 +33,12 @@
     "vbb-short-station-name": "^1.0.1"
   },
   "devDependencies": {
-    "@eslint/js": "^8.57.1",
-    "@stylistic/eslint-plugin": "^2.8.0",
-    "eslint": "^8.57.1",
-    "eslint-plugin-import": "^2.30.0",
+    "@eslint/js": "^9.12.0",
+    "@stylistic/eslint-plugin": "^2.9.0",
+    "eslint": "^9.12.0",
+    "eslint-plugin-import-x": "^4.3.1",
     "eslint-plugin-jsonc": "^2.16.0",
-    "globals": "^15.9.0",
+    "globals": "^15.10.0",
     "prettier": "^3.3.3",
     "stylelint": "^16.9.0",
     "stylelint-config-standard": "^36.0.1",

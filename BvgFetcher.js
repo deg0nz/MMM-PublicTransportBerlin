@@ -3,11 +3,11 @@ const Log = require("logger");
 const pjson = require("./package.json");
 
 module.exports = class BvgFetcher {
-  constructor(config) {
+  constructor (config) {
     this.config = config;
   }
 
-  async init() {
+  async init () {
     const {createClient} = await import("hafas-client");
     const {profile} = await import("hafas-client/p/bvg/index.js");
     this.hafasClient = createClient(
@@ -16,22 +16,22 @@ module.exports = class BvgFetcher {
     );
   }
 
-  getIdentifier() {
+  getIdentifier () {
     return this.config.identifier;
   }
 
-  getStationId() {
+  getStationId () {
     return this.config.stationId;
   }
 
-  async getStationName() {
+  async getStationName () {
     const station = await this.hafasClient.stop(this.config.stationId);
     return this.config.shortenStationNames
       ? shortenStationName(station.name)
       : station.name;
   }
 
-  async getDirectionDescriptor() {
+  async getDirectionDescriptor () {
     if (typeof this.config.directionStationId === "undefined") {
       return "all directions";
     }
@@ -39,7 +39,7 @@ module.exports = class BvgFetcher {
     return station.name;
   }
 
-  async fetchDepartures() {
+  async fetchDepartures () {
     // when value for a request is calculated to be 5 minutes before travelTimeToStation time
     // so we can also show the non-reachable departures in the module
     let when;
@@ -81,7 +81,7 @@ module.exports = class BvgFetcher {
     return processedDepartures;
   }
 
-  processData(data) {
+  processData (data) {
     const departuresData = {
       fetcherId: this.config.identifier,
       departuresArray: []
@@ -127,7 +127,7 @@ module.exports = class BvgFetcher {
     return departuresData;
   }
 
-  static compareTimes(a, b) {
+  static compareTimes (a, b) {
     if (a.when < b.when) {
       return -1;
     }
@@ -138,7 +138,7 @@ module.exports = class BvgFetcher {
   }
 
   // helper function to print departure for debugging
-  static printDeparture(row) {
+  static printDeparture (row) {
     const delayMinutes = Math.floor(
       row.delay % 31536000 % 86400 % 3600 / 60
     );

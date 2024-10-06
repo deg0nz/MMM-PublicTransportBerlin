@@ -31,7 +31,7 @@ Module.register("MMM-PublicTransportBerlin", {
     shortenStationNames: true           // Shorten station names? See https://github.com/derhuerst/vbb-short-station-name
   },
 
-  start() {
+  start () {
     Log.info(
       `Starting module: ${this.name} with identifier: ${this.identifier}`
     );
@@ -93,7 +93,7 @@ Module.register("MMM-PublicTransportBerlin", {
     }
   },
 
-  getDom() {
+  getDom () {
     const wrapper = document.createElement("div");
     wrapper.className = "ptb-wrapper";
 
@@ -200,7 +200,7 @@ Module.register("MMM-PublicTransportBerlin", {
     return wrapper;
   },
 
-  getRowOpacity(i, reachableDeparturePos) {
+  getRowOpacity (i, reachableDeparturePos) {
     // Per default, opacity is at 100%
     let opacity = 1;
 
@@ -241,7 +241,7 @@ Module.register("MMM-PublicTransportBerlin", {
     return opacity;
   },
 
-  getRuleRow() {
+  getRuleRow () {
     const ruleRow = document.createElement("tr");
 
     const ruleTimeCell = document.createElement("td");
@@ -255,7 +255,7 @@ Module.register("MMM-PublicTransportBerlin", {
     return ruleRow;
   },
 
-  getTableHeaderRow() {
+  getTableHeaderRow () {
     const headerRow = document.createElement("tr");
 
     // Cell for departure time
@@ -309,7 +309,7 @@ Module.register("MMM-PublicTransportBerlin", {
     return headerRow;
   },
 
-  getNoDeparturesRow(message) {
+  getNoDeparturesRow (message) {
     const row = document.createElement("tr");
     const cell = document.createElement("td");
 
@@ -321,7 +321,7 @@ Module.register("MMM-PublicTransportBerlin", {
     return row;
   },
 
-  getRow(currentDeparture) {
+  getRow (currentDeparture) {
     let currentWhen = moment(currentDeparture.when).tz(this.config.timezone);
     const delay = this.convertDelayToMinutes(currentDeparture.delay);
 
@@ -395,7 +395,7 @@ Module.register("MMM-PublicTransportBerlin", {
     return row;
   },
 
-  getDepartureTimeWithoutDelay(departureTime, delay) {
+  getDepartureTimeWithoutDelay (departureTime, delay) {
     if (delay > 0) {
       departureTime.subtract(delay, "minutes");
     } else if (delay < 0) {
@@ -405,7 +405,7 @@ Module.register("MMM-PublicTransportBerlin", {
     return departureTime;
   },
 
-  getFirstReachableDeparturePosition() {
+  getFirstReachableDeparturePosition () {
     const now = moment();
     const nowWithDelay = now.add(this.config.travelTimeToStation, "minutes");
     let result = 0;
@@ -429,7 +429,7 @@ Module.register("MMM-PublicTransportBerlin", {
     return result;
   },
 
-  trimDirectionString(string) {
+  trimDirectionString (string) {
     let dirString = string;
 
     if (dirString.indexOf(",") > -1) {
@@ -444,7 +444,7 @@ Module.register("MMM-PublicTransportBerlin", {
     return dirString;
   },
 
-  getLineSymbol(product) {
+  getLineSymbol (product) {
     const symbol = document.createElement("div");
 
     if (product.type === "express") {
@@ -471,26 +471,26 @@ Module.register("MMM-PublicTransportBerlin", {
     return symbol;
   },
 
-  convertDelayToMinutes(delay) {
+  convertDelayToMinutes (delay) {
     return Math.floor(delay % 31536000 % 86400 % 3600 / 60);
   },
 
-  getTranslations() {
+  getTranslations () {
     return {
       en: "translations/en.json",
       de: "translations/de.json"
     };
   },
 
-  getStyles() {
+  getStyles () {
     return ["style.css", "font-awesome.css"];
   },
 
-  getScripts() {
+  getScripts () {
     return ["moment.js", "moment-timezone.js"];
   },
 
-  socketNotificationReceived(notification, payload) {
+  socketNotificationReceived (notification, payload) {
     if (payload.fetcherId === this.identifier) {
       switch (notification) {
         case "FETCHER_INITIALIZED":
