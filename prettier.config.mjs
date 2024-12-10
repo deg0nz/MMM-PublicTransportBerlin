@@ -1,7 +1,12 @@
 const config = {
-  arrowParens: "always",
-  semi: true,
-  tabWidth: 2,
+  overrides: [
+    {
+      files: "*.md",
+      options: {
+        parser: "markdown"
+      }
+    }
+  ],
   trailingComma: "none"
 };
 

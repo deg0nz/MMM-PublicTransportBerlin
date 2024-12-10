@@ -2,7 +2,6 @@
   "name": "mmm-publictransportberlin",
   "version": "2.1.1",
   "description": "Public transport module for MagicMirror² driven by BVG-Hafas data.",
-  "repository": "deg0nz/MMM-PublicTransportBerlin",
   "keywords": [
     "MagicMirror",
     "module",
@@ -10,6 +9,15 @@
     "Berlin",
     "Brandenburg"
   ],
+  "homepage": "https://github.com/deg0nz/MMM-PublicTransportBerlin",
+  "bugs": {
+    "url": "https://github.com/deg0nz/MMM-PublicTransportBerlin/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deg0nz/MMM-PublicTransportBerlin"
+  },
+  "license": "MIT",
   "author": {
     "name": "deg0nz",
     "email": "magicmirror@kayuk.de",
@@ -18,13 +26,11 @@
   "contributors": [
     "https://github.com/deg0nz/MMM-PublicTransportBerlin/graphs/contributors"
   ],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/deg0nz/MMM-PublicTransportBerlin/issues"
-  },
-  "homepage": "https://github.com/deg0nz/MMM-PublicTransportBerlin",
-  "engines": {
-    "node": ">=16"
+  "scripts": {
+    "lint": "eslint . && stylelint **/*.css && markdownlint . --ignore node_modules && prettier . --check",
+    "lint:fix": "eslint . --fix && stylelint **/*.css --fix && markdownlint . --ignore node_modules --fix && prettier . --write",
+    "query_station": "node ./convenience/query_stations.mjs bvg",
+    "test": "npm run lint"
   },
   "dependencies": {
     "hafas-client": "^6.3.2",
@@ -39,15 +45,13 @@
     "eslint-plugin-import-x": "^4.5.0",
     "eslint-plugin-jsonc": "^2.18.2",
     "globals": "^15.13.0",
+    "markdownlint-cli": "^0.43.0",
     "prettier": "^3.4.2",
     "stylelint": "^16.11.0",
     "stylelint-config-standard": "^36.0.1",
     "stylelint-prettier": "^5.0.2"
   },
-  "scripts": {
-    "lint": "eslint . && stylelint **/*.css && prettier --check .",
-    "lint:fix": "eslint --fix . && stylelint --fix **/*.css && prettier --write .",
-    "query_station": "node ./convenience/query_stations.mjs bvg",
-    "test": "npm run lint"
+  "engines": {
+    "node": ">=16"
   }
 }
