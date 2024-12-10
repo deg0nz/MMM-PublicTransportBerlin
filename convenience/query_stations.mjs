@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import * as readline from "node:readline";
-// eslint-disable-next-line import-x/namespace
 import {createClient} from "hafas-client";
 
 let profileName = "";
