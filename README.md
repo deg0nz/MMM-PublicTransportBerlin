@@ -133,6 +133,19 @@ Multiple instances of this module are possible. Just add another entry of MMM-Pu
   You made my life a lot easier with this! Please consider supporting him on [Patreon](https://patreon.com/derhuerst)!
 - The community of [magicmirror.builders](https://magicmirror.builders) for help in the development process and all contributors for finding and fixing errors in this module.
 
-## Issues
+## Contributing
 
 If you find any problems, bugs or have questions, please [open a GitHub issue](https://github.com/deg0nz/MMM-PublicTransportBerlin/issues) in this repository.
+
+Pull requests are of course also very welcome 🙂
+
+### Developer commands
+
+- `npm run lint` - Run linting and formatter checks.
+- `npm run lint:fix` - Fix linting and formatter issues.
+- `npm run release` - Bump version for release.
+- `npm run test` - Run linting and formatter checks + Run spelling check.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
