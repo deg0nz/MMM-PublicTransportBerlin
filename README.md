@@ -50,7 +50,7 @@ You need the `stationId` for the station whose departures should be displayed.
 Here's how to find out the `stationId`:
 
 1. You have to be in the modules directory (`~/MagicMirror/modules/MMM-PublicTransportBerlin`).
-2. Then run the following command: `npm run query_station`.
+2. Then run the following command: `npm run query`.
 3. Enter a station name.
 4. The result could contain one or more possible stations with valid IDs.
 5. Use the appropriate ID as `stationId` in the configuration of the module.

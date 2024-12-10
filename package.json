@@ -29,7 +29,7 @@
   "scripts": {
     "lint": "eslint . && stylelint **/*.css && markdownlint . --ignore node_modules && prettier . --check",
     "lint:fix": "eslint . --fix && stylelint **/*.css --fix && markdownlint . --ignore node_modules --fix && prettier . --write",
-    "query_station": "node ./convenience/query_stations.mjs bvg",
+    "query": "node ./convenience/query_stations.mjs bvg",
     "test": "npm run lint"
   },
   "dependencies": {
