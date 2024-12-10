@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
 import * as readline from "node:readline";
 import {createClient} from "hafas-client";
+import process from "node:process";
 
 let profileName = "";
 const productMap = {};
 
 /**
  * Create an array without values that occur multiple times.
- *
  * @param {array} array An array that could have duplicate values.
  * @returns {array} An array without duplicate values.
  */
@@ -17,7 +17,6 @@ function arrayUnique (array) {
 
 /**
  * Get proper names for the product keys.
- *
  * @param {object} products An object with the available transport products as a keys.
  * @returns {string} A list of transport products as a string.
  */
@@ -39,7 +38,6 @@ function refineProducts (products) {
 
 /**
  * Output the information about the station on the console.
- *
  * @param {object} station The station it's about.
  */
 function printStationInfo (station) {
@@ -53,34 +51,37 @@ function printStationInfo (station) {
 }
 
 function query (profile) {
-  if (profile !== "" && profile !== undefined) {
+  if (profile !== "" && typeof profile !== "undefined") {
     const client = createClient(profile, "MMM-PublicTransportHafas");
     const rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout
     });
 
-    rl.question("Enter an address or station name: ", (answer) => {
+    rl.question("Enter an address or station name: ", async (answer) => {
       rl.close();
 
       const opt = {
-        adresses: false,
+        addresses: false,
         poi: false,
         results: 10,
         stations: true
       };
 
-      client
-        .locations(answer, opt)
-        .then((response) => {
-          console.info(`\nStops found for '${answer}':\n`);
-          response.forEach((station) => {
-            printStationInfo(station);
-          });
-          process.exit(0);
-        })
-        .catch(console.error);
-    });
+      try {
+        const response = await client.locations(
+          answer,
+          opt
+        );
+        console.info(`\nStops found for '${answer}':\n`);
+        for (const station of response) {
+          printStationInfo(station);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    );
   }
 }
 
