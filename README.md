@@ -18,10 +18,6 @@ The module looks like this:
 
 ![Example for Alexanderplatz with time delay](img/MMM-PublicTransport_screenshot.png)
 
-## Preconditions
-
-- MagicMirror² instance
-
 ## Installation
 
 Just clone the module into your MagicMirror modules directory and install the dependencies:
