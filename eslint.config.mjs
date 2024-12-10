@@ -83,7 +83,6 @@ const config = [
       "func-style": "off",
       "max-lines-per-function": ["error", 100],
       "no-magic-numbers": "off",
-      "no-undefined": "off",
       "one-var": "off",
       "prefer-destructuring": "off"
     }
