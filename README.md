@@ -145,3 +145,7 @@ Pull requests are of course also very welcome 🙂
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
+
+## Changelog
+
+All notable changes to this project will be documented in the [CHANGELOG.md](./CHANGELOG.md) file.
