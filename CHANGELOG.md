@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 - chore: Add CHANGELOG
 - chore: Update dependencies incl. `hafas-client`
+- chore: Switch node-version from 22 to lts in `automated-tests.yaml`
 
 ## [2.1.2] - 2024-12-11
 
