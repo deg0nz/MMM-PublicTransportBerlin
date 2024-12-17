@@ -34,21 +34,21 @@
     "test": "npm run lint"
   },
   "dependencies": {
-    "hafas-client": "^6.3.2",
+    "hafas-client": "^6.3.3",
     "moment": "^2.30",
     "vbb-line-colors": "^1.0.5",
     "vbb-short-station-name": "^1.0.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.16.0",
-    "@stylistic/eslint-plugin": "^2.12.0",
-    "eslint": "^9.16.0",
-    "eslint-plugin-import-x": "^4.5.0",
+    "@eslint/js": "^9.17.0",
+    "@stylistic/eslint-plugin": "^2.12.1",
+    "eslint": "^9.17.0",
+    "eslint-plugin-import-x": "^4.5.1",
     "eslint-plugin-jsonc": "^2.18.2",
     "globals": "^15.13.0",
     "markdownlint-cli": "^0.43.0",
     "prettier": "^3.4.2",
-    "stylelint": "^16.11.0",
+    "stylelint": "^16.12.0",
     "stylelint-config-standard": "^36.0.1",
     "stylelint-prettier": "^5.0.2"
   },
