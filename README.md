@@ -139,7 +139,6 @@ Pull requests are of course also very welcome 🙂
 
 - `npm run lint` - Run linting and formatter checks.
 - `npm run lint:fix` - Fix linting and formatter issues.
-- `npm run release` - Bump version for release.
 - `npm run test` - Run linting and formatter checks + Run spelling check.
 - `npm run test:spelling` - Run spelling check.
 
