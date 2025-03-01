@@ -7,6 +7,7 @@ import globals from "globals";
 const config = [
   eslintPluginJs.configs.all,
   eslintPluginImportX.flatConfigs.recommended,
+  eslintPluginStylistic.configs.all,
   ...eslintPluginJsonc.configs["flat/recommended-with-json"],
   {
     files: ["**/*.js"],
@@ -19,11 +20,7 @@ const config = [
       },
       sourceType: "commonjs"
     },
-    plugins: {
-      ...eslintPluginStylistic.configs["all-flat"].plugins
-    },
     rules: {
-      ...eslintPluginStylistic.configs["all-flat"].rules,
       "@stylistic/array-element-newline": ["error", "consistent"],
       "@stylistic/dot-location": ["error", "property"],
       "@stylistic/function-call-argument-newline": ["error", "consistent"],
@@ -68,11 +65,7 @@ const config = [
       },
       sourceType: "module"
     },
-    plugins: {
-      ...eslintPluginStylistic.configs["all-flat"].plugins
-    },
     rules: {
-      ...eslintPluginStylistic.configs["all-flat"].rules,
       "@stylistic/array-element-newline": "off",
       "@stylistic/dot-location": ["error", "property"],
       "@stylistic/function-call-argument-newline": ["error", "consistent"],
