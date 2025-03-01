@@ -98,7 +98,7 @@ Module.register("MMM-PublicTransportBerlin", {
     wrapper.className = "ptb-wrapper";
 
     if (this.configIssueDetected) {
-      // Show issue message if there is a configuartion issue
+      // Show issue message if there is a configuration issue
       const issueDiv = document.createElement("div");
       issueDiv.className = "ptb-issue-div";
       issueDiv.innerHTML = `MMM-PublicTransportBerlin: ${this.translate(

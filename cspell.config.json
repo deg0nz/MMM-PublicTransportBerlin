@@ -1,0 +1,28 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "Alexanderplatz",
+    "bumpp",
+    "bussign",
+    "dbsign",
+    "derhuerst",
+    "expresssign",
+    "Gericke",
+    "hafas",
+    "Jannis",
+    "LOCOMORE",
+    "locsign",
+    "magicmirror",
+    "publictransportberlin",
+    "Redmann",
+    "sbahnsign",
+    "Teeuw",
+    "tramsign",
+    "ubahnsign",
+    "VBBDATA",
+    "xsmall"
+  ],
+  "ignorePaths": ["node_modules/**", "translations/**"],
+  "dictionaries": ["node"]
+}
