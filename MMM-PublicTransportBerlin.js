@@ -2,7 +2,6 @@
 
 Module.register("MMM-PublicTransportBerlin", {
   // default values
-  // prettier-ignore
   defaults: {
     name: "MMM-PublicTransportBerlin",  // The name of this module
     hidden: false,                      // Hide this module?
