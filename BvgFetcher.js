@@ -148,7 +148,7 @@ module.exports = class BvgFetcher {
       minute: "2-digit"
     });
 
-    Log.log(
+    Log.debug(
       `${time} ${delayMinutes} ${row.line.product} ${row.direction} | stationId: ${row.station.id}`
     );
   }
