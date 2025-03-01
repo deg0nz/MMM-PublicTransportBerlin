@@ -1,6 +1,6 @@
 const shortenStationName = require("vbb-short-station-name");
 const Log = require("logger");
-const pjson = require("./package.json");
+const pJson = require("./package.json");
 
 module.exports = class BvgFetcher {
   constructor (config) {
@@ -12,7 +12,7 @@ module.exports = class BvgFetcher {
     const {profile} = await import("hafas-client/p/bvg/index.js");
     this.hafasClient = createClient(
       profile,
-      `MMM-PublicTransportBerlin v${pjson.version}`
+      `MMM-PublicTransportBerlin v${pJson.version}`
     );
   }
 

@@ -27,11 +27,12 @@
     "https://github.com/deg0nz/MMM-PublicTransportBerlin/graphs/contributors"
   ],
   "scripts": {
-    "lint": "eslint . && stylelint **/*.css && markdownlint . --ignore node_modules && prettier . --check",
-    "lint:fix": "eslint . --fix && stylelint **/*.css --fix && markdownlint . --ignore node_modules --fix && prettier . --write",
+    "lint": "eslint && stylelint **/*.css && markdownlint . --ignore node_modules && prettier . --check",
+    "lint:fix": "eslint --fix && stylelint **/*.css --fix && markdownlint . --ignore node_modules --fix && prettier . --write",
     "query": "node ./convenience/query_stations.mjs bvg",
     "release": "npx bumpp --no-push",
-    "test": "npm run lint"
+    "test": "npm run lint && npm run test:spelling",
+    "test:spelling": "cspell ."
   },
   "dependencies": {
     "hafas-client": "^6.3.4",
@@ -42,6 +43,7 @@
   "devDependencies": {
     "@eslint/js": "^9.21.0",
     "@stylistic/eslint-plugin": "^4.1.0",
+    "cspell": "^8.17.5",
     "eslint": "^9.21.0",
     "eslint-plugin-import-x": "^4.6.1",
     "eslint-plugin-jsonc": "^2.19.1",

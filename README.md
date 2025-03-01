@@ -51,7 +51,7 @@ Here's how to find out the `stationId`:
 4. The result could contain one or more possible stations with valid IDs.
 5. Use the appropriate ID as `stationId` in the configuration of the module.
 
-_Note:_ If you have used our instructions to get the `stationId` befor March 2023, you certainly use long IDs (12 digits) in your config. We will be upgrading our main dependency (`hafas-client`) to version 6 in a few months. From this point on, the old (long) IDs will no longer work. We recommend that you switch to the short IDs now. Both short and long IDs currently work.
+_Note:_ If you have used our instructions to get the `stationId` before March 2023, you certainly use long IDs (12 digits) in your config. We will be upgrading our main dependency (`hafas-client`) to version 6 in a few months. From this point on, the old (long) IDs will no longer work. We recommend that you switch to the short IDs now. Both short and long IDs currently work.
 
 ## Configuration
 
@@ -62,7 +62,7 @@ The module is quite configurable. These are the possible options:
 |--------|-------------|
 |`stationName`|The name of the station.<br><br>**Type:** `string` This value is **optional**.|
 |`stationId`|The ID of the station. How to get the ID for your station is described below.<br><br>**Type:** `string` This value is **Required**.|
-|`directionStationId`|If you want the module to show departures only in a specific direction, you can enter the ID of the next station on your line to specify the direction. <br><br> _Note: After some tests, the data delivery of this feature seems not to be as reliable as the normal version. Also, please make sure you actually have the right `stationId` for the direction station. Please check your MagicMirror log for errors before reporting them. <br> Additionally, more request results take more time for the request. So please make sure to keep your `maxUnreachableDepartures` and `maxReachabledepartures` low when using this feature._ <br><br> **Type:** `string` <br>**Default value:** `<empty>`|
+|`directionStationId`|If you want the module to show departures only in a specific direction, you can enter the ID of the next station on your line to specify the direction. <br><br> _Note: After some tests, the data delivery of this feature seems not to be as reliable as the normal version. Also, please make sure you actually have the right `stationId` for the direction station. Please check your MagicMirror log for errors before reporting them. <br> Additionally, more request results take more time for the request. So please make sure to keep your `maxUnreachableDepartures` and `maxReachableDepartures` low when using this feature._ <br><br> **Type:** `string` <br>**Default value:** `<empty>`|
 |`ignoredLines`|You can exclude different lines of a station by adding them to this array. Usually, this can be empty.<br><br>**Type:** `string array` (comma separated `strings` in the array).<br>**Default value:** `<empty>` <br>**Possible values:** All valid line names like `'U5'` (for subway) , `'M10'` or `'21'` (for tram), `'S75'` (for suburban) , `'Bus 200'`(for bus), etc.|
 |`excludedTransportationTypes`|Transportation types to be excluded from appearing on a module instance can be listed here.<br><br>**Type:** `string`, comma-separated list<br>**Default value:** `<empty>` <br>**Possible values:** `bus`, `tram`, `suburban`, `subway`, `regional`, `ferry`|
 |`marqueeLongDirections`|Makes a marquee/ticker text out of all direction descriptions with more than 25 characters. If this value is false, the descriptions are trimmed to the station names. You can see a video of it [here](https://ds.kayuk.de/kAfzU/) (rendered by a regular computer).<br><br> _Note: The rendering on the mirror is not perfect, but it is OK in my opinion. If the movement is not fluent enough for you, you should turn it off._<br><br>**Type:** `boolean`<br>**Default value:** `true`|
@@ -75,10 +75,10 @@ The module is quite configurable. These are the possible options:
 |`showTableHeaders`|Show or hides the table headers.<br><br>**Type:** `boolean`<br>**Default value:** `true`|
 |`showTableHeadersAsSymbols`|Show the table headers as text or symbols.<br><br>**Type:** `boolean`<br>**Default value:** `true`|
 |`maxUnreachableDepartures`|How many unreachable departures should be shown. Only necessary, of you set `travelTimeToStation` > 0<br><br>**Type:** `integer`<br>**Default value:** `3`|
-|`maxReachableDepartures`|How many reachable departures should be shown. If your `travelTimeToSteation = 0`, this is the value for the number of departures you want to see.<br><br>**Type:** `integer`<br>**Default value:** `7`|
+|`maxReachableDepartures`|How many reachable departures should be shown. If your `travelTimeToStation = 0`, this is the value for the number of departures you want to see.<br><br>**Type:** `integer`<br>**Default value:** `7`|
 |`fadeUnreachableDepartures`|Activates/deactivates fading for unreachable departures.<br><br>**Type:** `boolean`<br>**Default value:** `true`|
 |`fadeReachableDepartures`|Activates/deactivates fading for reachable departures.<br><br>**Type:** `boolean`<br>**Default value:** `true`|
-|`fadePointForReachableDepartures`|Fading point for reachable departures. This value is also valid for `travelTimeToSteation == 0` <br><br>**Type:** `float`<br>**Default value:** `0.5` <br>**Possible values:** `0.0 - 1.0`|
+|`fadePointForReachableDepartures`|Fading point for reachable departures. This value is also valid for `travelTimeToStation == 0` <br><br>**Type:** `float`<br>**Default value:** `0.5` <br>**Possible values:** `0.0 - 1.0`|
 |`excludeDelayFromTimeLabel`|The API provides time labels which include the delay time of the departure. This flag removes the delay time to show times like they are shown in the BVG-App.<br><br>**Type:** `boolean`<br>**Default value:** `false`|
 |`animationSpeed`|Speed of the update animation. The value is given in milliseconds.<br><br>**Type:** `integer` (milliseconds)<br>**Default value:** `3000` (3 seconds)|
 |`showDirection`|Shows the direction in the module instance's header if the module instance is directed.<br><br>**Type:** `boolean`<br>**Default value:** `true`|
@@ -141,6 +141,7 @@ Pull requests are of course also very welcome 🙂
 - `npm run lint:fix` - Fix linting and formatter issues.
 - `npm run release` - Bump version for release.
 - `npm run test` - Run linting and formatter checks + Run spelling check.
+- `npm run test:spelling` - Run spelling check.
 
 ## License
 
