@@ -29,6 +29,7 @@
   "scripts": {
     "lint": "eslint && stylelint **/*.css && markdownlint . --ignore node_modules && prettier . --check",
     "lint:fix": "eslint --fix && stylelint **/*.css --fix && markdownlint . --ignore node_modules --fix && prettier . --write",
+    "prepare": "[ -f node_modules/.bin/husky ] && husky || echo husky is not installed.",
     "query": "node ./convenience/query_stations.mjs bvg",
     "test": "npm run lint && npm run test:spelling",
     "test:spelling": "cspell ."
@@ -39,6 +40,20 @@
     "vbb-line-colors": "^1.0.5",
     "vbb-short-station-name": "^1.0.1"
   },
+  "lint-staged": {
+    "!(*.css|*.md)": [
+      "eslint --fix",
+      "prettier --write --ignore-unknown"
+    ],
+    "*.md": [
+      "markdownlint --ignore node_modules --fix",
+      "prettier --write"
+    ],
+    "*.css": [
+      "stylelint --fix",
+      "prettier --write"
+    ]
+  },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
     "@stylistic/eslint-plugin": "^4.1.0",
@@ -47,6 +62,8 @@
     "eslint-plugin-import-x": "^4.6.1",
     "eslint-plugin-jsonc": "^2.19.1",
     "globals": "^16.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
     "markdownlint-cli": "^0.44.0",
     "prettier": "^3.5.2",
     "stylelint": "^16.15.0",
