@@ -135,6 +135,10 @@ If you find any problems, bugs or have questions, please [open a GitHub issue](h
 
 Pull requests are of course also very welcome 🙂
 
+### Code of Conduct
+
+Please note that this project is released with a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+
 ### Developer commands
 
 - `npm run lint` - Run linting and formatter checks.
