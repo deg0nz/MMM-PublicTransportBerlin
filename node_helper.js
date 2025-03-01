@@ -27,7 +27,7 @@ module.exports = NodeHelper.create({
           })`
         );
       } catch (error) {
-        Log.error(error);
+        Log.error("[MMM-PublicTransportBerlin]", error);
       }
     } else {
       fetcher = this.departuresFetchers[fetcherId];
@@ -42,7 +42,7 @@ module.exports = NodeHelper.create({
           })`
         );
       } catch (error) {
-        Log.error(error);
+        Log.error("[MMM-PublicTransportBerlin]", error);
       }
     }
 
@@ -66,7 +66,7 @@ module.exports = NodeHelper.create({
         fetcherId: fetcher.getIdentifier()
       });
     } catch (error) {
-      Log.error(`Error initializing fetcher: ${error}`);
+      Log.error(`[MMM-PublicTransportBerlin] Error initializing fetcher: ${error}`);
     }
   },
 
@@ -78,7 +78,7 @@ module.exports = NodeHelper.create({
       this.pimpDeparturesArray(departuresData.departuresArray);
       this.sendSocketNotification("DEPARTURES_FETCHED", departuresData);
     } catch (error) {
-      Log.log(`Error while fetching departures (for module instance ${fetcherId}): ${error}`);
+      Log.error(`Error while fetching departures (for module instance ${fetcherId}): ${error}`);
       // Add stationId to error for identification in the main instance
       error.fetcherId = fetcherId;
       error.message = error;
