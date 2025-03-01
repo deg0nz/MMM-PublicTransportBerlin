@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file. The version
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.4] - 2025-03-01 - Maintenance update
+
+- Update dependencies incl. `hafas-client`
+- Add cspell and fix typos
+- Add Code of Conduct
+- chore: Optimize logging
+- chore: Simplify ESLint call
+- chore: Simplify ESLint @stylistic config
+- chore: Remove unused release script
+- chore: Add husky and lint-staged
+- chore: Remove superfluous "prettier-ignore"
+
 ## [2.1.3] - 2024-12-18 - Maintenance update
 
 - chore: Add CHANGELOG
