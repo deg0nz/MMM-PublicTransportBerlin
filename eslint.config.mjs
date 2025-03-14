@@ -1,12 +1,12 @@
-import eslintPluginImportX from "eslint-plugin-import-x";
+import eslintPluginImport from "eslint-plugin-import-x";
 import eslintPluginJs from "@eslint/js";
 import eslintPluginJsonc from "eslint-plugin-jsonc";
 import eslintPluginStylistic from "@stylistic/eslint-plugin";
 import globals from "globals";
 
 const config = [
+  eslintPluginImport.flatConfigs.recommended,
   eslintPluginJs.configs.all,
-  eslintPluginImportX.flatConfigs.recommended,
   eslintPluginStylistic.configs.all,
   ...eslintPluginJsonc.configs["flat/recommended-with-json"],
   {
@@ -28,7 +28,7 @@ const config = [
       "@stylistic/indent": ["error", 2],
       "@stylistic/multiline-comment-style": "off",
       "@stylistic/multiline-ternary": "off",
-      "@stylistic/no-multi-spaces": "off",
+      "@stylistic/no-multi-spaces": ["error", {ignoreEOLComments: true}],
       "@stylistic/padded-blocks": ["error", "never"],
       "@stylistic/quote-props": ["error", "as-needed"],
       "capitalized-comments": "off",
@@ -44,14 +44,11 @@ const config = [
       "multiline-comment-style": "off",
       "no-inline-comments": "off",
       "no-magic-numbers": "off",
-      "no-negated-condition": "off",
       "no-ternary": "off",
-      "no-undefined": "off",
       "no-warning-comments": "off",
-      "one-var": "off",
+      "one-var": ["error", "never"],
       "prefer-destructuring": "off",
       "prefer-named-capture-group": "off",
-      "require-await": "warn",
       "sort-keys": "off",
       strict: "off"
     }
@@ -66,18 +63,17 @@ const config = [
       sourceType: "module"
     },
     rules: {
-      "@stylistic/array-element-newline": "off",
-      "@stylistic/dot-location": ["error", "property"],
+      "@stylistic/array-element-newline": ["error", "consistent"],
       "@stylistic/function-call-argument-newline": ["error", "consistent"],
       "@stylistic/function-paren-newline": "off",
       "@stylistic/indent": ["error", 2],
+      "@stylistic/object-property-newline": ["error", {allowAllPropertiesOnSameLine: true}],
       "@stylistic/padded-blocks": ["error", "never"],
       "@stylistic/quote-props": ["error", "as-needed"],
       "func-style": "off",
-      "max-lines-per-function": ["error", 100],
       "no-magic-numbers": "off",
-      "one-var": "off",
-      "prefer-destructuring": "off"
+      "one-var": ["error", "never"],
+      "prefer-destructuring": ["error", {array: false, object: true}]
     }
   },
   {
