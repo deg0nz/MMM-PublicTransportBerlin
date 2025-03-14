@@ -149,19 +149,18 @@ module.exports = NodeHelper.create({
     }
 
     // In case new lines get added but are not listed in the vbb-line-colors module
-    if (typeof colors !== "undefined") {
+    if (typeof colors === "undefined") {
+      // If no color has been found for the line, default to grey
+      properties.bgColor = "#535353";
+      properties.fgColor = "#fff";
+    } else {
       // Change default values if we changed them
       if ("bg" in colors) {
         properties.bgColor = colors.bg;
       }
-
       if ("fg" in colors) {
         properties.fgColor = colors.fg;
       }
-    } else {
-      // If no color has been found for the line, default to grey
-      properties.bgColor = "#535353";
-      properties.fgColor = "#fff";
     }
 
     return properties;
