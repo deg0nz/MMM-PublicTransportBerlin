@@ -1,10 +1,6 @@
 const config = {
-  extends: ["stylelint-config-standard"],
-  plugins: ["stylelint-prettier"],
-  root: true,
-  rules: {
-    "prettier/prettier": true
-  }
+  extends: ["stylelint-config-standard", "stylelint-prettier/recommended"],
+  root: true
 };
 
 export default config;
