@@ -1,4 +1,4 @@
-/* global Module moment Log */
+/* global dayjs Module Log */
 
 Module.register("MMM-PublicTransportBerlin", {
   // default values
@@ -34,6 +34,9 @@ Module.register("MMM-PublicTransportBerlin", {
     Log.info(
       `Starting module: ${this.name} with identifier: ${this.identifier}`
     );
+
+    dayjs.locale(config.language);
+    dayjs.extend(window.dayjs_plugin_isSameOrAfter);
 
     this.departuresArray = [];
     this.loaded = false;
@@ -321,7 +324,7 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   getRow (currentDeparture) {
-    let currentWhen = moment(currentDeparture.when).tz(this.config.timezone);
+    let currentWhen = dayjs(currentDeparture.when);
     const delay = this.convertDelayToMinutes(currentDeparture.delay);
 
     if (this.config.excludeDelayFromTimeLabel) {
@@ -395,24 +398,24 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   getDepartureTimeWithoutDelay (departureTime, delay) {
+    let returnTime = departureTime;
     if (delay > 0) {
-      departureTime.subtract(delay, "minutes");
+      returnTime = departureTime.subtract(delay, "minutes");
     } else if (delay < 0) {
-      departureTime.add(Math.abs(delay), "minutes");
+      returnTime = departureTime.add(Math.abs(delay), "minutes");
     }
-
-    return departureTime;
+    return returnTime;
   },
 
   getFirstReachableDeparturePosition () {
-    const now = moment();
+    const now = dayjs();
     const nowWithDelay = now.add(this.config.travelTimeToStation, "minutes");
     let result = 0;
 
     if (this.config.travelTimeToStation !== 0) {
       this.departuresArray.forEach((departure, i) => {
-        const currentWhen = moment(this.departuresArray[i].when);
-        const nextWhen = i < this.departuresArray.length - 1 ? moment(this.departuresArray[i + 1].when) : null;
+        const currentWhen = dayjs(this.departuresArray[i].when);
+        const nextWhen = i < this.departuresArray.length - 1 ? dayjs(this.departuresArray[i + 1].when) : null;
 
 
         if (
@@ -486,7 +489,10 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   getScripts () {
-    return ["moment.js", "moment-timezone.js"];
+    return [
+      this.file("node_modules/dayjs/dayjs.min.js"),
+      this.file("node_modules/dayjs/plugin/isSameOrAfter.js")
+    ];
   },
 
   socketNotificationReceived (notification, payload) {
