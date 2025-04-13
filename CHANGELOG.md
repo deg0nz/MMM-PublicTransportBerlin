@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file. The version
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.6](https://github.com/deg0nz/MMM-PublicTransportBerlin/compare/v2.1.5...v2.1.6) - 2025-04-13 - Maintenance update
+
+- chore: update prepare script message about `husky` for clarity
+- chore: update dependencies
+- chore: resolve new ESLint warning
+
 ## [2.1.5](https://github.com/deg0nz/MMM-PublicTransportBerlin/compare/v2.1.4...v2.1.5) - 2025-03-16 - Maintenance update
 
 - refactor: Replace 'moment' with 'dayjs' for date handling. Reason: ['moment' is considered as legacy](https://momentjs.com/docs/#/-project-status/), 'dayjs' is a modern alternative.
