@@ -29,7 +29,7 @@
   "scripts": {
     "lint": "eslint && stylelint **/*.css && markdownlint . --ignore node_modules && prettier . --check",
     "lint:fix": "eslint --fix && stylelint **/*.css --fix && markdownlint . --ignore node_modules --fix && prettier . --write",
-    "prepare": "[ -f node_modules/.bin/husky ] && husky || echo husky is not installed.",
+    "prepare": "[ -f node_modules/.bin/husky ] && husky || echo info for developers: husky is not installed.",
     "query": "node ./convenience/query_stations.mjs bvg",
     "test": "npm run lint && npm run test:spelling",
     "test:spelling": "cspell ."
