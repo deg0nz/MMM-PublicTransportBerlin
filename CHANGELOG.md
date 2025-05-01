@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file. The version
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.7](https://github.com/deg0nz/MMM-PublicTransportBerlin/compare/v2.1.6...v2.1.7) - 2025-05-01
+
+- chore: update devDependencies
+- chore: optimize ESLint rules
+- docs: update `npm ci` command to omit dev dependencies
+- refactor: simplify string checks in `trimDirectionString` method
+- refactor: optimize handling of option `directionStationId` for consistency and better logging
+- refactor: remove unused `timezone` option
+- refactor: remove old deprecation warning about `delay` option which was removed in 2018
+
 ## [2.1.6](https://github.com/deg0nz/MMM-PublicTransportBerlin/compare/v2.1.5...v2.1.6) - 2025-04-13 - Maintenance update
 
 - chore: update prepare script message about `husky` for clarity
