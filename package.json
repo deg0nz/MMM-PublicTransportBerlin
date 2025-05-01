@@ -1,6 +1,6 @@
 {
   "name": "mmm-publictransportberlin",
-  "version": "2.1.6",
+  "version": "2.1.7",
   "description": "Public transport module for MagicMirror² driven by BVG-Hafas data.",
   "keywords": [
     "MagicMirror",
