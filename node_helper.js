@@ -21,10 +21,9 @@ module.exports = NodeHelper.create({
       try {
         const stationName = await fetcher.getStationName();
         const directionDescriptor = await fetcher.getDirectionDescriptor();
+        const directionStationString = config.directionStationId === "" ? "" : `, Direction ID: ${config.directionStationId}`;
         Log.log(
-          `Created transportation fetcher for station ${stationName} (toward ${directionDescriptor}). (Station ID: ${fetcher.getStationId()}, Direction ID: ${
-            config.directionStationId
-          })`
+          `Created transportation fetcher for station ${stationName} (toward ${directionDescriptor}). (Station ID: ${fetcher.getStationId()}${directionStationString})`
         );
       } catch (error) {
         Log.error("[MMM-PublicTransportBerlin]", error);

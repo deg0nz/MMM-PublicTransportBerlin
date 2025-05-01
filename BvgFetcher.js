@@ -32,7 +32,7 @@ module.exports = class BvgFetcher {
   }
 
   async getDirectionDescriptor () {
-    if (typeof this.config.directionStationId === "undefined") {
+    if (this.config.directionStationId === "") {
       return "all directions";
     }
     const station = await this.hafasClient.stop(this.config.directionStationId);
@@ -56,10 +56,7 @@ module.exports = class BvgFetcher {
     let opt;
 
     // Handle single direction case
-    if (
-      !this.config.directionStationId ||
-      this.config.directionStationId === ""
-    ) {
+    if (this.config.directionStationId === "") {
       opt = {
         when,
         duration: this.config.departureMinutes
