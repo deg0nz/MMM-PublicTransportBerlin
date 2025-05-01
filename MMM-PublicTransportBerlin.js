@@ -50,21 +50,12 @@ Module.register("MMM-PublicTransportBerlin", {
       this.configIssueDetected = true;
     }
 
-    // If the stationId is an old id, we'll print a warning
-    // (This test is for the migration to hafas-client v6. After a reasonable time (perhaps a year) after the migration, this test could be removed.)
+    // If the stationId is an old id, we'll print a warning. This test is for the migration to hafas-client v6.
+    // After a reasonable time (perhaps five years) after the migration (which happened 2023-06-20), this test can be removed.
     if (this.config.stationId.length === 12) {
       Log.warn(
         "MMM-PublicTransportBerlin deprecation warning: You are using an old stationId. Please change your configuration!"
       );
-      this.configIssueDetected = true;
-    }
-
-    // Provide backwards compatibility for refactoring of config.delay to config.travelTimeToStation
-    if (this.config.delay) {
-      Log.warn(
-        "MMM-PublicTransportBerlin deprecation warning: The delay option has been renamed to travelTimeToStation. Please change your configuration!"
-      );
-      this.config.travelTimeToStation = this.config.delay;
       this.configIssueDetected = true;
     }
 
