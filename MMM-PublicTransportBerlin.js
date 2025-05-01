@@ -434,13 +434,12 @@ Module.register("MMM-PublicTransportBerlin", {
   trimDirectionString (string) {
     let dirString = string;
 
-    if (dirString.indexOf(",") > -1) {
+    if (dirString.includes(",")) {
       dirString = dirString.split(",")[0];
     }
 
-    const viaIndex = dirString.search(/( via )/gu);
-    if (viaIndex > -1) {
-      dirString = dirString.split(/( via )/gu)[0];
+    if (dirString.includes(" via ")) {
+      dirString = dirString.split(" via ")[0];
     }
 
     return dirString;
