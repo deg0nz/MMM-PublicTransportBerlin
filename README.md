@@ -26,7 +26,7 @@ Just clone the module into your MagicMirror modules directory and install the de
 cd ~/MagicMirror/modules
 git clone https://github.com/deg0nz/MMM-PublicTransportBerlin
 cd MMM-PublicTransportBerlin
-npm ci
+npm ci --omit=dev
 ```
 
 ## Update
@@ -36,7 +36,7 @@ Just enter your MMM-PublicTransportBerlin directory, pull the update and install
 ```shell
 cd ~/MagicMirror/modules/MMM-PublicTransportBerlin
 git pull
-npm ci
+npm ci --omit=dev
 ```
 
 ## How to get the `stationId`
@@ -141,6 +141,7 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 
 ### Developer commands
 
+- `npm install` - Install all dependencies.
 - `npm run lint` - Run linting and formatter checks.
 - `npm run lint:fix` - Fix linting and formatter issues.
 - `npm run test` - Run linting and formatter checks + Run spelling check.
@@ -152,4 +153,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) f
 
 ## Changelog
 
-All notable changes to this project will be documented in the [CHANGELOG.md](./CHANGELOG.md) file.
+All notable changes to this project will be documented in the [CHANGELOG.md](CHANGELOG.md) file.
