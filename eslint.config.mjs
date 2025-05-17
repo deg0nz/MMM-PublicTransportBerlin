@@ -1,14 +1,11 @@
-import eslintPluginJs from "@eslint/js";
-import eslintPluginJsonc from "eslint-plugin-jsonc";
-import eslintPluginStylistic from "@stylistic/eslint-plugin";
+import {defineConfig} from "eslint/config";
 import globals from "globals";
-import {flatConfigs as importConfigs} from "eslint-plugin-import-x";
+import {flatConfigs as importX} from "eslint-plugin-import-x";
+import js from "@eslint/js";
+import json from "@eslint/json";
+import stylistic from "@stylistic/eslint-plugin";
 
-const config = [
-  importConfigs.recommended,
-  eslintPluginJs.configs.all,
-  eslintPluginStylistic.configs.all,
-  ...eslintPluginJsonc.configs["flat/recommended-with-json"],
+export default defineConfig([
   {
     files: ["**/*.js"],
     languageOptions: {
@@ -17,9 +14,10 @@ const config = [
         ...globals.browser,
         ...globals.node,
         config: "readonly"
-      },
-      sourceType: "commonjs"
+      }
     },
+    plugins: {js, stylistic},
+    extends: [importX.recommended, "js/all", "stylistic/all"],
     rules: {
       "@stylistic/array-element-newline": ["error", "consistent"],
       "@stylistic/dot-location": ["error", "property"],
@@ -60,6 +58,8 @@ const config = [
       },
       sourceType: "module"
     },
+    plugins: {js, stylistic},
+    extends: [importX.recommended, "js/all", "stylistic/all"],
     rules: {
       "@stylistic/array-element-newline": ["error", "consistent"],
       "@stylistic/function-call-argument-newline": ["error", "consistent"],
@@ -69,14 +69,12 @@ const config = [
       "@stylistic/padded-blocks": ["error", "never"],
       "@stylistic/quote-props": ["error", "as-needed"],
       "func-style": "off",
+      "import-x/no-unresolved": ["error", {ignore: ["eslint/config"]}],
       "no-magic-numbers": "off",
       "one-var": ["error", "never"],
-      "prefer-destructuring": ["error", {array: false, object: true}]
+      "prefer-destructuring": ["error", {array: false, object: true}],
+      "sort-keys": "off"
     }
   },
-  {
-    ignores: ["package-lock.json"]
-  }
-];
-
-export default config;
+  {files: ["**/*.json"], ignores: ["package-lock.json"], plugins: {json}, extends: ["json/recommended"], language: "json/json"}
+]);
