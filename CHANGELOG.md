@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file. The version
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.8](https://github.com/deg0nz/MMM-PublicTransportBerlin/compare/v2.1.7...v2.1.8) - 2025-05-17
+
+- chore: review linter setup
+- chore: update devDependencies
+
 ## [2.1.7](https://github.com/deg0nz/MMM-PublicTransportBerlin/compare/v2.1.6...v2.1.7) - 2025-05-01
 
 - chore: update devDependencies
