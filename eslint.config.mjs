@@ -1,11 +1,14 @@
+import css from "@eslint/css";
 import {defineConfig} from "eslint/config";
 import globals from "globals";
 import {flatConfigs as importX} from "eslint-plugin-import-x";
 import js from "@eslint/js";
 import json from "@eslint/json";
+import markdown from "@eslint/markdown";
 import stylistic from "@stylistic/eslint-plugin";
 
 export default defineConfig([
+  {files: ["**/*.css"], plugins: {css}, language: "css/css", extends: ["css/recommended"], rules: {"css/no-invalid-properties": "off"}},
   {
     files: ["**/*.js"],
     languageOptions: {
@@ -76,5 +79,6 @@ export default defineConfig([
       "sort-keys": "off"
     }
   },
-  {files: ["**/*.json"], ignores: ["package-lock.json"], plugins: {json}, extends: ["json/recommended"], language: "json/json"}
+  {files: ["**/*.json"], ignores: ["package-lock.json"], plugins: {json}, extends: ["json/recommended"], language: "json/json"},
+  {files: ["**/*.md"], plugins: {markdown}, language: "markdown/gfm", extends: ["markdown/recommended"]}
 ]);
