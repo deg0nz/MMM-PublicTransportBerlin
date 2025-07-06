@@ -27,8 +27,8 @@
     "https://github.com/deg0nz/MMM-PublicTransportBerlin/graphs/contributors"
   ],
   "scripts": {
-    "lint": "eslint && stylelint **/*.css && markdownlint . --ignore node_modules && prettier . --check",
-    "lint:fix": "eslint --fix && stylelint **/*.css --fix && markdownlint . --ignore node_modules --fix && prettier . --write",
+    "lint": "eslint && prettier . --check",
+    "lint:fix": "eslint --fix && prettier . --write",
     "prepare": "[ -f node_modules/.bin/husky ] && husky || echo info for developers: husky is not installed.",
     "query": "node ./convenience/query_stations.mjs bvg",
     "test": "node --run lint && node --run test:spelling",
@@ -41,22 +41,16 @@
     "vbb-short-station-name": "^1.0.1"
   },
   "lint-staged": {
-    "!(*.css|*.md)": [
+    "*": [
       "eslint --fix",
       "prettier --write --ignore-unknown"
-    ],
-    "*.md": [
-      "markdownlint --ignore node_modules --fix",
-      "prettier --write"
-    ],
-    "*.css": [
-      "stylelint --fix",
-      "prettier --write"
     ]
   },
   "devDependencies": {
+    "@eslint/css": "^0.9.0",
     "@eslint/js": "^9.30.0",
     "@eslint/json": "^0.12.0",
+    "@eslint/markdown": "^6.6.0",
     "@stylistic/eslint-plugin": "^4.4.0",
     "cspell": "^9.1.2",
     "eslint": "^9.30.0",
@@ -64,11 +58,7 @@
     "globals": "^16.2.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
-    "markdownlint-cli": "^0.45.0",
-    "prettier": "^3.6.2",
-    "stylelint": "^16.21.0",
-    "stylelint-config-standard": "^38.0.0",
-    "stylelint-prettier": "^5.0.3"
+    "prettier": "^3.6.2"
   },
   "engines": {
     "node": ">=16"
