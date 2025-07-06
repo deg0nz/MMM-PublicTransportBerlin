@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file. The version
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.10](https://github.com/deg0nz/MMM-PublicTransportBerlin/compare/v2.1.9...v2.1.10) (2025-07-06)
+
+- chore: use `node --run` to run scripts
+- chore: update devDependencies
+- refactor: simplify linting setup by replacing `stylelint` and `markdownlint` with ESLint plugins
+
 ## [2.1.9](https://github.com/deg0nz/MMM-PublicTransportBerlin/compare/v2.1.8...v2.1.9) (2025-06-01)
 
 - chore: update devDependencies
