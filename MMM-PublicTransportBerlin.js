@@ -473,7 +473,7 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   getStyles () {
-    return ["style.css", "font-awesome.css"];
+    return ["MMM-PublicTransportBerlin.css", "font-awesome.css"];
   },
 
   getScripts () {
