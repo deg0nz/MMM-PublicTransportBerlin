@@ -26,6 +26,7 @@
   "contributors": [
     "https://github.com/deg0nz/MMM-PublicTransportBerlin/graphs/contributors"
   ],
+  "type": "commonjs",
   "scripts": {
     "lint": "eslint && prettier . --check",
     "lint:fix": "eslint --fix && prettier . --write",
