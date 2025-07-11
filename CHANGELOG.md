@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file. The version
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.11](https://github.com/deg0nz/MMM-PublicTransportBerlin/compare/v2.1.10...v2.1.11) (2025-07-11)
+
+- chore: add missing "type" field in package.json
+- chore: update devDependencies
+- refactor: rename `style.css` to `MMM-PublicTransportBerlin.css` for better debugging
+
 ## [2.1.10](https://github.com/deg0nz/MMM-PublicTransportBerlin/compare/v2.1.9...v2.1.10) (2025-07-06)
 
 - chore: use `node --run` to run scripts
