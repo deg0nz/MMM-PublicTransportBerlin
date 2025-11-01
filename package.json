@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "dayjs": "^1.11.18",
-    "hafas-client": "^6.3.5",
+    "hafas-client": "^6.3.6",
     "vbb-line-colors": "^1.0.5",
     "vbb-short-station-name": "^1.0.1"
   },
