@@ -105,6 +105,9 @@ Module.register("MMM-PublicTransportBerlin", {
     } else {
       const heading = document.createElement("header");
       heading.innerHTML = this.stationName;
+      if(typeof this.directionDescriptor !== "undefined" && this.directionDescriptor !== "all directions" && this.config.showDirection) {
+        heading.innerHTML += `<br />(${this.translate("TOWARD")} ${this.directionDescriptor})`;
+      }
       wrapper.appendChild(heading);
 
       // Handle departure fetcher error and show it on the screen
@@ -488,6 +491,7 @@ Module.register("MMM-PublicTransportBerlin", {
       switch (notification) {
         case "FETCHER_INITIALIZED":
           this.stationName = payload.stationName;
+          this.directionDescriptor = payload.directionDescriptor;
           this.loaded = true;
           break;
 
