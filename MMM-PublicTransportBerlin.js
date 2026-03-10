@@ -84,6 +84,16 @@ Module.register("MMM-PublicTransportBerlin", {
     }
   },
 
+  getHeading() {
+    const heading = document.createElement("header");
+    heading.innerHTML = this.stationName;
+    if(typeof this.directionDescriptor !== "undefined" && this.directionDescriptor !== "all directions" && this.config.showDirection) {
+      heading.innerHTML += `<br />(${this.translate("TOWARD")} ${this.directionDescriptor})`;
+    }
+
+    return heading;
+  },
+
   getDom () {
     const wrapper = document.createElement("div");
     wrapper.className = "ptb-wrapper";
@@ -103,12 +113,7 @@ Module.register("MMM-PublicTransportBerlin", {
         : this.translate("LOADING");
       wrapper.className = "small light dimmed";
     } else {
-      const heading = document.createElement("header");
-      heading.innerHTML = this.stationName;
-      if(typeof this.directionDescriptor !== "undefined" && this.directionDescriptor !== "all directions" && this.config.showDirection) {
-        heading.innerHTML += `<br />(${this.translate("TOWARD")} ${this.directionDescriptor})`;
-      }
-      wrapper.appendChild(heading);
+      wrapper.appendChild(this.getHeading());
 
       // Handle departure fetcher error and show it on the screen
       if (Object.keys(this.error).length > 0) {
