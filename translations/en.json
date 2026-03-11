@@ -2,6 +2,7 @@
   "CONFIG_ISSUE": "Config issue. Please check Browser console warnings!",
   "LOADING": "Loading …",
   "DIRECTION": "Direction",
+  "TOWARD": "Toward",
   "WHEN": "When",
   "LINE": "Line",
   "NO_VBBDATA_ERROR_HINT": "This could mean that VBB data is currently not available.",

@@ -2,6 +2,7 @@
   "CONFIG_ISSUE": "Konfigurationsproblem. Bitte überprüfe die Warnungen in der Browserkonsole!",
   "LOADING": "Lade …",
   "DIRECTION": "Richtung",
+  "TOWARD": "Richtung",
   "WHEN": "Abfahrt",
   "LINE": "Linie",
   "NO_VBBDATA_ERROR_HINT": "Das könnte heißen, dass VBB-Daten gerade nicht verfügbar sind.",
