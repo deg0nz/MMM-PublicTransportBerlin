@@ -84,10 +84,10 @@ Module.register("MMM-PublicTransportBerlin", {
     }
   },
 
-  getHeading() {
+  getHeading () {
     const heading = document.createElement("header");
     heading.innerHTML = this.stationName;
-    if(typeof this.directionDescriptor !== "undefined" && this.directionDescriptor !== "all directions" && this.config.showDirection) {
+    if (typeof this.directionDescriptor !== "undefined" && this.directionDescriptor !== "all directions" && this.config.showDirection) {
       heading.innerHTML += `<br />(${this.translate("TOWARD")} ${this.directionDescriptor})`;
     }
 
