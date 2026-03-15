@@ -24,7 +24,10 @@
     "url": "https://kayuk.de"
   },
   "contributors": [
-    "https://github.com/deg0nz/MMM-PublicTransportBerlin/graphs/contributors"
+    {
+      "name": "Contributors to deg0nz/MMM-PublicTransportBerlin",
+      "url": "https://github.com/deg0nz/MMM-PublicTransportBerlin/graphs/contributors"
+    }
   ],
   "type": "commonjs",
   "scripts": {
