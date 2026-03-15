@@ -28,6 +28,7 @@
   ],
   "type": "commonjs",
   "scripts": {
+    "demo": "cd ../../ && MM_CONFIG_FILE=modules/MMM-PublicTransportBerlin/demo.config.js node --run start:dev",
     "lint": "eslint && prettier . --check",
     "lint:fix": "eslint --fix && prettier . --write",
     "prepare": "[ -f node_modules/.bin/husky ] && husky || echo info for developers: husky is not installed.",
