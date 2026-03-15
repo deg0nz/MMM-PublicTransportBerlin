@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file. The version
 
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.12](https://github.com/deg0nz/MMM-PublicTransportBerlin/compare/v2.1.11...v2.1.12) (2026-03-15)
+
+- chore: change runner from ubuntu-latest to ubuntu-slim for automated tests
+- chore: update dependencies and github actions
+- chore: update ESLint config regarding stylistic.configs.all
+- fix: localization issue (#341)
+- fix: remove dayjs to prevent conflict with other modules
+
 ## [2.1.11](https://github.com/deg0nz/MMM-PublicTransportBerlin/compare/v2.1.10...v2.1.11) (2025-07-11)
 
 - chore: add missing "type" field in package.json
