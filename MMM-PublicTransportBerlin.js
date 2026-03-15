@@ -1,4 +1,4 @@
-/* global dayjs Module Log */
+/* global Module Log */
 
 Module.register("MMM-PublicTransportBerlin", {
   defaults: {
@@ -32,9 +32,6 @@ Module.register("MMM-PublicTransportBerlin", {
     Log.info(
       `Starting module: ${this.name} with identifier: ${this.identifier}`
     );
-
-    dayjs.locale(config.language);
-    dayjs.extend(window.dayjs_plugin_isSameOrAfter);
 
     this.departuresArray = [];
     this.loaded = false;
@@ -320,8 +317,12 @@ Module.register("MMM-PublicTransportBerlin", {
     return row;
   },
 
+  formatTime (date) {
+    return `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+  },
+
   getRow (currentDeparture) {
-    let currentWhen = dayjs(currentDeparture.when);
+    let currentWhen = new Date(currentDeparture.when);
     const delay = this.convertDelayToMinutes(currentDeparture.delay);
 
     if (this.config.excludeDelayFromTimeLabel) {
@@ -334,7 +335,7 @@ Module.register("MMM-PublicTransportBerlin", {
     timeCell.className = `ptb-centered-td ptb-time-cell ${
       this.config.useBrightScheme ? " light" : ""
     }`;
-    timeCell.innerHTML = currentWhen.format("HH:mm");
+    timeCell.innerHTML = this.formatTime(currentWhen);
     row.appendChild(timeCell);
 
     const delayCell = document.createElement("td");
@@ -395,32 +396,28 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   getDepartureTimeWithoutDelay (departureTime, delay) {
-    let returnTime = departureTime;
-    if (delay > 0) {
-      returnTime = departureTime.subtract(delay, "minutes");
-    } else if (delay < 0) {
-      returnTime = departureTime.add(Math.abs(delay), "minutes");
+    if (delay === 0) {
+      return departureTime;
     }
-    return returnTime;
+    return new Date(departureTime.getTime() - delay * 60000);
   },
 
   getFirstReachableDeparturePosition () {
-    const now = dayjs();
-    const nowWithDelay = now.add(this.config.travelTimeToStation, "minutes");
+    const now = new Date();
+    const nowWithDelay = new Date(now.getTime() + this.config.travelTimeToStation * 60000);
     let result = 0;
 
     if (this.config.travelTimeToStation !== 0) {
       this.departuresArray.forEach((departure, i) => {
-        const currentWhen = dayjs(this.departuresArray[i].when);
-        const nextWhen = i < this.departuresArray.length - 1 ? dayjs(this.departuresArray[i + 1].when) : null;
-
+        const currentWhen = new Date(this.departuresArray[i].when);
+        const nextWhen = i < this.departuresArray.length - 1 ? new Date(this.departuresArray[i + 1].when) : null;
 
         if (
-          currentWhen.isBefore(nowWithDelay) &&
-          (nextWhen && nextWhen.isSameOrAfter(nowWithDelay) || i === 0 && nextWhen && nextWhen.isSameOrAfter(nowWithDelay))
+          currentWhen < nowWithDelay &&
+          (nextWhen && nextWhen >= nowWithDelay || i === 0 && nextWhen && nextWhen >= nowWithDelay)
         ) {
           result = i;
-        } else if (i === this.departuresArray.length - 1 && currentWhen.isBefore(nowWithDelay)) {
+        } else if (i === this.departuresArray.length - 1 && currentWhen < nowWithDelay) {
           throw new Error(this.translate("NO_REACHABLE_DEPARTURES"));
         }
       });
@@ -485,10 +482,7 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   getScripts () {
-    return [
-      this.file("node_modules/dayjs/dayjs.min.js"),
-      this.file("node_modules/dayjs/plugin/isSameOrAfter.js")
-    ];
+    return [];
   },
 
   socketNotificationReceived (notification, payload) {
