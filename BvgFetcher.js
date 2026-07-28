@@ -89,12 +89,6 @@ module.exports = class BvgFetcher {
       // excluded transportation types
       // ignored lines
 
-      // TODO: Make real stop/station handling here
-      // Quick fix to work around missing station objects
-      if (!row.station) {
-        row.station = row.stop;
-      }
-
       // Log.debug only prints when logLevel includes "DEBUG"
       BvgFetcher.printDeparture(row);
 
@@ -145,7 +139,7 @@ module.exports = class BvgFetcher {
     });
 
     Log.debug(
-      `${time} ${delayMinutes} ${row.line.product} ${row.direction} | stationId: ${row.station.id}`
+      `${time} ${delayMinutes} ${row.line.product} ${row.direction} | stationId: ${row.stop.id}`
     );
   }
 };
