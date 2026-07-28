@@ -95,10 +95,8 @@ module.exports = class BvgFetcher {
         row.station = row.stop;
       }
 
-      // If log level is set to debug print infos about departures
-      if (config.logLevel.includes("DEBUG")) {
-        BvgFetcher.printDeparture(row);
-      }
+      // Log.debug only prints when logLevel includes "DEBUG"
+      BvgFetcher.printDeparture(row);
 
       if (
         !this.config.excludedTransportationTypes.includes(row.line.product) &&
