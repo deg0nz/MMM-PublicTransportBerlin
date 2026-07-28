@@ -7,15 +7,6 @@ let profileName = "";
 const productMap = {};
 
 /**
- * Create an array without values that occur multiple times.
- * @param {array} array An array that could have duplicate values.
- * @returns {array} An array without duplicate values.
- */
-function arrayUnique (array) {
-  return [...new Set(array)];
-}
-
-/**
  * Get proper names for the product keys.
  * @param {object} products An object with the available transport products as a keys.
  * @returns {string} A list of transport products as a string.
@@ -25,15 +16,17 @@ function refineProducts (products) {
     return "none";
   }
 
-  const availableProducts = Object.keys(products).filter(
-    (key) => products[key]
-  );
+  const productNames = new Set();
 
-  const availableProductsReadable = arrayUnique(
-    availableProducts.map((product) => productMap[product])
-  );
+  for (const key of Object.keys(products)) {
+    if (products[key]) {
+      productNames.add(productMap[key]);
+    }
+  }
 
-  return availableProductsReadable.join(", ");
+  const productNamesList = [...productNames].join(", ");
+
+  return productNamesList;
 }
 
 /**
