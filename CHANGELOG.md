@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.2.1](https://github.com/deg0nz/MMM-PublicTransportBerlin/compare/v2.2.0...v2.2.1) (2026-08-23)
+
+### Chores
+
+* add allowScripts config ([44e7cda](https://github.com/deg0nz/MMM-PublicTransportBerlin/commit/44e7cda8bdb555bf729b5d0180f47293e003b311))
+* update devDependencies ([df3a28f](https://github.com/deg0nz/MMM-PublicTransportBerlin/commit/df3a28ff81d0972743eca3ebf5ac2b0076758621))
+* update GitHub Actions ([8607d8c](https://github.com/deg0nz/MMM-PublicTransportBerlin/commit/8607d8c47bb067f7dfaf94605f163bb679434625))
+
+### Code Refactoring
+
+* remove obsolete station/stop fallback in debug logging ([07c303d](https://github.com/deg0nz/MMM-PublicTransportBerlin/commit/07c303d72a6649d3a21805ecd0b08c97ab28c984))
+* remove redundant logLevel check before printDeparture ([8b03af2](https://github.com/deg0nz/MMM-PublicTransportBerlin/commit/8b03af2842901b74c78e281048f82a36388b1d1d))
+* simplify refineProducts and inline arrayUnique ([593fcaa](https://github.com/deg0nz/MMM-PublicTransportBerlin/commit/593fcaad22786c013ac2d5fa1093ef764e0ba097))
 ## [2.2.0](https://github.com/deg0nz/MMM-PublicTransportBerlin/compare/v2.1.12...v2.2.0) (2026-05-13)
 
 
