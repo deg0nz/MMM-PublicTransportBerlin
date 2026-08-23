@@ -375,20 +375,20 @@ Module.register("MMM-PublicTransportBerlin", {
       this.config.useBrightScheme ? " bright" : ""
     }`;
 
+    const direction = this.trimDirectionString(currentDeparture.direction);
+
     if (
       this.config.marqueeLongDirections &&
-      currentDeparture.direction.length >= 26
+      direction.length >= 26
     ) {
       directionCell.className = `ptb-direction-cell ptb-marquee${
         this.config.useBrightScheme ? " bright" : ""
       }`;
       const directionSpan = document.createElement("span");
-      directionSpan.innerHTML = currentDeparture.direction;
+      directionSpan.innerHTML = direction;
       directionCell.appendChild(directionSpan);
     } else {
-      directionCell.innerHTML = this.trimDirectionString(
-        currentDeparture.direction
-      );
+      directionCell.innerHTML = direction;
     }
 
     row.appendChild(directionCell);
@@ -432,6 +432,11 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   trimDirectionString (string) {
+    // hafas-client can return a null direction (e.g. for some arrivals/cancellations)
+    if (!string) {
+      return this.translate("UNKNOWN_DIRECTION");
+    }
+
     let dirString = string;
 
     if (dirString.includes(",")) {
