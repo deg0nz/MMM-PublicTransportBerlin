@@ -60,13 +60,13 @@ The module is quite configurable. These are the possible options:
 <!-- prettier-ignore-start -->
 | Option | Description |
 |--------|-------------|
-|`stationName`|The name of the station.<br><br>**Type:** `string` This value is **optional**.|
+|`stationName`|The name of the station. This is used in the header of the module. If not set, the name fetched from the API will be used.<br><br>**Type:** `string` This value is **optional**.|
 |`stationId`|The ID of the station. How to get the ID for your station is described below.<br><br>**Type:** `string` This value is **Required**.|
 |`directionStationId`|If you want the module to show departures only in a specific direction, you can enter the ID of the next station on your line to specify the direction. <br><br> _Note: After some tests, the data delivery of this feature seems not to be as reliable as the normal version. Also, please make sure you actually have the right `stationId` for the direction station. Please check your MagicMirror log for errors before reporting them. <br> Additionally, more request results take more time for the request. So please make sure to keep your `maxUnreachableDepartures` and `maxReachableDepartures` low when using this feature._ <br><br> **Type:** `string` <br>**Default value:** `<empty>`|
 |`ignoredLines`|You can exclude different lines of a station by adding them to this array. Usually, this can be empty.<br><br>**Type:** `string array` (comma separated `strings` in the array).<br>**Default value:** `<empty>` <br>**Possible values:** All valid line names like `'U5'` (for subway) , `'M10'` or `'21'` (for tram), `'S75'` (for suburban) , `'Bus 200'`(for bus), etc.|
 |`excludeDirections`|You can exclude different directions of departure at a station by adding them to this array. Usually, this can be empty.<br><br>**Type:** `string array` (comma separated `strings` in the array).<br>**Default value:** `<empty>` <br>**Possible values:** All valid destinations like `'Charlottenburg, Hertzallee'`, `'Mariendorf, Forddamm'`, etc.|
 |`excludedTransportationTypes`|Transportation types to be excluded from appearing on a module instance can be listed here.<br><br>**Type:** `string`, comma-separated list<br>**Default value:** `<empty>` <br>**Possible values:** `bus`, `tram`, `suburban`, `subway`, `regional`, `ferry`|
-|`marqueeLongDirections`|Makes a marquee/ticker text out of all direction descriptions with more than 25 characters. If this value is false, the descriptions are trimmed to the station names.<br><br> _Note: The rendering on the mirror is not perfect, but it is OK in my opinion. If the movement is not fluent enough for you, you should turn it off._<br><br>**Type:** `boolean`<br>**Default value:** `true`|
+|`marqueeLongDirections`|Makes a marquee/ticker text out of all direction descriptions with more than `maxDirectionCharacterCount` (default 25) characters.<br><br> _Note: The rendering on the mirror is not perfect, but it is OK in my opinion. If the movement is not fluent enough for you, you should turn it off._<br><br>**Type:** `boolean`<br>**Default value:** `true`|
 |`interval`|How often the module should be updated. The value is given in milliseconds.<br><br>**Type:** `integer` (milliseconds)<br>**Default value:** `120000` (2 minutes)|
 |`hidden`|Visibility of the module.<br><br>**Type:** `boolean`<br>**Default value:** `false`|
 |`travelTimeToStation`|How long does it take you to get from the mirror to the station? The value is given in minutes.<br><br>**Type:** `integer` (minutes)<br>**Default value:** `10` (10 minutes)|
@@ -85,6 +85,17 @@ The module is quite configurable. These are the possible options:
 |`showDirection`|Shows the direction in the module instance's header if the module instance is directed.<br><br>**Type:** `boolean`<br>**Default value:** `true`|
 |`useBrightScheme`|Brightens the display table.<br><br>**Type:** `boolean`<br>**Default value:** `false`|
 |`shortenStationNames`|Whether to use [`vbb-short-station-name`](https://github.com/derhuerst/vbb-short-station-name) to shorten Station names.<br><br>**Type:** `boolean`<br>**Default value:** `true`|
+|`showDistrictInDirections`|Whether to show the district (e.g. `Charlottenburg`) if the direction contains district and station (e.g. `Charlottenburg, Hertzallee`).<br><br>**Type:** `boolean`<br>**Default value:** `true`|
+|`showStopNameInDirections`|Whether to show the stop name (e.g. `Hertzallee`) if the direction contains district and station (e.g. `Charlottenburg, Hertzallee`).<br><br>**Type:** `boolean`<br>**Default value:** `true`|
+|`ignoreViaInDirections`|Whether to ignore via-stations in the direction (e.g. `U Walther-Schreiber-Platz via S Lankwitz` would get trimmed to `U Walther-Schreiber-Platz`.<br><br>**Type:** `boolean`<br>**Default value:** `true`|
+|`headerPrefix`|Adds a prefix to the Header (e.g. `towards`). A blank will get added if set.<br><br>**Type:** `string` This value is **optional**.|
+|`headerAppendix`|Adds a appendix to the Header (e.g. `towards`). A blank will get added if set.<br><br>**Type:** `string` This value is **optional**.|
+|`replaceInDirections`|<p>An object defining strings which are to be replaced in the displayed directions.</p><p>**Type:** `object`<br>**Example:** `{ "Platz": "Pl.", "\\(TF\\)": ""}`<br>**Default value:** `{}`</p><p>**Note:** The strings which appear as the keys of the object will be replaced by their values. If you want to replace special symbols like `"("`, `")"` or `"-"` you must escape these characters by placing **two** `"\"` in front of the character (see example above).</p>|
+|`noDeparturesText`|Overrides the default text for no departures.<br><br>**Type:** `string` This value is **optional**.|
+|`noReachableDeparturesText`|Overrides the default text for no reachable departures.<br><br>**Type:** `string` This value is **optional**.|
+|`noVBBDataText`|Overrides the default text for no VBB data.<br><br>**Type:** `string` This value is **optional**.|
+|`fetchErrorText`|Overrides the default text for a fetch error.<br><br>**Type:** `string` This value is **optional**.|
+|`maxDirectionCharacterCount`|Sets the maximum character count for a direction text. If the direction (after getting replaced and shortened is longer than this count, either the marquee effect is activated or the rest of the string is replaced with ...<br><br>**Type:** `integer`<br>**Default value:** `26`|
 <!-- prettier-ignore-end -->
 
 Here is an example of an entry in `config.js`:
@@ -114,7 +125,18 @@ Here is an example of an entry in `config.js`:
             fadeReachableDepartures: true,
             fadePointForReachableDepartures: 0.25,
             excludeDelayFromTimeLabel: true,
-            useBrightScheme: true
+            useBrightScheme: true,
+            showDistrictInDirections: true,
+            showStopNameInDirections: true,
+            ignoreViaInDirections: true,
+            headerPrefix: "towards",
+            headerAppendix: "S+U",
+            replaceInDirections: {"Hauptbahnhof": "Hbf."},
+            noDeparturesText: "no departures",
+            noReachableDeparturesText: "no reachable departures",
+            noVBBDataText: "no VBB data",
+            fetchErrorText: "fetch error",
+            maxDirectionCharacterCount: 20,
         }
     },
 ```

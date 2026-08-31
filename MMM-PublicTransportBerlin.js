@@ -26,7 +26,19 @@ Module.register("MMM-PublicTransportBerlin", {
     excludeDelayFromTimeLabel: false,   // Should the delay time be excluded from the time label?
     showDirection: true,                // Adds direction of the module instance to the header if the instance is directed
     animationSpeed: 3000,               // Speed of the update animation. (milliseconds)
-    shortenStationNames: true           // Shorten station names? See https://github.com/derhuerst/vbb-short-station-name
+    shortenStationNames: true,          // Shorten station names? See https://github.com/derhuerst/vbb-short-station-name
+    showDistrictInDirections: true,     // Show the District if splitted by a comma
+    showStopNameInDirections: true,     // Show the station name if spllited by a comma
+    ignoreViaInDirections: true,        // ignore via in Directions
+    stationName: "",                    // overrides the stationName in the header
+    headerPrefix: "",                   // adds a prefix to the header
+    headerAppendix: "",                 // adds a appendix to the header
+    replaceInDirections: {},            // key-value pairs which are used to replace `key` by `value` in the displayed directions
+    noDeparturesText: "",               // overrides the string displayed when no Departures got fetched
+    noReachableDeparturesText: "",      // overrides the string displayed when no reachable Departures got fetched
+    noVBBDataText: "",                  // overrides the string displayed when no VBB Data are available
+    fetchErrorText: "",                 // overrides the string displayed when there was an error fetching data
+    maxDirectionCharacterCount: 26,     // sets the maximum characted count for either changing to marque or end with ...
   },
 
   start () {
@@ -75,6 +87,31 @@ Module.register("MMM-PublicTransportBerlin", {
         this.config.excludeDirections = [];
       }
 
+      // Handle missing replace in directions
+      if (typeof this.config.replaceInDirections === "undefined") {
+        this.config.replaceInDirections = {};
+      }
+
+      // Handle overrides for translated strings
+      if (typeof this.config.noDeparturesText === "undefined" || this.config.noDeparturesText == "") {
+        this.config.noDeparturesText = this.translate("NO_DEPARTURES_AVAILABLE");
+      }
+
+      // Handle no reachable Departure text
+      if (typeof this.config.noReachableDeparturesText === "undefined" || this.config.noReachableDeparturesText == "") {
+        this.config.noReachableDeparturesText = this.translate("NO_REACHABLE_DEPARTURES");
+      }
+
+      // Handle no VBB Data text
+      if (typeof this.config.noVBBDataText === "undefined" || this.config.noVBBDataText == "") {
+        this.config.noVBBDataText = this.translate("NO_VBBDATA_ERROR_HINT");
+      }
+
+      // Handle fetcher error text
+      if (typeof this.config.fetchErrorText === "undefined" || this.config.fetchErrorText == "") {
+        this.config.fetchErrorText = this.translate("FETCHER_ERROR");
+      }
+
       // set minimum interval to 30 seconds
       if (this.config.interval < 30000) {
         this.config.interval = 30000;
@@ -89,9 +126,23 @@ Module.register("MMM-PublicTransportBerlin", {
 
   getHeading () {
     const heading = document.createElement("header");
-    heading.innerHTML = this.stationName;
+
+    if (typeof this.config.stationName === "undefined" || this.config.stationName == "") {
+      heading.innerHTML = this.stationName;
+    } else {
+      heading.innerHTML = this.config.stationName;
+    }
+
     if (typeof this.directionDescriptor !== "undefined" && this.directionDescriptor !== "all directions" && this.config.showDirection) {
       heading.innerHTML += `<br />(${this.translate("TOWARD")} ${this.directionDescriptor})`;
+    }
+
+    if (this.config.headerPrefix !== "") {
+      heading.innerHTML = `${this.config.headerPrefix} ${heading.innerHTML}`;
+    }
+
+    if (this.config.headerAppendix !== "") {
+      heading.innerHTML += ` ${this.config.headerAppendix}`;
     }
 
     return heading;
@@ -121,10 +172,8 @@ Module.register("MMM-PublicTransportBerlin", {
       // Handle departure fetcher error and show it on the screen
       if (Object.keys(this.error).length > 0) {
         const errorContent = document.createElement("div");
-        errorContent.innerHTML = `${this.translate(
-          "FETCHER_ERROR"
-        )}: ${JSON.stringify(this.error.hafasMessage)}<br>`;
-        errorContent.innerHTML += this.translate("NO_VBBDATA_ERROR_HINT");
+        errorContent.innerHTML = `${this.config.fetchErrorText}: ${JSON.stringify(this.error.hafasMessage)}<br>`;
+        errorContent.innerHTML += this.config.noVBBDataText;
         errorContent.className = "small light dimmed ptb-error-cell";
         wrapper.appendChild(errorContent);
       } else {
@@ -150,7 +199,7 @@ Module.register("MMM-PublicTransportBerlin", {
         // Handle empty departures array
         if (this.departuresArray.length === 0) {
           const row = this.getNoDeparturesRow(
-            this.translate("NO_DEPARTURES_AVAILABLE")
+            this.config.noDeparturesText
           );
 
           tBody.appendChild(row);
@@ -375,20 +424,20 @@ Module.register("MMM-PublicTransportBerlin", {
       this.config.useBrightScheme ? " bright" : ""
     }`;
 
+    let direction = this.prepareDirectionString(currentDeparture.direction);
+
     if (
       this.config.marqueeLongDirections &&
-      currentDeparture.direction.length >= 26
+      direction.length >= this.config.maxDirectionCharacterCount
     ) {
       directionCell.className = `ptb-direction-cell ptb-marquee${
         this.config.useBrightScheme ? " bright" : ""
       }`;
       const directionSpan = document.createElement("span");
-      directionSpan.innerHTML = currentDeparture.direction;
+      directionSpan.innerHTML = direction;
       directionCell.appendChild(directionSpan);
     } else {
-      directionCell.innerHTML = this.trimDirectionString(
-        currentDeparture.direction
-      );
+      directionCell.innerHTML = direction;
     }
 
     row.appendChild(directionCell);
@@ -424,22 +473,36 @@ Module.register("MMM-PublicTransportBerlin", {
         ) {
           result = i + 1;
         } else if (i === this.departuresArray.length - 1 && currentWhen < nowWithDelay) {
-          throw new Error(this.translate("NO_REACHABLE_DEPARTURES"));
+          throw new Error(this.config.noReachableDeparturesText);
         }
       });
     }
     return result;
   },
 
-  trimDirectionString (string) {
-    let dirString = string;
+  prepareDirectionString (string) {
+    let dirString = string ?? "";
 
-    if (dirString.includes(",")) {
-      dirString = dirString.split(",")[0];
+    const replacements = this.config.replaceInDirections;
+
+    for (const key of Object.keys(replacements)) {
+      dirString = dirString.replaceAll(key, replacements[key]);
     }
 
-    if (dirString.includes(" via ")) {
+    if (dirString.includes(", ")) {
+      if (this.config.showDistrictInDirections && !this.config.showStopNameInDirections) {
+        dirString = dirString.split(",")[0];
+      } else if (!this.config.showDistrictInDirections && this.config.showStopNameInDirections) {
+        dirString = dirString.split(",")[1];
+      }
+    }
+
+    if (this.config.ignoreViaInDirections && dirString.includes(" via ")) {
       dirString = dirString.split(" via ")[0];
+    }
+
+    if (dirString.length > this.config.maxDirectionCharacterCount) {
+      dirString = dirString.substring(0, this.config.maxDirectionCharacterCount - 3) + "...";
     }
 
     return dirString;
