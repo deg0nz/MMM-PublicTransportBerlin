@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.2.2](https://github.com/deg0nz/MMM-PublicTransportBerlin/compare/v2.2.1...v2.2.2) (2026-09-26)
+
+### Fixed
+
+* defensively handle null direction from hafas-client ([7f0b313](https://github.com/deg0nz/MMM-PublicTransportBerlin/commit/7f0b31341220578eab961aa60d96da1470ab799b))
+* retain departures after fetch errors ([e112c2c](https://github.com/deg0nz/MMM-PublicTransportBerlin/commit/e112c2c2dc98a2b8704444528ba8f2e261ba0c1f))
+
+### Chores
+
+* update devDependencies ([97dfe92](https://github.com/deg0nz/MMM-PublicTransportBerlin/commit/97dfe9228dc8338ccb9c4115fed2dbe19f51f7cc))
+
 ## [2.2.1](https://github.com/deg0nz/MMM-PublicTransportBerlin/compare/v2.2.0...v2.2.1) (2026-08-23)
 
 ### Chores
