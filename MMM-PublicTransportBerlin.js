@@ -1,5 +1,33 @@
 /* global Module Log */
 
+/**
+ * Removes departures that have already passed.
+ * @param {Array<object>} departures - Departure data to filter.
+ * @param {number} [now=Date.now()] - Current time as a Unix timestamp.
+ * @returns {Array<object>} Departures that are still upcoming or have no valid timestamp.
+ */
+function getVisibleDepartures (departures, now = Date.now()) {
+  return departures.filter((departure) => {
+    const departureTime = Date.parse(departure.when);
+    return !Number.isFinite(departureTime) || departureTime > now;
+  });
+}
+
+/**
+ * Checks whether the last successful result is still within the stale-data window.
+ * @param {number} lastUpdate - Unix timestamp of the last successful update.
+ * @param {number} maxStaleMinutes - Maximum age of stale data in minutes.
+ * @param {number} [now=Date.now()] - Current time as a Unix timestamp.
+ * @returns {boolean} Whether stale data may still be displayed.
+ */
+function canUseStaleData (lastUpdate, maxStaleMinutes, now = Date.now()) {
+  if (!Number.isFinite(lastUpdate) || !Number.isFinite(maxStaleMinutes)) {
+    return false;
+  }
+
+  return now - lastUpdate <= maxStaleMinutes * 60 * 1000;
+}
+
 Module.register("MMM-PublicTransportBerlin", {
   defaults: {
     name: "MMM-PublicTransportBerlin",  // The name of this module
@@ -12,6 +40,7 @@ Module.register("MMM-PublicTransportBerlin", {
     marqueeLongDirections: true,        // Use Marquee effect for long station names?
     travelTimeToStation: 10,            // How long do you need to walk/bike to the next Station?
     interval: 120000,                   // How often should the table be updated in ms?
+    maxStaleMinutes: 5,                 // How long old departures may be shown after a fetch error?
     departureMinutes: 30,               // For how many minutes should departures be shown?
     showColoredLineSymbols: true,       // Want colored line symbols?
     useColorForRealtimeInfo: true,      // Want colored real time information (delay, early)?
@@ -35,10 +64,14 @@ Module.register("MMM-PublicTransportBerlin", {
     );
 
     this.departuresArray = [];
+    this.lastSuccessfulUpdate = 0;
     this.loaded = false;
     this.error = {};
     this.configIssueDetected = false;
     this.config.identifier = this.identifier;
+    this.config.maxStaleMinutes = Number.isFinite(this.config.maxStaleMinutes)
+      ? Math.max(0, Math.floor(this.config.maxStaleMinutes))
+      : 5;
 
     // If the stationId is not a string, we'll print a warning
     if (typeof this.config.stationId === "number") {
@@ -118,8 +151,14 @@ Module.register("MMM-PublicTransportBerlin", {
     } else {
       wrapper.appendChild(this.getHeading());
 
-      // Handle departure fetcher error and show it on the screen
-      if (Object.keys(this.error).length > 0) {
+      const hasError = Object.keys(this.error).length > 0;
+      const canShowStaleData = hasError && canUseStaleData(
+        this.lastSuccessfulUpdate,
+        this.config.maxStaleMinutes
+      ) && this.departuresArray.length > 0;
+
+      // Keep useful data visible during a short-lived fetch failure.
+      if (hasError && !canShowStaleData) {
         const errorContent = document.createElement("div");
         errorContent.innerHTML = `${this.translate(
           "FETCHER_ERROR"
@@ -196,6 +235,16 @@ Module.register("MMM-PublicTransportBerlin", {
 
           table.appendChild(tBody);
           wrapper.appendChild(table);
+        }
+
+        if (hasError) {
+          const errorContent = document.createElement("div");
+          errorContent.innerHTML = `${this.translate(
+            "FETCHER_ERROR"
+          )}: ${JSON.stringify(this.error.hafasMessage)}<br>`;
+          errorContent.innerHTML += this.translate("NO_VBBDATA_ERROR_HINT");
+          errorContent.className = "small light dimmed ptb-error-cell";
+          wrapper.appendChild(errorContent);
         }
       }
     }
@@ -375,20 +424,20 @@ Module.register("MMM-PublicTransportBerlin", {
       this.config.useBrightScheme ? " bright" : ""
     }`;
 
+    const direction = this.trimDirectionString(currentDeparture.direction);
+
     if (
       this.config.marqueeLongDirections &&
-      currentDeparture.direction.length >= 26
+      direction.length >= 26
     ) {
       directionCell.className = `ptb-direction-cell ptb-marquee${
         this.config.useBrightScheme ? " bright" : ""
       }`;
       const directionSpan = document.createElement("span");
-      directionSpan.innerHTML = currentDeparture.direction;
+      directionSpan.innerHTML = direction;
       directionCell.appendChild(directionSpan);
     } else {
-      directionCell.innerHTML = this.trimDirectionString(
-        currentDeparture.direction
-      );
+      directionCell.innerHTML = direction;
     }
 
     row.appendChild(directionCell);
@@ -432,6 +481,11 @@ Module.register("MMM-PublicTransportBerlin", {
   },
 
   trimDirectionString (string) {
+    // hafas-client can return a null direction (e.g. for some arrivals/cancellations)
+    if (!string) {
+      return this.translate("UNKNOWN_DIRECTION");
+    }
+
     let dirString = string;
 
     if (dirString.includes(",")) {
@@ -504,6 +558,7 @@ Module.register("MMM-PublicTransportBerlin", {
           this.loaded = true;
           // Empty error object
           this.error = {};
+          this.lastSuccessfulUpdate = Date.now();
           // Proceed with normal operation
           this.departuresArray = payload.departuresArray;
           this.updateDom(this.config.animationSpeed);
@@ -512,6 +567,7 @@ Module.register("MMM-PublicTransportBerlin", {
         case "FETCH_ERROR":
           this.loaded = true;
           this.error = payload;
+          this.departuresArray = getVisibleDepartures(this.departuresArray);
           this.updateDom(this.config.animationSpeed);
       }
     }
